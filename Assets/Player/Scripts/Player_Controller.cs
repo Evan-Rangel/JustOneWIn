@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
 {
-    //Player Vars
+    //Player 
     private Rigidbody2D player_rb;
 
     [Header("Movement")]
-    //Player Movement Vars
+    //Player Movement 
     public float movementSpeed = 10.0f;
     private float movementInputDirection;
     private int facingDirection = 1;
@@ -18,14 +18,14 @@ public class Player_Controller : MonoBehaviour
     public float turnTimerSet = 0.1f;
 
     [Header("Jump")]
-    //Player Jump Vars
-    public float jumpForce = 16.0f;
+    //Player Jump 
+    [Range(1, 20)] public float jumpForce = 16.0f;
     public Transform groundCheck;
     public float groundCheckRadius;
     public LayerMask whatIsGround;
     private bool canNormalJump;
     private bool canWallJump;
-    public int amountOfJump = 1;//This is teh var that indicate how many jumps the player can di, if you wants more, just up the value
+    public int amountOfJump = 1;//This is the var that indicate how many jumps the player can do, if you wants more, just up the value
     private int amountOfJumpsLeft;
     public float variableJumpHeightMultiplier = 0.5f;
     private float jumpTimer;
@@ -58,7 +58,32 @@ public class Player_Controller : MonoBehaviour
     //Player Air Movement
     public float movementForceInAir;
     public float airDragMultiplier = 0.95f;
-    
+
+    [Header("Ledge Climb")]
+    //Player Ledge Climb
+    public Transform ledgeCheck;
+    private bool isTouchingLedge;
+    private bool canClimbLedge = false;
+    private bool ledgeDetected;
+    private Vector2 ledgePosBot;
+    private Vector2 ledgePos1;
+    private Vector2 ledgePos2;
+    public float ledgeClimbXOffSet1 = 0f;
+    public float ledgeClimbYOffSet1 = 0f;
+    public float ledgeClimbXOffSet2 = 0f;
+    public float ledgeClimbYOffSet2 = 0f;
+
+    [Header("Dash")]
+    //Player Dash 
+    public float dashTime;
+    public float dashSpeed;
+    public float distanceBetweenImages;
+    public float dashCoolDown;
+    private bool isDashing;
+    private float dashTimeLeft;
+    private float lastImageXpos;
+    private float lastDash = -100f;
+
     //Player Animations
     private Animator player_anim;
     private bool isWalking; 
@@ -79,7 +104,7 @@ public class Player_Controller : MonoBehaviour
     }
 
     //Awake
-    private void Awake()//Ask Evan
+    private void Awake()
     {
         //Initialice Vars
         player_rb = GetComponent<Rigidbody2D>();
@@ -89,7 +114,7 @@ public class Player_Controller : MonoBehaviour
     //Update
     private void Update()
     {
-        //Check for de used Inputs
+        //Check for the used Inputs
         CheckInput();
         //Check the direction the player is Facing
         CheckMovementDirection();
@@ -101,6 +126,10 @@ public class Player_Controller : MonoBehaviour
         CheckIfWallSliding();
         //Check if Player Jump
         CheckJump();
+        //Check if Player can LedgeClimb
+        //CheckLedgeClimb();//This Function have problems, commented in case you neede until this work correctly
+        //Check if Player can Dash
+        CheckDash();
     }
 
     //FixedUpdate
@@ -116,7 +145,7 @@ public class Player_Controller : MonoBehaviour
     private void CheckIfWallSliding()
     {
         //Condition that if the raycast activate the bool of a wall, the player is not on the ground and the velocity in axe "y" is negative, the we can said that is wall sliding
-        if(isTouchingWall && movementInputDirection == facingDirection && player_rb.velocity.y < 0)
+        if (isTouchingWall && movementInputDirection == facingDirection && player_rb.velocity.y < 0 && !canClimbLedge)
         {
             isWallSliding = true;
         }   
@@ -126,25 +155,78 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
+    //Function CheckLedgeClimb
+    private void CheckLedgeClimb()
+    {
+        //Condition that if can climb a ledge, hold the pos1
+        if (canClimbLedge)//WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            transform.position = ledgePos1;
+        }
+
+        //Condition that indicate that can climb a ledge
+        if (ledgeDetected && !canClimbLedge)
+        {
+            canClimbLedge = true;
+
+            //Condition that helps to continue looking at the correct side and do the offset when climb the ledge
+            if (isFacingRight)//Character Facing Right
+            {
+                ledgePos1 = new Vector2(Mathf.Floor(ledgePosBot.x + wallCheckDistance) - ledgeClimbXOffSet1, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffSet1);
+                ledgePos2 = new Vector2(Mathf.Floor(ledgePosBot.x + wallCheckDistance) - ledgeClimbXOffSet2, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffSet2);
+            }
+            else//Character Facing Left
+            {
+                ledgePos1 = new Vector2(Mathf.Ceil(ledgePosBot.x - wallCheckDistance) + ledgeClimbXOffSet1, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffSet1);
+                ledgePos2 = new Vector2(Mathf.Ceil(ledgePosBot.x - wallCheckDistance) + ledgeClimbXOffSet2, Mathf.Floor(ledgePosBot.y) + ledgeClimbYOffSet2);
+            }
+
+            canMove = false;//Quit the controller to the Player when the climb is happening
+            canFlip = false;//Quit the flip to avoid errors in the animation when the climb is happening
+
+            player_anim.SetBool("canClimbLedge", canClimbLedge);
+        }
+    }
+
+    //Function FinishLedgeClimb
+    public void FinishLedgeClimb()
+    {
+        canClimbLedge = false;
+        ledgeDetected = false;
+        player_anim.SetBool("canClimbLedge", canClimbLedge);
+        transform.position = ledgePos2;
+        canMove = true;
+        canFlip = true;
+    }
+
     //Function CheckSurroundings
     private void CheckSurroundings()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);//This is gona check if the player is in the ground and determinate what is ground, using the postion of the CheckGround gameObject in the player, a radius and the objects that select like a proper ground
 
         isTouchingWall = Physics2D.Raycast(wallCheck.position, transform.right, wallCheckDistance, whatIsGround);//Use a RayCast to detect if a wall is enough close to slide
+
+        isTouchingLedge = Physics2D.Raycast(ledgeCheck.position, transform.right, wallCheckDistance, whatIsGround);//Use the RayCast above the other RayCast isTouchingWall, to detect if is on a ledge, with this will not be a problem between wall jump and ledge climb
+
+        //Condition that helps to know the diference between a ledge that can climb and a part of the wall that can jump
+        if (isTouchingWall && !isTouchingLedge && !ledgeDetected)
+        {
+            ledgeDetected = true;
+            ledgePosBot = wallCheck.position;//We need to take track of the position of the leadge to move the character
+        }
     }
 
     //Function CheckIfCanJump
     private void CheckIfCanJump()
     {
         //Condition that only player can jump if is touching ground and the velocity in axe Y is 0
-        if(isGrounded && player_rb.velocity.y <= 0.01f)//Before was 0
+        if (isGrounded && player_rb.velocity.y <= 0.01f)//Before was 0
         {
             amountOfJumpsLeft = amountOfJump;
         }
 
         //Condition to allow the wallJump
-        if(isTouchingWall)
+        if (isTouchingWall)
         {
             canWallJump = true;
         }
@@ -164,7 +246,7 @@ public class Player_Controller : MonoBehaviour
     private void CheckMovementDirection()
     {
         //Condition to call de function "Flip" depending in the direction the player is going
-        if(isFacingRight && movementInputDirection < 0)
+        if (isFacingRight && movementInputDirection < 0)
         {
             Flip();
         }
@@ -174,7 +256,7 @@ public class Player_Controller : MonoBehaviour
         }
 
         //Condition that know if the player is walking or not
-        if(player_rb.velocity.x != 0)
+        if (Mathf.Abs(player_rb.velocity.x) >= 0.01f)//Before if(player_rb.velocity.x != 0). Now if(Mathf.Abs(player_rb.velocity.x) >= 0.01f).
         {
             isWalking = true;
         }
@@ -203,7 +285,7 @@ public class Player_Controller : MonoBehaviour
         //Jump Action-Condition
         if (Input.GetButtonDown("Jump"))
         {
-            if (isGrounded || amountOfJumpsLeft > 0 && isTouchingWall)
+            if (isGrounded || amountOfJumpsLeft > 0 && !isTouchingWall)
             {
                 NormalJump();
             }
@@ -217,7 +299,7 @@ public class Player_Controller : MonoBehaviour
         //Condition that is ging to make a really little amoount of time to the player to do the wall jump, this we be allow by freezing the movement in a short time, and if detects a inputs it will do teh wall jump
         if (Input.GetButtonDown("Horizontal") && isTouchingWall)
         {
-            if(!isGrounded && movementInputDirection != facingDirection)
+            if (!isGrounded && movementInputDirection != facingDirection)
             {
                 canMove = false;
                 canFlip = false;
@@ -227,11 +309,11 @@ public class Player_Controller : MonoBehaviour
         }
 
         //Condition thats take track of the timer thats allow move
-        if(!canMove)
+        if (turnTimer >= 0)
         {
             turnTimer -= Time.deltaTime;
 
-            if(turnTimer <= 0)
+            if (turnTimer <= 0)
             {
                 canMove = true;
                 canFlip = true;
@@ -244,6 +326,65 @@ public class Player_Controller : MonoBehaviour
             checkJumpMultiplier = false;
             player_rb.velocity = new Vector2(player_rb.velocity.x, player_rb.velocity.y * variableJumpHeightMultiplier);
         }
+
+        //Condition that check if we press the dash button
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if(Time.time >= (lastDash + dashCoolDown))
+            {
+                AttemptToDash();
+            }        
+        }
+    }
+
+    //Function AttemptToDash
+    private void AttemptToDash()
+    {
+        isDashing = true;
+        dashTimeLeft = dashTime;
+        lastDash = Time.time;
+
+        //Get GameObject from the pool
+        PlayerAfterImagePool.Instance.GetFromPool();
+        lastImageXpos = transform.position.x;
+    }
+
+    //Function GetFacingDirection
+    public int GetFacingDirection()
+    {
+        return facingDirection;
+    }
+
+    //Function CheckDash
+    private void CheckDash()
+    {
+        //Condition thats help to know if the player is Dashing
+        if (isDashing)
+        {
+            //Condition thats know if the player still dashing
+            if (dashTimeLeft > 0)
+            {
+                canMove = false;
+                canFlip = false;
+                player_rb.velocity = new Vector2(dashSpeed * facingDirection, player_rb.velocity.y);//Wuth Fall: new Vector2(dashSpeed * facingDirection, player_rb.velocity.y), Not Fall: new Vector2(dashSpeed * facingDirection, 0)
+                dashTimeLeft -= Time.deltaTime;
+
+                //Candition thats know if is enough distance has passed for us to place another image after image
+                if (Mathf.Abs(transform.position.x - lastImageXpos) > distanceBetweenImages)
+                {
+                    PlayerAfterImagePool.Instance.GetFromPool();
+                    lastImageXpos = transform.position.x;
+                }
+            }
+
+            if (dashTimeLeft <= 0 || isTouchingWall)
+            {
+                isDashing = false;
+                canMove = true;
+                canFlip = true;
+            }
+            
+        }
     }
 
     //Function Jump
@@ -252,24 +393,24 @@ public class Player_Controller : MonoBehaviour
         //Condition that determinate what kind of jump the player is going to do
         if (jumpTimer > 0)
         {
-            if(!isGrounded && isTouchingWall && movementInputDirection != 0 && movementInputDirection != facingDirection)//WallJump
+            if (!isGrounded && isTouchingWall && movementInputDirection != 0 && movementInputDirection != facingDirection)//WallJump
             {
                 WallJump();
             }
-            else if(isGrounded)//Normal Jump
+            else if (isGrounded)//Normal Jump
             {
                 NormalJump();
             }
         }
 
         //Condition that determinate the time is jumping
-        if(isAttemptingToJump)
+        if (isAttemptingToJump)
         {
             jumpTimer -= Time.deltaTime;
         }
 
         //Cindition that it is still time left to do wall jump and the player select a direction diferent than up, can do the wall jump
-        if(wallJumpTimer > 0)
+        if (wallJumpTimer > 0)
         {
             player_rb.velocity = new Vector2(player_rb.velocity.x, 0.0f);
             hasWallJump = false;
@@ -290,7 +431,7 @@ public class Player_Controller : MonoBehaviour
         if (canNormalJump)//Jump
         {
             //Jump Force
-            player_rb.velocity = new Vector2(player_rb.velocity.y, jumpForce);
+            player_rb.velocity = new Vector2(player_rb.velocity.x, jumpForce);
             amountOfJumpsLeft--;//This rest the amount of jump evrey time player jump
             jumpTimer = 0;
             isAttemptingToJump = false;
@@ -338,7 +479,7 @@ public class Player_Controller : MonoBehaviour
         
         
         //Condition that if is walSsliding the velocity of going down deacrease but not the same when is falling
-        if(isWallSliding)
+        if (isWallSliding)
         {
             if (player_rb.velocity.y < -wallSlideSpeed)
             {
@@ -347,11 +488,23 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
+    //Function DisableFlip
+    private void DisableFlip()//Maybe could be Private
+    {
+        canFlip = false;
+    }
+
+    //Function EnableFlip
+    private void EnableFlip()//Maybe could be Private
+    {
+        canFlip = true;
+    }
+
     //Function Flip
     private void Flip()
     {
         //Condition to avoid change the character face direction in the wall sliding
-        if(!isWallSliding && canFlip)
+        if (!isWallSliding && canFlip)
         {
             facingDirection *= -1;//This will change 1 and -1 to flip the character
             isFacingRight = !isFacingRight;//Only changing if is diferent from his own
@@ -365,7 +518,13 @@ public class Player_Controller : MonoBehaviour
         //Sphere for detect Ground
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);//This wild draw a circle in the player that we help to calculate the ground
 
-        //Line to detect walls
+        //Line to detect Walls
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y, wallCheck.position.z));//This will Draw a line thats help to used like a RayCast, with this will detect a wall to know if can slide from a wall
+
+        //Line to detct ledgeClimb
+        Gizmos.DrawLine(ledgeCheck.position, new Vector3(ledgeCheck.position.x + wallCheckDistance, ledgeCheck.position.y, ledgeCheck.position.z));//This will Draw a line thats help to used like a RayCast, with this will detect a wall to know if can slide from a wall
+
+        //Line to detect where is climbing LedgeClimb
+        Gizmos.DrawLine(ledgePos1, ledgePos2);//This will Draw a line thats help to used like a RayCast, with this will detect a wall to know if can slide from a wall
     }
 }
