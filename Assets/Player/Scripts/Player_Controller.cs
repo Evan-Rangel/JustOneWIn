@@ -127,7 +127,7 @@ public class Player_Controller : MonoBehaviour
         //Check if Player Jump
         CheckJump();
         //Check if Player can LedgeClimb
-        //CheckLedgeClimb();//This Function have problems, commented in case you neede until this work correctly
+        CheckLedgeClimb();//This Function have problems, commented in case you neede until this work correctly
         //Check if Player can Dash
         CheckDash();
     }
