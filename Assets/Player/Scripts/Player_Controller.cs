@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEditor.Tilemaps;
+//using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
@@ -84,6 +84,14 @@ public class Player_Controller : MonoBehaviour
     private float lastImageXpos;
     private float lastDash = -100f;
 
+    [Header("Knockback")]
+    [SerializeField]
+    private float knockbackDuration;
+    [SerializeField]
+    private Vector2 knockbackSpeed;
+    private float knockbackStartTime;
+    private bool knockback;
+
     //Player Animations
     private Animator player_anim;
     private bool isWalking; 
@@ -127,9 +135,11 @@ public class Player_Controller : MonoBehaviour
         //Check if Player Jump
         CheckJump();
         //Check if Player can LedgeClimb
-        CheckLedgeClimb();//This Function have problems, commented in case you neede until this work correctly
+        //CheckLedgeClimb();//This Function have problems, commented in case you neede until this work correctly
         //Check if Player can Dash
         CheckDash();
+        //Check ifPlayer is Knockback
+        CheckKnockback();
     }
 
     //FixedUpdate
@@ -152,6 +162,31 @@ public class Player_Controller : MonoBehaviour
         else
         {
             isWallSliding = false;
+        }
+    }
+
+    //Function CheckDashStatus
+    public bool GetDashStatus()
+    {
+        return isDashing;
+    }
+
+    //Function Knockback
+    public void Knockback(int direction)
+    {
+        knockback = true;
+        knockbackStartTime = Time.time;
+        player_rb.velocity = new Vector2(knockbackSpeed.x * direction, knockbackSpeed.y);
+    }
+
+    //Function CheckKnockback
+    private void CheckKnockback()
+    {
+        //Condition that check if th knockback is active and ca doit again
+        if (Time.time >= knockbackStartTime + knockbackDuration && knockback)
+        {
+            knockback = false;
+            player_rb.velocity = new Vector2(0.0f, player_rb.velocity.y);
         }
     }
 
@@ -366,7 +401,7 @@ public class Player_Controller : MonoBehaviour
             {
                 canMove = false;
                 canFlip = false;
-                player_rb.velocity = new Vector2(dashSpeed * facingDirection, player_rb.velocity.y);//Wuth Fall: new Vector2(dashSpeed * facingDirection, player_rb.velocity.y), Not Fall: new Vector2(dashSpeed * facingDirection, 0)
+                player_rb.velocity = new Vector2(dashSpeed * facingDirection, player_rb.velocity.y);//Put Fall: new Vector2(dashSpeed * facingDirection, player_rb.velocity.y), Not Fall: new Vector2(dashSpeed * facingDirection, 0)
                 dashTimeLeft -= Time.deltaTime;
 
                 //Candition thats know if is enough distance has passed for us to place another image after image
@@ -466,12 +501,12 @@ public class Player_Controller : MonoBehaviour
     private void ApplyMovement()
     {
         //Condition
-        if (!isGrounded && !isWallSliding && movementInputDirection == 0)
+        if (!isGrounded && !isWallSliding && movementInputDirection == 0 && !knockback)
         {
             player_rb.velocity = new Vector2(player_rb.velocity.x * airDragMultiplier, player_rb.velocity.y);
         }
         //Condition that only applay the movement to walk on the ground  --Maybe i change this--
-        else if (canMove)
+        else if (canMove && !knockback)
         {
             //Applay Velocity to the movements
             player_rb.velocity = new Vector2(movementSpeed * movementInputDirection, player_rb.velocity.y);
@@ -504,7 +539,7 @@ public class Player_Controller : MonoBehaviour
     private void Flip()
     {
         //Condition to avoid change the character face direction in the wall sliding
-        if (!isWallSliding && canFlip)
+        if (!isWallSliding && canFlip && !knockback)
         {
             facingDirection *= -1;//This will change 1 and -1 to flip the character
             isFacingRight = !isFacingRight;//Only changing if is diferent from his own

@@ -21,9 +21,9 @@ public class PlayerAfterImageSprite : MonoBehaviour
     private float timeActivated;
     private float alpha;
     [SerializeField]
-    private float alphaSet = 0.8f;
+    private float alphaSet = 0.7f;
     [SerializeField]
-    private float alphaMultiplier = 0.85f;//This var change the velocity of the fade, more small number much faste will be
+    private float alphaDecay = 1f;//This var change the velocity of the fade, more small number much faste will be
 
     //OnEnble
     private void OnEnable()
@@ -44,7 +44,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
     //Update
     private void Update()
     {
-        alpha *= alphaMultiplier;//Decreasing the alpha
+        alpha -= alphaDecay * Time.deltaTime;//Decreasing the alpha
         color = new Color(1f, 1f, 1f, alpha);//Crate new color with the alpha 
         sR.color = color;//Set the color to the sprite
 

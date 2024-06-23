@@ -22,9 +22,14 @@ public class Player_CombatController : MonoBehaviour
     private Transform attack1HitBoxPos;//This position the hit box where we want
     [SerializeField]
     private LayerMask whatIsDamageable;
+    private float[] attackDetails = new float[2];
 
     //Player Combat Anim
     private Animator playerC_anim;
+
+    //Player Reference
+    private Player_Controller playerC;
+    private Player_Stats playerS;
 
     //Start
     private void Start()
@@ -38,6 +43,8 @@ public class Player_CombatController : MonoBehaviour
     {
         //Initialice Vars
         playerC_anim = GetComponent<Animator>();
+        playerC = GetComponent<Player_Controller>();
+        playerS = GetComponent<Player_Stats>();
     }
 
     //Update
@@ -94,10 +101,14 @@ public class Player_CombatController : MonoBehaviour
     {
         Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attack1HitBoxPos.position, attack1Radius, whatIsDamageable);//This will detected a object that can be hit in a circle range
 
+        //AttackDetails
+        attackDetails[0] = attack1Damage;
+        attackDetails[1] = transform.position.x;
+
         //Used to loop through all the objects in our detected objects array
         foreach (Collider2D collider in detectedObjects)
         {
-            collider.transform.parent.SendMessage("Damage", attack1Damage);//Used to call to a specific funtion (like Unreal xd)
+            collider.transform.parent.SendMessage("Damage", attackDetails);//Used to call to a specific funtion (like Unreal xd)
             //Instantiate hit particle
         }
     }
@@ -110,6 +121,30 @@ public class Player_CombatController : MonoBehaviour
         playerC_anim.SetBool("attack1", false);
     }
 
+    //Function Damage (This is used in "SendMessege")
+    private void Damage(float[] attackDetails)
+    {
+        //Condition that check if the player is dashing, if is dashing then will no applay damage
+        if (!playerC.GetDashStatus())
+        {
+            int direction; //Determinate the direction supposed to knockback the player
+
+            //Damag player here using attackDetails[0]
+            playerS.DecreaseHealth(attackDetails[0]);
+
+            //Condition that check th position of the attack to applay the direction knockback
+            if (attackDetails[1] < transform.position.x)
+            {
+                direction = 1;
+            }
+            else
+            {
+                direction = -1;
+            }
+
+            playerC.Knockback(direction);//Call function in Player_Controller
+        } 
+    }
     //OnDrawGizmos
     private void OnDrawGizmos()
     {
