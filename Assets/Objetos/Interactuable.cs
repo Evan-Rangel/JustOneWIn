@@ -4,26 +4,38 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Interactuable : MonoBehaviour
+public abstract class Interactuable : MonoBehaviour
 {
-    [SerializeField] LoadCircles[] circles;
-    float timeToActive;
-    [SerializeField] UnityEvent onFinish;
-    [SerializeField] UnityEvent onStart;
+    [Header("Parent")]
+    [SerializeField] Transform parentTransform;
+
+    [Header("Carge Circles")]
+    [SerializeField, Tooltip("Se cargan al iniciar si se ponen de hijo a este objeto")] LoadCircles[] circles;
+    [SerializeField, Tooltip("Para que los circulos se activen gradualmente o al instante")] bool loadInstant;
+
+    [Header("Colors")]
     [SerializeField] CirclesColors activateColor;
     [SerializeField] CirclesColors deactivateColor;
-    bool inAction = false;
-    [SerializeField] bool active;
-    [SerializeField] bool loadInstant;
 
-    private void Awake()
+    [Header("Events")]
+    [SerializeField] UnityEvent onFinish;
+    [SerializeField] UnityEvent onStart;
+
+    bool inAction = false;
+    float timeToActive;
+    protected bool active;
+
+    public virtual void Awake()
     {
         circles = GetComponentsInChildren<LoadCircles>();
+        foreach (LoadCircles circle in circles)
+        {
+            circle.gameObject.transform.parent = parentTransform;
+        }
     }
-    private void Start()
+    public virtual void Start()
     {
         onStart.Invoke();
-
     }
     [Tooltip("Al presionar el boton, el estado sera estado = !estado")]
     public void ActivateAndDeactivate()
@@ -96,8 +108,8 @@ public class Interactuable : MonoBehaviour
         //For para que sea inverso
         for (int i = circles.Length-1; i >= 0; i--)
         {
-            circles[i].ChangeColor(timeToActive / circles.Length, deactivateColor, loadInstant);
             yield return new WaitForSeconds(timeToActive / circles.Length);
+            circles[i].ChangeColor(timeToActive / circles.Length, deactivateColor, !loadInstant);
         }
         inAction = false;
         Deactivate();
@@ -106,8 +118,8 @@ public class Interactuable : MonoBehaviour
     {
         foreach (var circle in circles)
         {
-            circle.ChangeColor(timeToActive / circles.Length, activateColor, loadInstant);
             yield return new WaitForSeconds(timeToActive / circles.Length);
+            circle.ChangeColor(timeToActive / circles.Length, activateColor, !loadInstant);
         }
         inAction = false;
         Activate();

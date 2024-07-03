@@ -4,6 +4,13 @@ using UnityEngine;
 
 public static class Helpers 
 {
+    //SCRIPT de funciones generales
+
+
+
+
+
+
     static Dictionary<float, WaitForSeconds> waitDictionary= new Dictionary<float, WaitForSeconds>();
 
     public static WaitForSeconds GetWait(float time)
