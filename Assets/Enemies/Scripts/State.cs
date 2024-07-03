@@ -11,7 +11,7 @@ public class State
     protected Entity entity;
 
     //Float
-    protected float startTime;
+    public float startTime { get; protected set; }
 
     //Bool to safe name of the vars in the animators
     protected string animBoolName;

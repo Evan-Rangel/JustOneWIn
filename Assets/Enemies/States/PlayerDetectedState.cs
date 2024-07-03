@@ -11,6 +11,8 @@ public class PlayerDetectedState : State
     protected bool isPlayerInMinAgroRange;
     protected bool isPlayerInMaxAgroRange;
     protected bool performLongRangeAction;
+    protected bool performCloseRangeAction;
+    protected bool isDetectingLedge;
 
     //Idle Time
 
@@ -62,6 +64,12 @@ public class PlayerDetectedState : State
         //Detect Player
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
         isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+
+        //Perform Attacks
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+
+        //Detectors
+        isDetectingLedge = entity.CheckLedge();
     }
     //-------END OVERRIDES-------//
 

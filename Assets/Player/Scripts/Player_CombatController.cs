@@ -19,10 +19,12 @@ public class Player_CombatController : MonoBehaviour
     [SerializeField]
     private float attack1Damage;
     [SerializeField]
+    private float stunDamageAmount = 1f;
+    [SerializeField]
     private Transform attack1HitBoxPos;//This position the hit box where we want
     [SerializeField]
     private LayerMask whatIsDamageable;
-    private float[] attackDetails = new float[2];
+    private AttackDetails attackDetails;//This is a struct
 
     //Player Combat Anim
     private Animator playerC_anim;
@@ -102,8 +104,11 @@ public class Player_CombatController : MonoBehaviour
         Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attack1HitBoxPos.position, attack1Radius, whatIsDamageable);//This will detected a object that can be hit in a circle range
 
         //AttackDetails
-        attackDetails[0] = attack1Damage;
-        attackDetails[1] = transform.position.x;
+        attackDetails.damageAmount = attack1Damage;
+        attackDetails.position = transform.position;
+
+        //Stun
+        attackDetails.stunDamageAmount = stunDamageAmount;
 
         //Used to loop through all the objects in our detected objects array
         foreach (Collider2D collider in detectedObjects)
@@ -122,18 +127,18 @@ public class Player_CombatController : MonoBehaviour
     }
 
     //Function Damage (This is used in "SendMessege")
-    private void Damage(float[] attackDetails)
+    private void Damage(AttackDetails attackDetails)
     {
         //Condition that check if the player is dashing, if is dashing then will no applay damage
         if (!playerC.GetDashStatus())
         {
             int direction; //Determinate the direction supposed to knockback the player
 
-            //Damag player here using attackDetails[0]
-            playerS.DecreaseHealth(attackDetails[0]);
+            //Damage player here using attackDetails.damageAmount
+            playerS.DecreaseHealth(attackDetails.damageAmount);
 
             //Condition that check th position of the attack to applay the direction knockback
-            if (attackDetails[1] < transform.position.x)
+            if (attackDetails.position.x < transform.position.x)
             {
                 direction = 1;
             }

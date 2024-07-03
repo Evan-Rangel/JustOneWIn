@@ -111,9 +111,16 @@ MonoBehaviour:
   wallCheck: {fileID: 1531738785694126850}
   ledgeCheck: {fileID: 1531738784286551133}
   playerCheck: {fileID: 5150054262798185885}
+  groundCheck: {fileID: 78419236143230466}
   idleStateData: {fileID: 11400000, guid: 042366e379519154ba56b04530788cd4, type: 2}
   moveStateData: {fileID: 11400000, guid: d26f2188583a94846be68302428ca4bd, type: 2}
   playerDetectedStateData: {fileID: 11400000, guid: 338657fd24b39984990e86ba455eca7c, type: 2}
+  chargeStateData: {fileID: 11400000, guid: 61d003682da650f44aa36275e383ebd0, type: 2}
+  lookForPlayerStateData: {fileID: 11400000, guid: c03f7512534d3f349951b923ac960272, type: 2}
+  meleeAttackStateData: {fileID: 11400000, guid: 967811eeb6b698247b0ae2786eff06fe, type: 2}
+  stunStateData: {fileID: 11400000, guid: 0ffc2971aa12bd04fb0d9c5613564b78, type: 2}
+  deadStateData: {fileID: 11400000, guid: b13c142d87e96734c9699dfe81d6a001, type: 2}
+  meleeAttackPosition: {fileID: 4159559443164324055}
 --- !u!1 &1531738785694126861
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +165,7 @@ GameObject:
   - component: {fileID: 1531738785733291804}
   - component: {fileID: 1531738785733291807}
   - component: {fileID: 1531738785733291806}
+  - component: {fileID: 7968478746250525032}
   m_Layer: 9
   m_Name: Alive
   m_TagString: Enemy
@@ -181,6 +189,8 @@ Transform:
   - {fileID: 1531738785694126850}
   - {fileID: 972758359973097126}
   - {fileID: 5150054262798185885}
+  - {fileID: 4159559443164324055}
+  - {fileID: 78419236143230466}
   m_Father: {fileID: 1531738784991701695}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -303,6 +313,49 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.8, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7968478746250525032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531738785733291800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49bfeeb83e9ca64bad78b944b8a0d69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1599949338364077270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4159559443164324055}
+  m_Layer: 9
+  m_Name: MeleeAttackPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4159559443164324055
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599949338364077270}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3, y: -0.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1531738785733291801}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1653082051302341813
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +381,37 @@ Transform:
   m_GameObject: {fileID: 1653082051302341813}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.2, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1531738785733291801}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6384879233591870462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 78419236143230466}
+  m_Layer: 9
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &78419236143230466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6384879233591870462}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

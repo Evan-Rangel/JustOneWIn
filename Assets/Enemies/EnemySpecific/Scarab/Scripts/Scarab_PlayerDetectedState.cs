@@ -29,9 +29,12 @@ public class Scarab_PlayerDetectedState : PlayerDetectedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        //Condition that if not a player detected, then trasition back to Idle
-        if(performLongRangeAction)
+        //Condition that detected if player is enough close to do the action
+        if(performCloseRangeAction)
+        {
+            stateMachine.ChangeState(scarab.meleeAttackState);
+        }
+        else if (performLongRangeAction) //Condition that if not a player detected, then trasition back to Idle
         {
             stateMachine.ChangeState(scarab.chargeState);
         }
@@ -39,6 +42,12 @@ public class Scarab_PlayerDetectedState : PlayerDetectedState
         {
             stateMachine.ChangeState(scarab.lookForPlayerState);
         }
+        else if (!isDetectingLedge)
+        {
+            entity.Flip();
+            stateMachine.ChangeState(scarab.moveState);
+        }
+
     }
 
     public override void PhysicsUpdate()

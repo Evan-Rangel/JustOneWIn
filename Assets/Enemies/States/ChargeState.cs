@@ -12,6 +12,7 @@ public class ChargeState : State
     protected bool isDetectingLedge;
     protected bool isDetectingWall;
     protected bool isChargeTimeOver;
+    protected bool performCloseRangeAction;
 
     //Constructor
     //---This means is it's going to pass the entity state machine and animation variables that we get when we call this contructor on to our base clase which is "State" so now if we want to add anything else to the construcot, we can go ahead and do that.---//
@@ -66,6 +67,9 @@ public class ChargeState : State
         //Check for a wall or ledge to stop the charge when reach one of those
         isDetectingLedge = entity.CheckLedge();
         isDetectingWall = entity.CheckWall();
+
+        //Check for Attack
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
     }
     //-------END OVERRIDES-------//
 

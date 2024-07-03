@@ -401,7 +401,7 @@ public class Player_Controller : MonoBehaviour
             {
                 canMove = false;
                 canFlip = false;
-                player_rb.velocity = new Vector2(dashSpeed * facingDirection, player_rb.velocity.y);//Put Fall: new Vector2(dashSpeed * facingDirection, player_rb.velocity.y), Not Fall: new Vector2(dashSpeed * facingDirection, 0)
+                player_rb.velocity = new Vector2(dashSpeed * facingDirection, 0);//Put Fall: new Vector2(dashSpeed * facingDirection, player_rb.velocity.y), Not Fall: new Vector2(dashSpeed * facingDirection, 0)
                 dashTimeLeft -= Time.deltaTime;
 
                 //Candition thats know if is enough distance has passed for us to place another image after image

@@ -29,9 +29,13 @@ public class Scarab_ChargeState : ChargeState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        //Condition that check if we doing a meleeattack
+        if (performCloseRangeAction)
+        {
+            stateMachine.ChangeState(scarab.meleeAttackState);
+        }
         //Condition to avoid that the Charge State don't follow the action of stop to a wall or ledge
-        if(!isDetectingLedge || isDetectingWall)
+        else if (!isDetectingLedge || isDetectingWall)
         {
             //LookForPlayer
             stateMachine.ChangeState(scarab.lookForPlayerState);
@@ -41,6 +45,10 @@ public class Scarab_ChargeState : ChargeState
             if(isPlayerInMinAgroRange)
             {
                 stateMachine.ChangeState(scarab.playerDetectedState);
+            }
+            else
+            {
+                stateMachine.ChangeState(scarab.lookForPlayerState);
             }
         }
     }
