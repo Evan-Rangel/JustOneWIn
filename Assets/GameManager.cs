@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Image loadImage;
@@ -23,11 +24,18 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(StartGame());
     }
-    public GameObject GetRandomItem()
+    public GameObject RequestRandomItem()
     {
-        return items[Random.Range(0, items.Length)];
+        return Instantiate( items[Random.Range(0, items.Length)]);
     }
-    
+    //Para reaparecer el item en el mapa
+    public IEnumerator ReEnableItem(GameObject item)
+    { 
+        item.SetActive(false);
+        yield return Helpers.GetWait(5);
+        item.SetActive(true);
+        yield break;
+    }
     IEnumerator StartGame()
     {
         bool isFilled;
@@ -58,4 +66,8 @@ public class GameManager : MonoBehaviour
         }
     }
     
+}
+public interface ItemAction
+{
+    public void Action(PlayerItemManager _playerItemManager);
 }

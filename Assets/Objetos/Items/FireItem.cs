@@ -6,10 +6,14 @@ public class FireItem : Item, ItemAction
 {
     [SerializeField] GameObject bullet;
     [SerializeField] float forceSpeed;
-    public void Action(Transform _player)
+    public void Action(PlayerItemManager _playerItemManager)
     {
-        GameObject _bullet = Instantiate(bullet, _player.position,Quaternion.identity);
-        _bullet.GetComponent<Rigidbody2D>().velocity=(GameManager.instance.cursor.position - _player.position)*forceSpeed;
-        Debug.Log("Fire Item");
+        Transform originTransform = _playerItemManager.GetAttackTransform();
+        Transform player = _playerItemManager.transform;
+        Vector2 direction =(originTransform.position.x< player.position.x)?Vector2.left : Vector2.right;
+        GameObject _bullet = Instantiate(bullet, originTransform.position,Quaternion.identity);
+        _bullet.GetComponent<Rigidbody2D>().AddForce((GameManager.instance.cursor.position - originTransform.position).normalized*forceSpeed);
+        Destroy( _bullet,10 );
+        Destroy(gameObject);
     }
 }

@@ -6,8 +6,12 @@ public static class Helpers
 {
     //SCRIPT de funciones generales
 
+    static WaitForEndOfFrame waitForEndFrame;
 
-
+    public static WaitForEndOfFrame GetWaitForEndOfFrame()
+    { 
+        return (waitForEndFrame!=null) ? waitForEndFrame : waitForEndFrame= new WaitForEndOfFrame();
+    }
 
 
 
