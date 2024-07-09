@@ -17,14 +17,14 @@ public class Player_Stats : MonoBehaviour
     private GameObject deathBloodParticle;
 
     //GameManager Reference
-    private GameManager gameManager;
+    private GameManagerLevel gameManager;
 
     //Start
     private void Start()
     {
         //Initialize Vars
         currentHealth = maxHealth;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerLevel>();
     }
 
     //Awake

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class GameManager : MonoBehaviour
+public class GameManagerLevel : MonoBehaviour
 {
     //NOTE: Simple respawn Mechanic, not the real version, just something to test things
 
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     //Awake
     private void Awake()
     {
-        
+
     }
 
     //Update
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     private void CheckRespawn()
     {
         //Condition that if the enough time has pass, then respawn
-        if(Time.time <= respawnStartTime + respawnTime && respawn)
+        if (Time.time <= respawnStartTime + respawnTime && respawn)
         {
             var playerTemp = Instantiate(player, respawnPoint);//"var playerTemp" It exists because when the player is destroyed, Cinemachin's camera will lose its target, so I save it in the VAR so I can access it later
             CVC.m_Follow = playerTemp.transform;//Here the camera again go with the respawn player
