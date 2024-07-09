@@ -70,4 +70,5 @@ public class GameManager : MonoBehaviour
 public interface ItemAction
 {
     public void Action(PlayerItemManager _playerItemManager);
+
 }

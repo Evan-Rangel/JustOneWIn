@@ -11,12 +11,16 @@ public class PlayerItemManager : MonoBehaviour
     [SerializeField] Image itemSprite;
     [SerializeField] GameObject currentItem;
     [SerializeField] ItemAction action;
-    [SerializeField] Transform attackTransform;
+    [SerializeField] Transform itemHolderFront;
+    [SerializeField] Transform itemHolderBack;
     [SerializeField] PlayerInput playerInput;
     [SerializeField] int actives;
     public PlayerInput GetPlayerInput() { return playerInput; }
-    public Transform GetAttackTransform (){ return attackTransform; }
+    public Transform GetItemHolderFront (){ return itemHolderFront; }
+    public Transform GetItemHolderBack (){ return itemHolderBack; }
     public DistanceJoint2D distanceJoint { get; private set; }
+    public void ResetCurrentItem()
+    { currentItem = null; }
     private void Awake()
     {
         distanceJoint = gameObject.GetComponent<DistanceJoint2D>();
@@ -28,11 +32,11 @@ public class PlayerItemManager : MonoBehaviour
     IEnumerator RequestRandomItem()
     {
         itemSprite.enabled = true;
-        /*for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             itemSprite.sprite=GameManager.instance.itemsSprites[Random.Range(0, GameManager.instance.itemsSprites.Length)];
             yield return Helpers.GetWait(0.3f);
-        }*/
+        }
         for (int i = 0; i < actives; i++)
         {
             currentItem = GameManager.instance.RequestRandomItem();
@@ -54,5 +58,12 @@ public class PlayerItemManager : MonoBehaviour
         {
             StartCoroutine(RequestRandomItem());
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(itemHolderFront.position, 0.2f);
+        Gizmos.DrawWireSphere(itemHolderBack.position, 0.2f);
+
     }
 }

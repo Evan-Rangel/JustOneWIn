@@ -9,12 +9,12 @@ public class HookItem : Item, ItemAction
     [SerializeField] float hookGrabSpeed;
     [SerializeField] float endForce;
     PlayerInput playerInput;
-
+  
     public void Action(PlayerItemManager _playerItemManager)
     {
         Debug.Log("Hook Item");
         playerInput= _playerItemManager.GetPlayerInput();
-        StartCoroutine(TrowHook(_playerItemManager.GetAttackTransform(), _playerItemManager));
+        StartCoroutine(TrowHook(_playerItemManager.GetItemHolderFront(), _playerItemManager));
     }
     IEnumerator TrowHook(Transform _origingPos, PlayerItemManager _playerItemManager)
     {
@@ -38,7 +38,6 @@ public class HookItem : Item, ItemAction
             {
                 target = hit.point;
                 transform.parent = player.transform;
-
                 distanceJoint2D.enabled = true;
                 distanceJoint2D.distance = Vector2.Distance(target, _origingPos.position);
                 distanceJoint2D.connectedAnchor = target;
@@ -48,24 +47,38 @@ public class HookItem : Item, ItemAction
         }
         if (hit.collider != null)
         {
-            while (Vector2.Distance(transform.position, target) > 1)
+            if (hit.transform.CompareTag("Enemy"))
             {
-                distanceJoint2D.distance -= Time.deltaTime * hookGrabSpeed;
-                lineRenderer.SetPosition(0, transform.position);
-                yield return Helpers.GetWaitForEndOfFrame();
-                if (playerInput.actions["Fire"].WasReleasedThisFrame())
+                Vector2 forceDir= (hit.transform.position.x>player.transform.position.x)? Vector2.left: Vector2.right;
+                float forceSpeed=200;
+                hit.transform.GetComponent<Rigidbody2D>().AddForce(forceDir*forceSpeed+Vector2.up*50);
+                while (Vector2.Distance(transform.position, target) > 1)
                 {
-                    Debug.Log(direction * endForce);
-                    player.GetComponent<Rigidbody2D>().AddForce(direction * endForce); ;
-                    break;
+                    distanceJoint2D.distance -= Time.deltaTime * hookGrabSpeed;
+                    lineRenderer.SetPosition(0, transform.position);
+                    lineRenderer.SetPosition(1, hit.transform.position);
+
+                    yield return Helpers.GetWaitForEndOfFrame();
+                    if (playerInput.actions["Fire"].WasReleasedThisFrame())
+                    {
+                        Debug.Log(direction * endForce);
+                       // player.GetComponent<Rigidbody2D>().AddForce(direction * endForce); ;
+                        break;
+                    }
+                }
+                yield return new WaitUntil(() => playerInput.actions["Fire"].WasReleasedThisFrame());
+            }
+            else 
+            {
+                while (!playerInput.actions["Fire"].WasReleasedThisFrame())
+                {
+                    lineRenderer.SetPosition(0, transform.position);
+                    yield return Helpers.GetWaitForEndOfFrame();
                 }
             }
-            yield return new WaitUntil(() => playerInput.actions["Fire"].WasReleasedThisFrame());
             transform.parent = null;
             distanceJoint2D.enabled = false;
         }
-
-
         Destroy(gameObject);
         yield break;
     }

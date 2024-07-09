@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 9127429194676371472}
   - component: {fileID: 9127429194676371473}
   - component: {fileID: 816200454058169469}
-  - component: {fileID: 590518449641042267}
   m_Layer: 8
   m_Name: FireBullet
   m_TagString: Untagged
@@ -114,25 +113,13 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 10
   m_Material: {fileID: 6200000, guid: c4f110198ce152f48a2b647aecf8ce08, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &590518449641042267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9127429194676371950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79b241dc0ff71134a934944222c0c529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

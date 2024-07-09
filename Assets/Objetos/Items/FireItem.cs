@@ -8,7 +8,7 @@ public class FireItem : Item, ItemAction
     [SerializeField] float forceSpeed;
     public void Action(PlayerItemManager _playerItemManager)
     {
-        Transform originTransform = _playerItemManager.GetAttackTransform();
+        Transform originTransform = _playerItemManager.GetItemHolderFront();
         Transform player = _playerItemManager.transform;
         Vector2 direction =(originTransform.position.x< player.position.x)?Vector2.left : Vector2.right;
         GameObject _bullet = Instantiate(bullet, originTransform.position,Quaternion.identity);

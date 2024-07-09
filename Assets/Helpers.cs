@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class Helpers 
 {
@@ -23,4 +24,5 @@ public static class Helpers
         waitDictionary[time] = new WaitForSeconds(time);
         return waitDictionary[time];
     }
+  
 }
