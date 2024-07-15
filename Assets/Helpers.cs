@@ -1,11 +1,20 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public static class Helpers 
+public static class Helpers
 {
     //SCRIPT de funciones generales
+
+    static LevelData currentLevel;
+    public static void SetCurrentLevel(LevelData _levelD)
+    {
+        currentLevel=_levelD;
+    }
+    public static LevelData GetCurrentLevel()
+    { 
+        return (currentLevel!=null)?currentLevel:new LevelData();
+    }
+
 
     static WaitForEndOfFrame waitForEndFrame;
 

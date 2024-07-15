@@ -5,6 +5,8 @@ public class SettingsResolution : MonoBehaviour
 {
     TMP_Dropdown dropdown;
     Resolution[] resolutions;
+    [SerializeField] AudioClip dropdownClip;
+
     private void Start()
     {
         resolutions = Screen.resolutions;
@@ -26,6 +28,7 @@ public class SettingsResolution : MonoBehaviour
     }
     void LoadResolution()
     {
+        dropdown.onValueChanged.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(dropdownClip); });
         dropdown.value = PlayerPrefs.GetInt("Resolution");
     }
     public void SetResolution()

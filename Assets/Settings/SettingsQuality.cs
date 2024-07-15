@@ -4,6 +4,8 @@ public class SettingsQuality : MonoBehaviour
 {
     string[] qualityNames;
     TMP_Dropdown dropdown;
+    [SerializeField] AudioClip dropdownClip;
+
     private void Start()
     {
         qualityNames = QualitySettings.names;
@@ -25,6 +27,7 @@ public class SettingsQuality : MonoBehaviour
     }
     void LoadQuality()
     {
+        dropdown.onValueChanged.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(dropdownClip); });
         dropdown.value = PlayerPrefs.GetInt("QualityLevel");
     }
     public void SetQuality()

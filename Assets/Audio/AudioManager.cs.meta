@@ -3,8 +3,12 @@ guid: 7def163c4db5b0a41abac5c3363f45e4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
+  defaultReferences:
+  - musicSource: {instanceID: 0}
+  - sfxSource: {instanceID: 0}
+  - masterSource: {instanceID: 0}
+  - mixer: {fileID: 24100000, guid: eba657f3258920d40a4f36674e17d8ce, type: 2}
+  executionOrder: -1
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
