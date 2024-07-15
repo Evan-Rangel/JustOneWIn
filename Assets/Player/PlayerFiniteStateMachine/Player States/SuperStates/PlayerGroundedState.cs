@@ -8,6 +8,7 @@ public class PlayerGroundedState : PlayerState
     #region PlayerGroundedStates Vars
     //--Ints--//
     protected int xInput;
+    protected int yInput;
     //--Flags--//
     //Inputs flags
     private bool jumpInput;
@@ -49,6 +50,7 @@ public class PlayerGroundedState : PlayerState
 
         //Read the inputs used
         xInput = player.InputHandler.NormInputX;
+        yInput = player.InputHandler.NormInputY;
         jumpInput = player.InputHandler.JumpInput;
         grabInput = player.InputHandler.GrabInput;
         dashInput = player.InputHandler.DashInput;

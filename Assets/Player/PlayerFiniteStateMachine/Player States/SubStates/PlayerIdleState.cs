@@ -35,11 +35,19 @@ public class PlayerIdleState : PlayerGroundedState
         //Set velocity
         player.SetVelocityX(0f);
 
-        //Condition that know when player move on axe "x", if is true then change the state to "MoveState"
-        if (xInput != 0 && !isExitingState)
+        //Condition that check that we are not exiting a state
+        if (!isExitingState)
         {
-            stateMachine.ChangeState(player.MoveState);
-        }
+            //Condition that know when player move on axe "x", if is true then change the state to "MoveState"
+            if (xInput != 0)//---> MoveState
+            {
+                stateMachine.ChangeState(player.MoveState);
+            }
+            else if (yInput == -1)//---> CrouchIdleState
+            {
+                stateMachine.ChangeState(player.CrouchIdleState);
+            }
+        }    
     }
 
     public override void PhysicsUpdate()

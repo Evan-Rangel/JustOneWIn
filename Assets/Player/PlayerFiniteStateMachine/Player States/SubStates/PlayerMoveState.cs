@@ -38,10 +38,18 @@ public class PlayerMoveState : PlayerGroundedState
         //Set velocity
         player.SetVelocityX(playerData.movementVelocity * xInput);
 
-        //Condition that know when player move on axe "x", if is false then change the state to "IdleState"
-        if (xInput == 0 && !isExitingState)
+        //Condition that check that we are not exiting a state
+        if (!isExitingState)
         {
-            stateMachine.ChangeState(player.IdleState);
+            //Condition that know when player not move on axe "x", if is true then change the state to "MoveState"
+            if (xInput == 0)//---> IdleState
+            {
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else if (yInput == -1)//---> CrouchIdleState
+            {
+                stateMachine.ChangeState(player.CrouchMoveState);
+            }
         }
     }
 
