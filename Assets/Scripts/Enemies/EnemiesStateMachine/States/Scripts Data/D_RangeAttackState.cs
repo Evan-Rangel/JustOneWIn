@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "newRangeAttackStateData", menuName = "Data/State Data/Range Attack State")]
+public class D_RangeAttackState : ScriptableObject
+{
+    //Projectile Stats
+    public GameObject projectile;
+
+    public float projectileDamage = 10f;
+    public float projectileSpeed = 12f;
+    public float projectileTravelDistance = 10f;
+}
