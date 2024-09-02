@@ -37,7 +37,7 @@ public abstract class Interactuable : MonoBehaviour
     {
         onStart.Invoke();
     }
-    [Tooltip("Al presionar el boton, el estado sera estado = !estado")]
+    [Tooltip("Al activar el trigger, el estado sera estado = !estado")]
     public void ActivateAndDeactivate()
     {
         if (active)
@@ -49,6 +49,7 @@ public abstract class Interactuable : MonoBehaviour
             Activate();
         }
     }
+    [Tooltip("Activa el objeto")]
     public virtual void Activate()
     {
         if (!inAction)

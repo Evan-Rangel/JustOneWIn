@@ -48,5 +48,4 @@ public class MenuManager : MonoBehaviour
         levelsPanel.SetActive(true);
         charactersPanel.SetActive(false);
     }
-
 }

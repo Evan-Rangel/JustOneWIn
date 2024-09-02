@@ -13,7 +13,6 @@ public class LoadCircles : MonoBehaviour
 {
     SpriteRenderer spriteRenderer;
     Dictionary<CirclesColors, Color> colors= new Dictionary<CirclesColors, Color>();
-
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -34,7 +33,6 @@ public class LoadCircles : MonoBehaviour
         }
         spriteRenderer.color = colors[_targetColor];
     }
-
     IEnumerator ChangeColor(float _time, CirclesColors _targetColor)
     {
         float mTime = 0;
@@ -51,6 +49,4 @@ public class LoadCircles : MonoBehaviour
         }
         yield break;
     }
-
-
 }

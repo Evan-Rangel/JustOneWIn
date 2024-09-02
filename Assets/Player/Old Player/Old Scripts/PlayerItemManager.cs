@@ -37,13 +37,13 @@ public class PlayerItemManager : MonoBehaviour
             itemSprite.sprite=GameManager.instance.itemsSprites[Random.Range(0, GameManager.instance.itemsSprites.Length)];
             yield return Helpers.GetWait(0.3f);
         }
-        for (int i = 0; i < actives; i++)
+       // for (int i = 0; i < actives; i++)
         {
             currentItem = GameManager.instance.RequestRandomItem();
             action = currentItem.gameObject.GetComponent<ItemAction>();
             itemSprite.sprite = currentItem.GetComponent<Item>().GetSprite();
             StartCoroutine(ActiveItem());
-            yield return new WaitUntil(() => currentItem==null);
+            //yield return new WaitUntil(() => currentItem==null);
         }
     }
     IEnumerator ActiveItem()

@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour
             loadImage.fillClockwise = !loadImage.fillClockwise;
         }
     }
-    
 }
 public interface ItemAction
 {
