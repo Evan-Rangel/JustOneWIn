@@ -64,7 +64,6 @@ public class PlayerListItem : MonoBehaviour
                 texture = new Texture2D((int)width, (int)height, TextureFormat.RGBA32, false, true);
                 texture.LoadRawTextureData(image);
                 texture.Apply();
-                //texture.
             }
         }
         avatarReceived = true;

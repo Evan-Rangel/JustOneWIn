@@ -21,7 +21,7 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
                 SetPosition();
                 playerModel.SetActive(true);
             }
-            if (authority)
+            //if (authority)
             {
                 Movement();
             }

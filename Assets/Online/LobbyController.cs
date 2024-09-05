@@ -13,6 +13,7 @@ public class LobbyController : MonoBehaviour
 
     //UI Elements
     public TMP_Text lobbyNameText;
+    public TMP_Text lobbyTestText;
     //Player Data
     public GameObject playerListViewContent;
     public GameObject playerListItemPrefab;
@@ -49,10 +50,16 @@ public class LobbyController : MonoBehaviour
     {
         if (instance == null) { instance = this; }
     }
-
+    public void ChangeTestText(string text)
+    {
+        lobbyTestText.text = text;
+    }
     public void ReadyPlayer()
     {
+        lobbyTestText.text = "Pressed ";
+
         localPlayerController.ChangeReady();
+        //count++;
     }
     public void UpdateButton()
     {
@@ -60,13 +67,16 @@ public class LobbyController : MonoBehaviour
         {
             readyButtonText.text = "Unready";
         }
-        else {
+        else 
+        {
             readyButtonText.text = "Ready";
 
         }
     }
     public void CheckIfAllReady()
     {
+        //startGameButton.interactable = true;
+        
         bool allReady = false;
         foreach (PlayerObjectController player in Manager.gamePlayers) 
         {
@@ -192,7 +202,6 @@ public class LobbyController : MonoBehaviour
             }
         }
     }
-
     public void StartGame(string sceneName)
     {
         localPlayerController.CanStartGame(sceneName);

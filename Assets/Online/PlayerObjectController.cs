@@ -36,22 +36,31 @@ public class PlayerObjectController : NetworkBehaviour
     {
         if (isServer)
         {
+            LobbyController.instance.ChangeTestText("Is server");
+
             this.ready = newValue;
         }
         if (isClient)
         {
+            LobbyController.instance.ChangeTestText("Is Client");
+
+            //this.ready = newValue;
             LobbyController.instance.UpdatePlayerList();
         }
     }
     [Command]
     private void CmdSetPlayerReady()
     {
+        LobbyController.instance.ChangeTestText("Command");
+
         this.PlayerReadyUpdate(this.ready, !this.ready);
     }
     public void ChangeReady()
     {
+        LobbyController.instance.ChangeTestText("Not enter");
         if (authority)
         {
+            LobbyController.instance.ChangeTestText("authority");
             CmdSetPlayerReady();
         }
     }
@@ -59,6 +68,8 @@ public class PlayerObjectController : NetworkBehaviour
     {
         CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
         gameObject.name = "LocalGamePlayer";
+        LobbyController.instance.ChangeTestText( "OnStartAuthority");
+
         LobbyController.instance.FindLocalPlayer();
         LobbyController.instance.UpdateLobbyName();
     }
@@ -92,7 +103,7 @@ public class PlayerObjectController : NetworkBehaviour
 
     public void CanStartGame(string sceneName)
     {
-        if (authority)
+        //if (authority)
         {
             CmdCanStartGame(sceneName);
         }
@@ -100,7 +111,7 @@ public class PlayerObjectController : NetworkBehaviour
     [Command]
     public void CmdCanStartGame(string sceneName)
     {
-        manager.StartGame(sceneName);
+        Manager.StartGame(sceneName);
     } 
     
 }
