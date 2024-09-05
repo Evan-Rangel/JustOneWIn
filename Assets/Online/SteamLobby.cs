@@ -7,29 +7,30 @@ using UnityEngine.UI;
 using Org.BouncyCastle.Math.Field;
 public class SteamLobby : MonoBehaviour
 {
+
+    public static SteamLobby instance;
+
     //callbacks
     protected Callback<LobbyCreated_t> LobbyCreated;
     protected Callback<GameLobbyJoinRequested_t> JoinRequest;
     protected Callback<LobbyEnter_t> LobbyEntered;
 
     // variables
-    public ulong CurrentLobbyID;
-    private const string HostAddresKey = "HostAddress";
+    public ulong currentLobbyID;
+    private const string hostAddresKey = "HostAddress";
     private CustomNetworkManager manager;
 
-    //GameObject
-    public GameObject HostButton;
-    public Text lobbyNameText;
 
     private void Start()
     {
         if (!SteamManager.Initialized) { return; }
-
+        if (instance == null) instance = this;
+      
         manager=GetComponent<CustomNetworkManager>();
         LobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
         JoinRequest=Callback<GameLobbyJoinRequested_t>.Create(OnJoinRequest);
         LobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
-  }
+    }
 
     public void HostLobby()
     {
@@ -40,29 +41,24 @@ public class SteamLobby : MonoBehaviour
     {
         if (callback.m_eResult != EResult.k_EResultOK) { return; }
 
-        Debug.Log("Lobby Created Succesfully");
+        //Debug.Log("Lobby Created Succesfully");
         manager.StartHost();
-        SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), HostAddresKey, SteamUser.GetSteamID().ToString());
+        SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), hostAddresKey, SteamUser.GetSteamID().ToString());
         SteamMatchmaking.SetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), "name", SteamFriends.GetPersonaName().ToString()+"'S Lobby");
     }
     private void OnJoinRequest(GameLobbyJoinRequested_t callback)
     {
-        Debug.Log("Request To Join Lobby");
+        //Debug.Log("Request To Join Lobby");
         SteamMatchmaking.JoinLobby(callback.m_steamIDLobby);
     }
     private void OnLobbyEntered(LobbyEnter_t callback)
     {
-        //Everione
-        HostButton.SetActive(false);
-        CurrentLobbyID = callback.m_ulSteamIDLobby;
-        lobbyNameText.gameObject.SetActive(true);
-        lobbyNameText.text = SteamMatchmaking.GetLobbyData(new CSteamID(callback.m_ulSteamIDLobby),"name");
-
+        currentLobbyID = callback.m_ulSteamIDLobby;
         if (NetworkServer.active)
         {
             return;
         }
-        manager.networkAddress=SteamMatchmaking.GetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), HostAddresKey);
+        manager.networkAddress=SteamMatchmaking.GetLobbyData(new CSteamID(callback.m_ulSteamIDLobby), hostAddresKey);
 
         manager.StartClient();
     }
