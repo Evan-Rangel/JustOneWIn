@@ -10,6 +10,12 @@ public class LevelButton : MonoBehaviour
     [SerializeField] Image mapImage;
     [SerializeField] TMP_Text levelLavel;
     [SerializeField] Button levelButton;
+    [SerializeField] AudioClip buttonSound;
+
+    private void Start()
+    {
+        levelButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(buttonSound); });
+    }
     public void SetLevelButton(LevelData _data)
     {
         levelButton.onClick.AddListener(delegate { _data.StartLevel(); });

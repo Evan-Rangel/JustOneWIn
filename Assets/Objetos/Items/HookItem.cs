@@ -12,7 +12,7 @@ public class HookItem : Item, ItemAction
   
     public void Action(PlayerItemManager _playerItemManager)
     {
-        Debug.Log("Hook Item");
+        //Debug.Log("Hook Item");
         playerInput= _playerItemManager.GetPlayerInput();
         StartCoroutine(TrowHook(_playerItemManager.GetItemHolderFront(), _playerItemManager));
     }
