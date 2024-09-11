@@ -5,5 +5,4 @@ public class CharacterData : ScriptableObject
 {
     [field: SerializeField] public Sprite[] skins { get; private set; }
     [field: SerializeField] public string cName { get; private set; }
-
 }

@@ -74,3 +74,8 @@ public interface ItemAction
     public void Action(PlayerItemManager _playerItemManager);
 
 }
+public enum CHARACTERS
+{ 
+    Blue
+
+}

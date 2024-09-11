@@ -70,7 +70,6 @@ public class LobbyController : MonoBehaviour
         else 
         {
             readyButtonText.text = "Ready";
-
         }
     }
     public void CheckIfAllReady()

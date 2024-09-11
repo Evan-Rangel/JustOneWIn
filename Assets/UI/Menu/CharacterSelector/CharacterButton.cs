@@ -1,6 +1,6 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class CharacterButton : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class CharacterButton : MonoBehaviour
     { 
         data = _data; 
         charName.text = data.cName;
+        
         selectButton.onClick.AddListener(delegate { MenuManager.instance.SelectCharacter(_data); });
         selectButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         NextCharacterSkin(); 
@@ -22,13 +23,13 @@ public class CharacterButton : MonoBehaviour
 
     public void NextCharacterSkin()
     {
-        if (skinIdx >= data.skins.Length) skinIdx = 0;
+        skinIdx = (skinIdx >= data.skins.Length) ? 0 : skinIdx;
         charImage.sprite = data.skins[skinIdx];
         skinIdx++;
     }
     public void PrevCharacterSkin()
     {
-        if (skinIdx < 0) skinIdx = data.skins.Length-1;
+        skinIdx = (skinIdx < 0) ? data.skins.Length - 1 : skinIdx;
         charImage.sprite = data.skins[skinIdx];
         skinIdx--;
     }
