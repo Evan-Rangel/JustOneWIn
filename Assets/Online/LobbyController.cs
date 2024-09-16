@@ -6,12 +6,28 @@ using Steamworks;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using System;
 
+[Serializable]
+public enum AllCharacters
+{ 
+    Blue,
+    Red
+}
 public class LobbyController : MonoBehaviour
 {
     public static LobbyController instance;
 
+    //Characters
+    CHARACTERS dasd;
+    [SerializeField] CharacterData[] characters;
+    List<AllCharacters> charactersLocked= new List<AllCharacters>();
+    public bool IsCharacterLocked( AllCharacters _char) { return charactersLocked.Contains(_char); } 
+    public int GetMaxCharacters { get { return (characters.Length > 0) ? characters.Length : 0; } }
+    public CharacterData RequestCharacterData(int idx) { return characters[idx]; }
     //UI Elements
+    [SerializeField] Transform charactersGrid;
+    
     public TMP_Text lobbyNameText;
     public TMP_Text lobbyTestText;
     //Player Data
@@ -22,13 +38,14 @@ public class LobbyController : MonoBehaviour
     public ulong currentLobbyID;
     public bool playerItemCreated = false;
     private List<PlayerListItem> playerListItems = new List<PlayerListItem>();
-    public PlayerObjectController localPlayerController;
+
+    //Hace referencia al jugador local del cliente.
+    public PlayerObjectController localPlayerController; 
 
 
     //Ready
     public Button startGameButton;
     public TMP_Text readyButtonText;
-
 
     //Manager
     private CustomNetworkManager manager;
@@ -43,21 +60,25 @@ public class LobbyController : MonoBehaviour
             return manager = CustomNetworkManager.singleton as CustomNetworkManager;
         }
     }
-
-
-
     private void Awake()
     {
         if (instance == null) { instance = this; }
     }
+
+    public void LockCharacter()
+    {
+     
+    }
+
+
+
     public void ChangeTestText(string text)
     {
         lobbyTestText.text = text;
     }
     public void ReadyPlayer()
     {
-        lobbyTestText.text = "Pressed ";
-
+        ChangeTestText("Pressed ");
         localPlayerController.ChangeReady();
         //count++;
     }
@@ -105,6 +126,7 @@ public class LobbyController : MonoBehaviour
             startGameButton.interactable = false ;
         }
     }
+
     public void UpdateLobbyName()
     {
         currentLobbyID = Manager.GetComponent<SteamLobby>().currentLobbyID;
@@ -118,11 +140,13 @@ public class LobbyController : MonoBehaviour
         if (playerListItems.Count > Manager.gamePlayers.Count) { RemovePlayerItem(); }
         if (playerListItems.Count == Manager.gamePlayers.Count) { UpdatePlayerItem(); }
     }
+    //Funcion llamada en OnStartAuthority en "PlayerObjectController"
     public void FindLocalPlayer()
     {
         localPlayerObject = GameObject.Find("LocalGamePlayer");
         localPlayerController=localPlayerObject.GetComponent<PlayerObjectController>();
     }
+    //Para el host
     public void CreateHostPlayerItem()
     {
         foreach (var player in Manager.gamePlayers) {
@@ -133,13 +157,19 @@ public class LobbyController : MonoBehaviour
             NewPlayerItemScript.playerSteamID= player.playerSteamID;
             NewPlayerItemScript.ready = player.ready;
             NewPlayerItemScript.SetPlayerValues();
-
+            if (player == localPlayerController)
+            {
+                NewPlayerItemScript.StartListeners();
+            }
             newPlayerItem.transform.SetParent(playerListViewContent.transform);
             newPlayerItem.transform.localScale = Vector3.one;
             playerListItems.Add(NewPlayerItemScript);
+
+          
         }
         playerItemCreated = true;
     }
+    //Para los clientes
     public void CreateClientPlayerItem()
     { 
        foreach(PlayerObjectController player in Manager.gamePlayers )
@@ -153,13 +183,18 @@ public class LobbyController : MonoBehaviour
                 NewPlayerItemScript.playerSteamID = player.playerSteamID;
                 NewPlayerItemScript.ready = player.ready;
                 NewPlayerItemScript.SetPlayerValues();
-
+                if (player == localPlayerController)
+                {
+                    NewPlayerItemScript.StartListeners();
+                }
                 newPlayerItem.transform.SetParent(playerListViewContent.transform);
                 newPlayerItem.transform.localScale = Vector3.one;
                 playerListItems.Add(NewPlayerItemScript);
+              
             }
         }
     }
+    //Aqui se actualizan los valores del PlayerListItem para cada uno de los clientes
     public void UpdatePlayerItem() 
     {
         foreach (PlayerObjectController player in Manager.gamePlayers)
@@ -170,9 +205,18 @@ public class LobbyController : MonoBehaviour
                 {
                     playerListItemScript.playerName = player.playerName;
                     playerListItemScript.ready = player.ready;
+                    if (player.character!=null)
+                    {
+                        playerListItemScript.data = player.character;
+                        playerListItemScript.skinIdx = player.skinIdx;
+                        //Debug.Log("Select Character");
+                    }
+                    
                     playerListItemScript.SetPlayerValues();
+                    
                     if (player==localPlayerController)
                     {
+                        playerListItemScript.IsInteractuable(true);
                         UpdateButton();
                     }
                 }

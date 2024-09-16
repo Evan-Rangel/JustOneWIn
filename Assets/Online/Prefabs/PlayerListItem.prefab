@@ -117,7 +117,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 4260558676701881358}
   m_OnClick:
     m_PersistentCalls:
@@ -648,7 +648,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 8496665863505725351}
   m_OnClick:
     m_PersistentCalls:
@@ -988,6 +988,7 @@ MonoBehaviour:
   playerReadyText: {fileID: 6883721368739402531}
   ready: 0
   playerIcon: {fileID: 8258314631738628843}
+  localPlayerObject: {fileID: 0}
   charImage: {fileID: 9217454092769553033}
   charName: {fileID: 5260820380975074624}
   selectButtonText: {fileID: 3165928582958213466}
@@ -995,6 +996,8 @@ MonoBehaviour:
   nextButton: {fileID: 3518324983461661970}
   prevButton: {fileID: 1599087047262694902}
   clickSound: {fileID: 8300000, guid: a61d10bfd36dbb340b0ecb75a0e6b17f, type: 3}
+  data: {fileID: 0}
+  skinIdx: 0
 --- !u!1 &8258314631589634461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1472,7 +1475,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 6406221388167718045}
   m_OnClick:
     m_PersistentCalls:

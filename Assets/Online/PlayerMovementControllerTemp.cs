@@ -7,6 +7,7 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
 {
     public float speed = 0.1f;
     public GameObject playerModel;
+   [SerializeField] CharacterData characterData;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
             if (!playerModel.activeSelf)
             {
                 SetPosition();
+                PlayerCharacterSetup();
                 playerModel.SetActive(true);
             }
             //if (authority)
@@ -29,7 +31,7 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
     }
     public void SetPosition()
     {
-        transform.position = new Vector2(Random.Range(-5,5),0);
+        transform.position = Vector2.zero;//new Vector2(Random.Range(-5,5),0);
     }
     public void Movement()
     {
@@ -37,5 +39,9 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
         float yDir = Input.GetAxis("Vertical");
         Vector2 movDirection = new Vector2(xDir, yDir);
         transform.position +=(Vector3) movDirection * speed;
+    }
+    public void PlayerCharacterSetup()
+    {
+        characterData = GetComponent<PlayerObjectController>().character;
     }
 }

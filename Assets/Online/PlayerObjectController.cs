@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Steamworks;
+using UnityEngine.Experimental.GlobalIllumination;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -25,8 +26,6 @@ public class PlayerObjectController : NetworkBehaviour
             return manager = CustomNetworkManager.singleton as CustomNetworkManager;
         }
     }
-
-
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -114,4 +113,49 @@ public class PlayerObjectController : NetworkBehaviour
         Manager.StartGame(sceneName);
     } 
     
+    [SyncVar(hook = nameof(SendPlayerCharacter))] public CharacterData character;
+    [Command]
+    public void CmdUpdatePlayerCharacter(CharacterData newData)
+    {
+        SendPlayerCharacter(character, newData);
+    }
+    public void SendPlayerCharacter(CharacterData oldValue, CharacterData newValue)
+    {
+        if (isServer)
+        {
+            character = newValue;
+        }
+        if (isClient&&(oldValue!=newValue))
+        {
+            UpdateCharacter(newValue);
+        }
+    }
+    void UpdateCharacter(CharacterData message)
+    {
+        character = message;
+        LobbyController.instance.UpdatePlayerList();
+    }
+
+    [SyncVar(hook = nameof(SendCharacterSkin))] public int skinIdx;
+    [Command]
+    public void CmdUpdateCharacterSkin(int newData)
+    {
+        SendCharacterSkin(skinIdx, newData);
+    }
+    public void SendCharacterSkin(int oldValue, int newValue)
+    {
+        if (isServer)
+        {
+            skinIdx = newValue;
+        }
+        if (isClient&&(oldValue!=newValue))
+        {
+            UpdateSkin(newValue);
+        }
+    }
+    void UpdateSkin(int message)
+    {
+        skinIdx = message;
+        LobbyController.instance.UpdatePlayerList();
+    }
 }

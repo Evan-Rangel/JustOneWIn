@@ -4,8 +4,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Steamworks;
+
 public class PlayerListItem : MonoBehaviour
 {
+
+    //Carga de datos de Steam
     public string playerName;
     public int connectionID;
     public ulong playerSteamID;
@@ -16,7 +19,6 @@ public class PlayerListItem : MonoBehaviour
     public bool ready;
     public RawImage playerIcon;
     protected Callback<AvatarImageLoaded_t> imageLoaded;
-
 
     public void ChangeReadyStatus()
     {
@@ -31,19 +33,16 @@ public class PlayerListItem : MonoBehaviour
             playerReadyText.color = Color.red;
         }
     }
-
     private void Start()
     {
         imageLoaded = Callback<AvatarImageLoaded_t>.Create(OnImageLoaded);
-        prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
-        prevButton.onClick.AddListener(delegate { GetPrevCharacter(); });
-        nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
-        nextButton.onClick.AddListener(delegate { GetNextCharacter(); });
-        SetCharacterData(MenuManager.instance.RequestCharacterData(characterIdx));
     }
+
+
     public void SetPlayerValues()
     {
         playerNameText.text = playerName;
+        charImage.sprite =(data!=null)?data.skins[skinIdx]:null;
         ChangeReadyStatus();
         if (!avatarReceived)
         {
@@ -54,15 +53,15 @@ public class PlayerListItem : MonoBehaviour
     {
         int ImageID = SteamFriends.GetLargeFriendAvatar((CSteamID)playerSteamID);
         if (ImageID == -1) { return; }
-        playerIcon.texture= GetSteamImageAsTexture(ImageID);
+        playerIcon.texture = GetSteamImageAsTexture(ImageID);
     }
     private Texture2D GetSteamImageAsTexture(int iImage)
     {
         Texture2D texture = null;
-        bool isValid = SteamUtils.GetImageSize(iImage,out uint width, out uint height);
+        bool isValid = SteamUtils.GetImageSize(iImage, out uint width, out uint height);
         if (isValid)
         {
-            byte[] image = new byte[width*height*4];
+            byte[] image = new byte[width * height * 4];
             isValid = SteamUtils.GetImageRGBA(iImage, image, (int)(width * height * 4));
             if (isValid)
             {
@@ -86,6 +85,7 @@ public class PlayerListItem : MonoBehaviour
         }
     }
 
+    
 
     //Para la seleccion de personaje y skin
     [Space]
@@ -101,9 +101,24 @@ public class PlayerListItem : MonoBehaviour
     [SerializeField] Button nextButton;
     [SerializeField] Button prevButton;
     [SerializeField] AudioClip clickSound;
-    CharacterData data;
-    int skinIdx = 0;
+    public CharacterData data;
+    public int skinIdx = 0;
     int characterIdx = 0;
+
+    public void IsInteractuable(bool value)
+    {
+        nextButton.interactable = value;
+        prevButton.interactable= value;
+        selectButton.interactable= value;
+    }
+    public void StartListeners()
+    {
+        prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
+        prevButton.onClick.AddListener(delegate { GetPrevCharacter(); });
+        nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); }); prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
+        nextButton.onClick.AddListener(delegate { GetNextCharacter(); });
+        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
+    }
     public void SetCharacterData(CharacterData _data)
     {
         data = _data;
@@ -112,9 +127,10 @@ public class PlayerListItem : MonoBehaviour
         skinIdx = 0;
         //Setting the selector character
         selectButton.onClick.RemoveAllListeners();
-        //selectButton.onClick.AddListener(delegate { MenuManager.instance.SelectCharacter(_data); });
         selectButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         selectButton.onClick.AddListener(delegate { SelectCharacter(); });
+        //Checa con el lobby si el personaje ha sido seleccionado, en dado caso, el boton se bloquea
+        selectButton.interactable = !LobbyController.instance.IsCharacterLocked(_data.cCharacter);
     }
     public void SelectCharacter()
     {
@@ -155,22 +171,19 @@ public class PlayerListItem : MonoBehaviour
         selectButton.onClick.AddListener(delegate { SelectCharacter(); });
         selectButtonText.text = "Select";
     }
-
     public void GetNextCharacter()
     {
-        Debug.Log("Next Character   ");
 
-        characterIdx = (characterIdx >= MenuManager.instance.GetMaxCharacters-1) ? 0 : characterIdx + 1;
-        SetCharacterData(MenuManager.instance.RequestCharacterData(characterIdx));
+        characterIdx = (characterIdx >= LobbyController.instance.GetMaxCharacters-1) ? 0 : characterIdx + 1;
+        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
     }
     public void GetPrevCharacter()
     {
-        characterIdx = (characterIdx <= 0) ? MenuManager.instance.GetMaxCharacters - 1 : characterIdx-1;
-        SetCharacterData(MenuManager.instance.RequestCharacterData(characterIdx));
+        characterIdx = (characterIdx <= 0) ? LobbyController.instance.GetMaxCharacters - 1 : characterIdx-1;
+        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
     }
     public void GetNextCharacterSkin()
     {
-        Debug.Log("Next Skin");
         skinIdx = (skinIdx >= data.skins.Length-1) ? 0 : skinIdx+1;
         charImage.sprite = data.skins[skinIdx];
     }
