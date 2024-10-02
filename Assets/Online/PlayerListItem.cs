@@ -37,12 +37,29 @@ public class PlayerListItem : MonoBehaviour
     {
         imageLoaded = Callback<AvatarImageLoaded_t>.Create(OnImageLoaded);
     }
-
+    private void Update()
+    {
+        //Intentar Optimizar esto
+        if (isInteractuable && !charLocked)
+        {
+            selectButton.interactable = !LobbyController.instance.IsCharacterLocked(characterIdx);
+            LobbyController.instance.ChangeTestText("Values: " + selectButton.interactable.ToString());
+        }
+    }
 
     public void SetPlayerValues()
     {
         playerNameText.text = playerName;
-        charImage.sprite =(data!=null)?data.skins[skinIdx]:null;
+        if (characterIdx<=0)
+        {
+            characterIdx = characters.Length;
+        }if (characterIdx>=characters.Length)
+        {
+            characterIdx = 0;
+        }
+        charImage.sprite = characters[characterIdx].skins[skinIdx];
+        charName.text = characters[characterIdx].cName;
+
         ChangeReadyStatus();
         if (!avatarReceived)
         {
@@ -85,55 +102,60 @@ public class PlayerListItem : MonoBehaviour
         }
     }
 
-    
+
 
     //Para la seleccion de personaje y skin
     [Space]
     [Space]
     [Space]
     [Header("Seleccion de personaje")]
+    [SerializeField] CharacterData[] characters;
     [SerializeField] Image charImage;
     [SerializeField] TMP_Text charName;
     [SerializeField] TMP_Text selectButtonText;
     [SerializeField] Button selectButton;
-    //backButton is starting in false in the Start function
-    //[SerializeField] Button backButton;
+  
     [SerializeField] Button nextButton;
     [SerializeField] Button prevButton;
-    [SerializeField] AudioClip clickSound;
-    public CharacterData data;
+    [SerializeField] AudioClip clickSound; 
     public int skinIdx = 0;
-    int characterIdx = 0;
-
+    public int characterIdx = 0;
+    bool isInteractuable;
+    bool charLocked;
+    //Desactiva los PlayerListItem que no sean del cliente
     public void IsInteractuable(bool value)
     {
         nextButton.interactable = value;
         prevButton.interactable= value;
         selectButton.interactable= value;
+        isInteractuable = value;
     }
+    //Agrega listener iniciales.
     public void StartListeners()
     {
         prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         prevButton.onClick.AddListener(delegate { GetPrevCharacter(); });
-        nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); }); prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
+        nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); }); 
         nextButton.onClick.AddListener(delegate { GetNextCharacter(); });
-        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
+
+        SetCharacterData(characterIdx);
     }
-    public void SetCharacterData(CharacterData _data)
+
+    public void SetCharacterData(int _data)
     {
-        data = _data;
-        charName.text = data.cName;
-        charImage.sprite = data.skins[0];
+        //data = _data;
+        charName.text = characters[_data].cName;
+        charImage.sprite = characters[_data].skins[0];
         skinIdx = 0;
         //Setting the selector character
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         selectButton.onClick.AddListener(delegate { SelectCharacter(); });
-        //Checa con el lobby si el personaje ha sido seleccionado, en dado caso, el boton se bloquea
-        selectButton.interactable = !LobbyController.instance.IsCharacterLocked(_data.cCharacter);
     }
     public void SelectCharacter()
     {
+        charLocked = true;
+        LobbyController.instance.LockCharacter(true);
         //Setting the prev button
         prevButton.onClick.RemoveAllListeners();
         prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
@@ -148,10 +170,14 @@ public class PlayerListItem : MonoBehaviour
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         selectButton.onClick.AddListener(delegate { BackToSelectCharacter(); });
+
         selectButtonText.text = "Cancel";
     }
     public void BackToSelectCharacter()
     {
+        charLocked = false;
+
+        LobbyController.instance.LockCharacter(false);
         //Setting the prev button
         prevButton.onClick.RemoveAllListeners();
         prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
@@ -162,34 +188,36 @@ public class PlayerListItem : MonoBehaviour
         nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         nextButton.onClick.AddListener(delegate { GetNextCharacter(); });
 
-        //Reset the character data
-        SetCharacterData(data);
-
         //SelectButton
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
+        //selectButton.onClick.AddListener(delegate { LobbyController.instance.LockCharacter(characterIdx); });
         selectButton.onClick.AddListener(delegate { SelectCharacter(); });
+
         selectButtonText.text = "Select";
     }
     public void GetNextCharacter()
     {
-
-        characterIdx = (characterIdx >= LobbyController.instance.GetMaxCharacters-1) ? 0 : characterIdx + 1;
-        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
+        characterIdx = (characterIdx >= characters.Length - 1) ? 0 : characterIdx + 1;
+        SetCharacterData(characterIdx);
+        LobbyController.instance.ChangeCharacter(characterIdx);
     }
     public void GetPrevCharacter()
     {
-        characterIdx = (characterIdx <= 0) ? LobbyController.instance.GetMaxCharacters - 1 : characterIdx-1;
-        SetCharacterData(LobbyController.instance.RequestCharacterData(characterIdx));
+        characterIdx = (characterIdx <= 0) ? characters.Length - 1 : characterIdx-1;
+        SetCharacterData(characterIdx);
+        LobbyController.instance.ChangeCharacter( characterIdx); 
     }
     public void GetNextCharacterSkin()
     {
-        skinIdx = (skinIdx >= data.skins.Length-1) ? 0 : skinIdx+1;
-        charImage.sprite = data.skins[skinIdx];
+        skinIdx = (skinIdx >= characters[characterIdx].skins.Length-1) ? 0 : skinIdx+1;
+        charImage.sprite = characters[characterIdx].skins[skinIdx];
+        LobbyController.instance.ChangeSkin(skinIdx);
     }
     public void GetPrevCharacterSkin()
     {
-        skinIdx = (skinIdx <= 0) ? data.skins.Length - 1 : skinIdx-1;
-        charImage.sprite = data.skins[skinIdx];
+        skinIdx = (skinIdx <= 0) ? characters[characterIdx].skins.Length - 1 : skinIdx-1;
+        charImage.sprite = characters[characterIdx].skins[skinIdx];
+        LobbyController.instance.ChangeSkin(skinIdx);
     }
 }

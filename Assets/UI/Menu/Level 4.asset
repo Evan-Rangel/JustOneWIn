@@ -13,19 +13,6 @@ MonoBehaviour:
   m_Name: Level 4
   m_EditorClassIdentifier: 
   <levelName>k__BackingField: Level 4
+  <levelId>k__BackingField: 3
   <levelSprite>k__BackingField: {fileID: 800369761, guid: f3769e8de04f1ff41bd49e17849f9a5a, type: 3}
-  StartLevelAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000}
-        m_TargetAssemblyTypeName: LevelData, Assembly-CSharp
-        m_MethodName: StartLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  <levelMusic>k__BackingField: {fileID: 0}

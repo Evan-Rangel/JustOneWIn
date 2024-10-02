@@ -988,7 +988,9 @@ MonoBehaviour:
   playerReadyText: {fileID: 6883721368739402531}
   ready: 0
   playerIcon: {fileID: 8258314631738628843}
-  localPlayerObject: {fileID: 0}
+  characters:
+  - {fileID: 11400000, guid: 4b08bd2bc1118da42b61109c83a4780a, type: 2}
+  - {fileID: 11400000, guid: 142e5cf6df140774182f9dca2a694ac7, type: 2}
   charImage: {fileID: 9217454092769553033}
   charName: {fileID: 5260820380975074624}
   selectButtonText: {fileID: 3165928582958213466}
@@ -996,8 +998,8 @@ MonoBehaviour:
   nextButton: {fileID: 3518324983461661970}
   prevButton: {fileID: 1599087047262694902}
   clickSound: {fileID: 8300000, guid: a61d10bfd36dbb340b0ecb75a0e6b17f, type: 3}
-  data: {fileID: 0}
   skinIdx: 0
+  characterIdx: 0
 --- !u!1 &8258314631589634461
 GameObject:
   m_ObjectHideFlags: 0

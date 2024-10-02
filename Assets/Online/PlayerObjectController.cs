@@ -4,6 +4,7 @@ using UnityEngine;
 using Mirror;
 using Steamworks;
 using UnityEngine.Experimental.GlobalIllumination;
+using System;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -12,14 +13,14 @@ public class PlayerObjectController : NetworkBehaviour
     [SyncVar] public ulong playerSteamID;
     [SyncVar(hook = nameof(PlayerNameUpdate))] public string playerName;
     [SyncVar(hook = nameof(PlayerReadyUpdate))] public bool ready;
-    
+
     private CustomNetworkManager manager;
 
     private CustomNetworkManager Manager
-    { 
+    {
         get
         {
-            if (manager!=null)
+            if (manager != null)
             {
                 return manager;
             }
@@ -35,40 +36,26 @@ public class PlayerObjectController : NetworkBehaviour
     {
         if (isServer)
         {
-            LobbyController.instance.ChangeTestText("Is server");
-
             this.ready = newValue;
         }
         if (isClient)
         {
-            LobbyController.instance.ChangeTestText("Is Client");
-
-            //this.ready = newValue;
             LobbyController.instance.UpdatePlayerList();
         }
     }
     [Command]
     private void CmdSetPlayerReady()
     {
-        LobbyController.instance.ChangeTestText("Command");
-
         this.PlayerReadyUpdate(this.ready, !this.ready);
     }
     public void ChangeReady()
     {
-        LobbyController.instance.ChangeTestText("Not enter");
-        if (authority)
-        {
-            LobbyController.instance.ChangeTestText("authority");
-            CmdSetPlayerReady();
-        }
+        CmdSetPlayerReady();
     }
     public override void OnStartAuthority()
     {
         CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
         gameObject.name = "LocalGamePlayer";
-        LobbyController.instance.ChangeTestText( "OnStartAuthority");
-
         LobbyController.instance.FindLocalPlayer();
         LobbyController.instance.UpdateLobbyName();
     }
@@ -111,28 +98,68 @@ public class PlayerObjectController : NetworkBehaviour
     public void CmdCanStartGame(string sceneName)
     {
         Manager.StartGame(sceneName);
-    } 
-    
-    [SyncVar(hook = nameof(SendPlayerCharacter))] public CharacterData character;
-    [Command]
-    public void CmdUpdatePlayerCharacter(CharacterData newData)
-    {
-        SendPlayerCharacter(character, newData);
     }
-    public void SendPlayerCharacter(CharacterData oldValue, CharacterData newValue)
+
+    [SyncVar(hook = nameof(SendPlayerCharacter))] public int character;
+    [Command]
+    public void CmdUpdatePlayerCharacter(int newData)
+    {
+        this.SendPlayerCharacter(this.character, newData);
+    }
+    public void ChangeCharacter(int newData)
+    {
+        //if (authority) 
+        {
+            CmdUpdatePlayerCharacter(newData);
+        }
+    }
+    public void SendPlayerCharacter(int oldValue, int newValue)
+    {
+        //    if (!Manager.lockedCharacters.Contains(newValue))
+        {
+            if (isServer)
+            {
+
+                this.character = newValue;
+            }
+            if (isClient && (oldValue != newValue))
+            {
+                UpdateCharacter(newValue);
+            }
+            //Manager.LockCharacter(newValue);
+        }
+    }
+    void UpdateCharacter(int message)
+    {
+        character = message;
+        LobbyController.instance.UpdatePlayerList();
+    }
+
+    [SyncVar] public bool isLocked;
+    [Command]
+    public void CmdLockCharacters(bool newValue)
+    {
+        this.SendLocked(isLocked, newValue);
+    }
+    public void SendLocked(bool oldValue, bool newValue)
     {
         if (isServer)
         {
-            character = newValue;
+
+            this.isLocked = newValue;
         }
-        if (isClient&&(oldValue!=newValue))
+        if (isClient && (oldValue != newValue))
         {
-            UpdateCharacter(newValue);
+            SetCharactersLocked(newValue);
         }
     }
-    void UpdateCharacter(CharacterData message)
+    public void LockCharacter(bool newValue)
     {
-        character = message;
+        CmdLockCharacters(newValue);
+    }
+    void SetCharactersLocked(bool newValue)
+    {
+        isLocked= newValue;
         LobbyController.instance.UpdatePlayerList();
     }
 
@@ -140,13 +167,17 @@ public class PlayerObjectController : NetworkBehaviour
     [Command]
     public void CmdUpdateCharacterSkin(int newData)
     {
-        SendCharacterSkin(skinIdx, newData);
+        SendCharacterSkin(this.skinIdx, newData);
+    }
+    public void ChangeSkin(int newData)
+    {
+        CmdUpdateCharacterSkin(newData);
     }
     public void SendCharacterSkin(int oldValue, int newValue)
     {
         if (isServer)
         {
-            skinIdx = newValue;
+            this.skinIdx = newValue;
         }
         if (isClient&&(oldValue!=newValue))
         {
@@ -157,5 +188,32 @@ public class PlayerObjectController : NetworkBehaviour
     {
         skinIdx = message;
         LobbyController.instance.UpdatePlayerList();
+    }
+
+    [SyncVar] public int mapChoice;
+    [Command]
+    public void CmdUpdateMapChoiced(int newData)
+    {
+        SendMapChoiced(this.mapChoice, newData);
+    }
+    public void ChangeMapChoice(int mapChoiced)
+    {
+        CmdUpdateMapChoiced(mapChoiced);
+    }
+    public void SendMapChoiced(int oldValue, int newValue)
+    {
+        if (isServer)
+        {
+            this.mapChoice = newValue;
+        }
+        if (isClient)
+        {
+            UpdateMapChoice(newValue);
+        }
+    }
+    void UpdateMapChoice(int message)
+    {
+        mapChoice = message;
+        LevelSelectorController.instance.UpdateLevelList();
     }
 }

@@ -42,6 +42,6 @@ public class PlayerMovementControllerTemp : NetworkBehaviour
     }
     public void PlayerCharacterSetup()
     {
-        characterData = GetComponent<PlayerObjectController>().character;
+     //   characterData = GetComponent<PlayerObjectController>().character;
     }
 }

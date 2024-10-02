@@ -435,7 +435,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 188448088}
   m_OnClick:
     m_PersistentCalls:
@@ -654,9 +654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f544c11898c8246a043735999da852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characters:
-  - {fileID: 11400000, guid: 142e5cf6df140774182f9dca2a694ac7, type: 2}
-  - {fileID: 11400000, guid: 4b08bd2bc1118da42b61109c83a4780a, type: 2}
   charactersGrid: {fileID: 0}
   lobbyNameText: {fileID: 64111192}
   lobbyTestText: {fileID: 1827284600}
@@ -667,6 +664,7 @@ MonoBehaviour:
   playerItemCreated: 0
   localPlayerController: {fileID: 8600419989079764982, guid: 2afb0e191d3265f49a6a54bec0a5afbd, type: 3}
   startGameButton: {fileID: 1811124907}
+  readyButton: {fileID: 188448087}
   readyButtonText: {fileID: 1873419638}
 --- !u!4 &249194784
 Transform:
@@ -1504,7 +1502,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TestLevel
+          m_StringArgument: LevelSelector
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1811124908
@@ -1599,9 +1597,9 @@ RectTransform:
   m_Father: {fileID: 1151492004}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -574.25, y: 261}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 141, y: 82}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1827284600
