@@ -13,20 +13,6 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   <levelName>k__BackingField: ObjectsScene
+  <levelId>k__BackingField: 1
   <levelSprite>k__BackingField: {fileID: -1746572691, guid: b76e46fc3162f7f43a325c153499d528, type: 3}
   <levelMusic>k__BackingField: {fileID: 8300000, guid: 6a09edcd35f8dd74da940f0fb830909d, type: 3}
-  StartLevelAction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000}
-        m_TargetAssemblyTypeName: LevelData, Assembly-CSharp
-        m_MethodName: StartLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2

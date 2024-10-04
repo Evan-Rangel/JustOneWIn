@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Steamworks;
-using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
+
 using System;
 public class PlayerObjectController : NetworkBehaviour
 {
@@ -56,19 +57,35 @@ public class PlayerObjectController : NetworkBehaviour
     {
         CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
         gameObject.name = "LocalGamePlayer";
-        LobbyController.instance.FindLocalPlayer();
-        LobbyController.instance.UpdateLobbyName();
+        if (SceneManager.GetActiveScene().name == "Lobby")
+
+        {
+
+            LobbyController.instance.FindLocalPlayer();
+            LobbyController.instance.UpdateLobbyName();
+        }
+        
     }
     public override void OnStartClient()
     {
         Manager.gamePlayers.Add(this);
-        LobbyController.instance.UpdateLobbyName();
-        LobbyController.instance.UpdatePlayerList();
+       
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            LobbyController.instance.UpdateLobbyName();
+            LobbyController.instance.UpdatePlayerList();
+        }
+        
     }
     public override void OnStopClient()
     {
         Manager.gamePlayers.Remove(this);
-        LobbyController.instance.UpdatePlayerList();
+
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            LobbyController.instance.UpdatePlayerList();
+        }
+        
     }
     [Command]
     private void CmdSetPlayerName(string playerName)
@@ -83,7 +100,11 @@ public class PlayerObjectController : NetworkBehaviour
         }
         if (isClient)
         {
-            LobbyController.instance.UpdatePlayerList();
+            if (SceneManager.GetActiveScene().name == "Lobby")
+            {
+                LobbyController.instance.UpdatePlayerList();
+            }
+            
         }
     }
 
@@ -132,7 +153,11 @@ public class PlayerObjectController : NetworkBehaviour
     void UpdateCharacter(int message)
     {
         character = message;
-        LobbyController.instance.UpdatePlayerList();
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            LobbyController.instance.UpdatePlayerList();
+        }
+        
     }
 
     [SyncVar] public bool isLocked;
@@ -160,7 +185,11 @@ public class PlayerObjectController : NetworkBehaviour
     void SetCharactersLocked(bool newValue)
     {
         isLocked= newValue;
-        LobbyController.instance.UpdatePlayerList();
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            LobbyController.instance.UpdatePlayerList();
+        }
+        
     }
 
     [SyncVar(hook = nameof(SendCharacterSkin))] public int skinIdx;
@@ -187,10 +216,14 @@ public class PlayerObjectController : NetworkBehaviour
     void UpdateSkin(int message)
     {
         skinIdx = message;
-        LobbyController.instance.UpdatePlayerList();
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        { 
+            LobbyController.instance.UpdatePlayerList();
+        }
+        
     }
 
-    [SyncVar] public int mapChoice;
+    [SyncVar(hook = nameof(SendMapChoiced))] public int mapChoice;
     [Command]
     public void CmdUpdateMapChoiced(int newData)
     {
@@ -206,7 +239,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.mapChoice = newValue;
         }
-        if (isClient)
+        if (isClient && oldValue!= newValue)
         {
             UpdateMapChoice(newValue);
         }

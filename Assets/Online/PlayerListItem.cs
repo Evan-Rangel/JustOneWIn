@@ -102,8 +102,6 @@ public class PlayerListItem : MonoBehaviour
         }
     }
 
-
-
     //Para la seleccion de personaje y skin
     [Space]
     [Space]

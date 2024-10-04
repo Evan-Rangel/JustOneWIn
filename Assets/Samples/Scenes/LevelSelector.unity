@@ -283,7 +283,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -504,6 +504,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 184e6740fb4acf14e8ca24c517134146, type: 2}
   levelButtonPrefab: {fileID: 8835795495341420366, guid: 880403b264b798b4fad0f199e0958197, type: 3}
   levelButtonsGrid: {fileID: 2006003127}
+  localPlayerController: {fileID: 0}
+  localPlayerObject: {fileID: 0}
 --- !u!1 &1762178924
 GameObject:
   m_ObjectHideFlags: 0
