@@ -18,23 +18,25 @@ public class LevelButton : MonoBehaviour
     //Characters
     [SerializeField] CharacterData[] characters;
     public int levelId;
+    public string levelName;
     private void Start()
     {
         levelButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(buttonSound); });
     }
-    
+    public void DisableButton()
+    { 
+        levelButton.interactable = false;
+    }
     public void SetVotes(int charIdx, int skinIdx, int playerID)
     {
-        Debug.Log(playersID.Contains(playerID));
         foreach (Image image in playerImages)
         {
             if (playersID.Contains(playerID))
                 break;
             if (image.sprite != null)
                 continue;
-            image.sprite = characters[charIdx].skins[skinIdx]; 
+            image.sprite = characters[charIdx].skins[skinIdx];
             playersID.Add(playerID); ;
-            Debug.Log("entro");
             break;
         }
     }
@@ -42,17 +44,13 @@ public class LevelButton : MonoBehaviour
     {
         mapImage.sprite = _data.levelSprite;
         levelLabel.text = _data.levelName;
+        levelName= _data.levelName;
         levelId = _data.levelId;
         foreach (PlayerObjectController player in FindObjectsOfType<PlayerObjectController>())
         {
             GameObject image = Instantiate(imagePrefab, parent: playerGrid.transform);
             playerImages.Add(image.GetComponent<Image>());
-            //if (player.transform.name== "LocalGamePlayer")
-            {
-               // levelButton.onClick.AddListener(delegate { SetVotes(player.character, player.skinIdx, player.playeridNumber); });
-            }
         }
-       
         levelButton.onClick.AddListener(delegate { LevelSelectorController.instance.ChoiceLevel(levelId); });
     }
 }
