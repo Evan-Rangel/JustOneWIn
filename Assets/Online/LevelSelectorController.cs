@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.AI;
-
+using TMPro;
 public class LevelSelectorController : MonoBehaviour
 {
     public static LevelSelectorController instance;
+    [SerializeField] int timeToVote;
+    [SerializeField] TMP_Text voteText;
     [SerializeField] LevelData[] levelData;
     Dictionary<string, int> levelVotes= new Dictionary<string, int>();    
     [SerializeField] GameObject levelButtonPrefab;
@@ -42,17 +44,26 @@ public class LevelSelectorController : MonoBehaviour
         }
         localPlayerObject = GameObject.Find("LocalGamePlayer");
         localPlayerController = localPlayerObject.GetComponent<PlayerObjectController>();
-        if (localPlayerController.playeridNumber==1)
+        
+        StartCoroutine(StartTimerVote());
+    }
+    IEnumerator StartTimerVote()
+    {
+        for (int i = 0; i <= timeToVote; i++)
         {
-            StartCoroutine(StartLevel());
+            voteText.text = (timeToVote - i).ToString();
+            yield return Helpers.GetWait(1);
+        }
+        if (localPlayerController.playeridNumber == 1)
+        {
+            StartLevel();
         }
     }
-    IEnumerator StartLevel()
+    void StartLevel()
     {
-        Debug.Log("Voting...");
-        yield return new WaitForSeconds(3);
         List<string> mapMaxVotes= new List<string>();
         int maxVote=0;
+        //Recount the votes of the maps
         foreach (LevelButton button in levelButtonScripts)
         {
             if (button.playersID.Count == maxVote)
@@ -66,8 +77,6 @@ public class LevelSelectorController : MonoBehaviour
                 mapMaxVotes.Add(button.levelName);
             }
         }
-        Debug.Log(mapMaxVotes.Count);
-
         string mapSelected = mapMaxVotes[Random.Range(0, mapMaxVotes.Count)];
         Manager.StartGame(mapSelected);
     }

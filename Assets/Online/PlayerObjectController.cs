@@ -249,4 +249,33 @@ public class PlayerObjectController : NetworkBehaviour
         mapChoice = message;
         LevelSelectorController.instance.UpdateLevelList();
     }
+    
+
+    /*
+    [SyncVar(hook = nameof(SendMapChoiced))] public int voteTime;
+    [Command]
+    public void CmdUpdateVoteTime(int newData)
+    {
+        SendVoteTime(this.voteTime, newData);
+    }
+    public void ChangeVoteTime(int value)
+    {
+        CmdUpdateVoteTime(value);
+    }
+    public void SendVoteTime(int oldValue, int newValue)
+    {
+        if (isServer)
+        {
+            this.voteTime = newValue;
+        }
+        if (isClient && oldValue!= newValue)
+        {
+            UpdateVoteTime(newValue);
+        }
+    }
+    void UpdateVoteTime(int message)
+    {
+        voteTime = message;
+        LevelSelectorController.instance.UpdateLevelList();
+    }*/
 }
