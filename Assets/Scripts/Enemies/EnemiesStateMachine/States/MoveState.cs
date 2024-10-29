@@ -2,54 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState : State
+namespace Avocado.CoreSystem
 {
-    //Data reference
-    protected D_MoveState stateData;
-
-    //Detectors flags
-    protected bool isDetectingWall;
-    protected bool isDetectingLedge;
-    protected bool isPlayerInMinAgroRange;
-
-    //Constructor
-    //---This means is it's going to pass the entity state machine and animation variables that we get when we call this contructor on to our base clase which is "State" so now if we want to add anything else to the construcot, we can go ahead and do that.---//
-    public MoveState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(entity, stateMachine, animBoolName)
+    public class MoveState : State
     {
-        this.stateData = stateData;
-    }
+        #region References
+        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+        private Movement movement;
+        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+        private CollisionSenses collisionSenses;
 
-    //---With override, we can reride the function on the father script with out changing the base funtion (yo can override function with the "Virtual")---//
-    //-------OVERRIDES-------//
-    public override void Enter()
-    { 
-        base.Enter();//"base" means that when this enter funtion gets called it's going to also call the enter funtion in our base class, which is "State", So if we want to change to completely the functionality of a function we can just remove this based on enter and the code inside of our "State" base won't get call.
-        //Entity Movement
-        entity.SetVelocity(stateData.movementSpeed);
-    }
+        protected D_MoveState stateData;
+        #endregion
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
+        #region Flags
+        protected bool isDetectingWall;
+        protected bool isDetectingLedge;
+        protected bool isPlayerInMinAgroRange;
+        #endregion
 
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-    }
+        #region Constructor
+        public MoveState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(entity, stateMachine, animBoolName)
+        {
+            this.stateData = stateData;
+        }
+        #endregion
 
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
-    }
-    public override void DoChecks()
-    {
-        base.DoChecks();
+        #region Oberride Functions
+        public override void Enter()
+        {
+            base.Enter();//"base" means that when this enter funtion gets called it's going to also call the enter funtion in our base class, which is "State", So if we want to change to completely the functionality of a function we can just remove this based on enter and the code inside of our "State" base won't get call.
+                         //Entity Movement
+            Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
+        }
 
-        //Equal to same function
-        isDetectingWall = entity.CheckWall();
-        isDetectingLedge = entity.CheckLedge();
-        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        public override void Exit()
+        {
+            base.Exit();
+        }
+
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
+            //This is here to to avoid the Entity to slice when recibe the Knockback
+            Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
+        }
+
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+        }
+        public override void DoChecks()
+        {
+            base.DoChecks();
+
+            //Equal to same function
+            isDetectingWall = CollisionSenses.WallFront;
+            isDetectingLedge = CollisionSenses.LedgeVertical;
+            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        }
+        #endregion
     }
-    //-------END OVERRIDES-------//
 }

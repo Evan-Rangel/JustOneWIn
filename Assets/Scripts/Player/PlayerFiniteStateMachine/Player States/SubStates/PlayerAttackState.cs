@@ -1,116 +1,57 @@
+using Avocado.Weapons;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class PlayerAttackState : PlayerAbilityState
+namespace Avocado.CoreSystem
 {
-    //---PlayerAttackState Vars---//
-    #region PlayerAttackState Vars
-    private Weapon weapon;
-    #endregion
-
-    #region Values
-    private float velocityToSet;
-
-    private int xInput;
-    #endregion
-
-    #region Flags
-    private bool setVelocity;
-    private bool shouldCheckFlip;
-    #endregion
-
-    //---PlayerAttackState Construct---//
-    #region Construct
-    public PlayerAttackState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    public class PlayerAttackState : PlayerAbilityState
     {
+        //---PlayerAttackState Vars---//
+        #region PlayerAttackState Vars
+        private Weapon weapon;
+        #endregion
 
-    }
-    #endregion
+        #region Values
+        private int inputIndex;
+        #endregion
 
-    //---Override Functions---//
-    #region Override Functions
-    public override void Enter()
-    {
-        base.Enter();
+        #region Flags
+        #endregion
 
-        //Set velocity to false to avoid giving speed before activate the weapon
-        setVelocity = false;
-
-        //Call the Enter function on "Weapon"
-        weapon.EnterWeapon();
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-
-        //Call the Exit function on "Weapon"
-        weapon.ExitWeapon();
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-
-        //Equal with our real input
-        xInput = player.InputHandler.NormInputX;
-
-        player.CheckIfShouldFlip(xInput);//This allow to flip when attack
-
-        //Condition that check if we can flip base on the xInput
-        if (shouldCheckFlip)
+        //---PlayerAttackState Construct---//
+        #region Construct
+        public PlayerAttackState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName, Weapon weapon, CombatInputs input) : base(player, stateMachine, playerData, animBoolName)
         {
-            player.CheckIfShouldFlip(xInput);
+            this.weapon = weapon;
+
+            inputIndex = (int)input;
+
+            weapon.OnExit += ExitHandler;
+        }
+        #endregion
+
+        #region Override Functions
+        public override void Enter()
+        {
+            base.Enter();
+
+            weapon.Enter();
         }
 
-        //Condition that give the velocity with reference the facingdirection
-        if(setVelocity)
+        public override void LogicUpdate()
         {
-            player.SetVelocityX(velocityToSet * player.FacingDirection);
+            base.LogicUpdate();
+
+            weapon.CurrentInput = player.InputHandler.AttackInputs[inputIndex];
         }
+
+        private void ExitHandler()
+        {
+            AnimationFinishTrigger();
+            isAbilityDone = true;
+        }
+        #endregion
     }
-
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
-    }
-
-    public override void DoChecks()
-    {
-        base.DoChecks();
-    }
-    #endregion
-
-    //---Other Functions---//
-    #region Other Functions
-    public void SetWeapon(Weapon weapon)
-    {
-        this.weapon = weapon;
-        weapon.InitializeWeapon(this);//With this the weapons has a way to tell the state when the animation is finished
-    }
-
-    public void SetPlayerVelocity(float velocity)
-    {
-        player.SetVelocityX(velocity * player.FacingDirection);
-
-        velocityToSet = velocity;
-        setVelocity = true;
-    }
-
-    public void SetFlipCheck(bool value)
-    {
-        shouldCheckFlip = value;
-    }
-    #endregion
-
-    #region Animation Triggers
-    public override void AnimationFinishTrigger()
-    {
-        base.AnimationFinishTrigger();
-
-        isAbilityDone = true;
-    }
-    #endregion
 }

@@ -2,87 +2,99 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State
+namespace Avocado.CoreSystem
 {
-    //Data reference
-    protected D_IdleState stateData;
-
-    //Flag
-    protected bool flipAfterIdle;
-    protected bool isIdleTimeOver;
-    protected bool isPlayerInMinAgroRange;
-
-    //Idle Time
-    protected float idleTime;
-
-    //Constructor
-    //---This means is it's going to pass the entity state machine and animation variables that we get when we call this contructor on to our base clase which is "State" so now if we want to add anything else to the construcot, we can go ahead and do that.---//
-    public IdleState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_IdleState stateData) : base(entity, stateMachine, animBoolName)
+    public class IdleState : State
     {
-        this.stateData = stateData;
-    }
+        #region References
+        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+        private Movement movement;
+        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+        private CollisionSenses collisionSenses;
 
-    //---With override, we can reride the function on the father script with out changing the base funtion (yo can override function with the "Virtual")---//
-    //-------OVERRIDES-------//
-    public override void Enter()
-    {
-        base.Enter();
+        protected D_IdleState stateData;
+        #endregion
 
-        //Stop Moving
-        entity.SetVelocity(0f);
-        isIdleTimeOver = false;
-        SetRandomIdleTime();
+        #region Flags
+        protected bool flipAfterIdle;
+        protected bool isIdleTimeOver;
+        protected bool isPlayerInMinAgroRange;
+        #endregion
 
+        #region Floats
+        protected float idleTime;
+        #endregion
 
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-
-        //Condition taht wheb ends, then can flip the character
-        if (flipAfterIdle)
+        #region Construct
+        public IdleState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_IdleState stateData) : base(entity, stateMachine, animBoolName)
         {
-            entity.Flip();
+            this.stateData = stateData;
         }
-    }
+        #endregion
 
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-
-        //Conditions thats if the time pass the idle time then the idle is over
-        if(Time.time >= startTime + idleTime)
+        #region Override Functions
+        public override void Enter()
         {
-            isIdleTimeOver = true;
+            base.Enter();
+
+            //Stop Moving
+            Movement?.SetVelocityX(0f);
+            isIdleTimeOver = false;
+            SetRandomIdleTime();
+
+
         }
-    }
 
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
-    }
+        public override void Exit()
+        {
+            base.Exit();
 
-    public override void DoChecks()
-    {
-        base.DoChecks();
+            //Condition taht wheb ends, then can flip the character
+            if (flipAfterIdle)
+            {
+                Movement?.Flip();
+            }
+        }
 
-        //Check Range
-        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-    }
-    //-------END OVERRIDES-------//
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
 
-    //-------OTHER FUNCTIONS-------//
-    //Function SetFlipAfterIdle
-    public void SetFlipAfterIdle(bool flip)
-    {
-        flipAfterIdle = flip;
-    }
+            Movement?.SetVelocityX(0f);
 
-    //Funtion SetRandomIdleTime
-    private void SetRandomIdleTime()
-    {
-        idleTime = Random.Range(stateData.minIdleTime, stateData.maxIdleTime);
+            //Conditions thats if the time pass the idle time then the idle is over
+            if (Time.time >= startTime + idleTime)
+            {
+                isIdleTimeOver = true;
+            }
+        }
+
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+        }
+
+        public override void DoChecks()
+        {
+            base.DoChecks();
+
+            //Check Range
+            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        }
+        //-------END OVERRIDES-------//
+
+        //-------OTHER FUNCTIONS-------//
+        //Function SetFlipAfterIdle
+        public void SetFlipAfterIdle(bool flip)
+        {
+            flipAfterIdle = flip;
+        }
+
+        //Funtion SetRandomIdleTime
+        private void SetRandomIdleTime()
+        {
+            idleTime = Random.Range(stateData.minIdleTime, stateData.maxIdleTime);
+        }
+        #endregion
     }
-    //-------END OTHERS FUNCTIONS-------//
 }
