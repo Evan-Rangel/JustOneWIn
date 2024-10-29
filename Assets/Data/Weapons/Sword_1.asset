@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12c65e20895c8ab44b0da55b556fc9df, type: 3}
+  m_Name: Sword_1
+  m_EditorClassIdentifier: 
+  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1b67682faf6c0c04aacdb9fc37bab79a, type: 2}
+  <NumberOfAttacks>k__BackingField: 3
+  <ComponentData>k__BackingField:
+  - rid: 2184549602213756955
+  - rid: 2184549602213756956
+  - rid: 2184549602213756957
+  - rid: 2184549602213756958
+  - rid: 3485779026558844958
+  - rid: 3485779026558845008
+  references:
+    version: 2
+    RefIds:
+    - rid: 2184549602213756955
+      type: {class: WeaponSpriteData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: WeaponSpriteData
+        attackData:
+        - name: Attack 1
+          <PhaseSprites>k__BackingField:
+          - <Phase>k__BackingField: 2
+            <Sprites>k__BackingField:
+            - {fileID: -1185325723, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -1985898828, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -1416127593, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -952170701, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: 1452457978, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+        - name: Attack 2
+          <PhaseSprites>k__BackingField:
+          - <Phase>k__BackingField: 2
+            <Sprites>k__BackingField:
+            - {fileID: 500699754, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -370470182, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: 947272580, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -1375672572, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -725449939, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+        - name: Attack 3
+          <PhaseSprites>k__BackingField:
+          - <Phase>k__BackingField: 2
+            <Sprites>k__BackingField:
+            - {fileID: 1227723510, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -1486264979, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: 712322971, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: 2103075379, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+            - {fileID: -1009821110, guid: 00c8356f2a9498a4399be9ad32361a49, type: 3}
+    - rid: 2184549602213756956
+      type: {class: MovementData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: MovementData
+        attackData:
+        - name: Attack 1
+          <Direction>k__BackingField: {x: 1, y: 0}
+          <Velocity>k__BackingField: 3
+        - name: Attack 2
+          <Direction>k__BackingField: {x: 1, y: 0}
+          <Velocity>k__BackingField: 4
+        - name: Attack 3
+          <Direction>k__BackingField: {x: 1, y: 5}
+          <Velocity>k__BackingField: 5
+    - rid: 2184549602213756957
+      type: {class: ActionHitBoxData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: ActionHitBoxData
+        attackData:
+        - name: Attack 1
+          Debug: 0
+          <HitBox>k__BackingField:
+            serializedVersion: 2
+            x: 0
+            y: -1
+            width: 2
+            height: 1.75
+        - name: Attack 2
+          Debug: 0
+          <HitBox>k__BackingField:
+            serializedVersion: 2
+            x: 0
+            y: -1
+            width: 2
+            height: 1.75
+        - name: Attack 3
+          Debug: 0
+          <HitBox>k__BackingField:
+            serializedVersion: 2
+            x: 0
+            y: -1
+            width: 1.75
+            height: 2.5
+        <DetectableLayers>k__BackingField:
+          serializedVersion: 2
+          m_Bits: 512
+    - rid: 2184549602213756958
+      type: {class: DamageData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: DamageData
+        attackData:
+        - name: Attack 1
+          <Amount>k__BackingField: 5
+        - name: Attack 2
+          <Amount>k__BackingField: 10
+        - name: Attack 3
+          <Amount>k__BackingField: 15
+    - rid: 3485779026558844958
+      type: {class: KnockBackData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: KnockBackData
+        attackData:
+        - name: Attack 1
+          <Angle>k__BackingField: {x: 1, y: 1}
+          <Strength>k__BackingField: 10
+        - name: Attack 2
+          <Angle>k__BackingField: {x: 1, y: 1}
+          <Strength>k__BackingField: 10
+        - name: Attack 3
+          <Angle>k__BackingField: {x: 1, y: 3}
+          <Strength>k__BackingField: 20
+    - rid: 3485779026558845008
+      type: {class: PoiseDamageData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: PoiseDamageData
+        attackData:
+        - name: Attack 1
+          <Amount>k__BackingField: 30
+        - name: Attack 2
+          <Amount>k__BackingField: 30
+        - name: Attack 3
+          <Amount>k__BackingField: 30

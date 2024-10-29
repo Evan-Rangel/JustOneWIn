@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    
     //Attack Details Reference
-    private AttackDetails attackDetails;
+    //private AttackDetails attackDetails;
 
     //Arow Stats
     private float speed;
@@ -58,7 +59,7 @@ public class Projectile : MonoBehaviour
         //Condition that check if hit the ground
         if(!hasHitGround)
         {
-            attackDetails.position = transform.position;
+            //attackDetails.position = transform.position;
 
             if(isGravityOn)
             {
@@ -83,7 +84,7 @@ public class Projectile : MonoBehaviour
             if(damageHit)
             {
                 //Damage Player
-                damageHit.transform.SendMessage("Damage", attackDetails);
+                //damageHit.transform.SendMessage("Damage", attackDetails);
                 Destroy(gameObject);
             }
 
@@ -109,7 +110,7 @@ public class Projectile : MonoBehaviour
     {
         this.speed = speed;
         this.travelDistance = travelDistance;
-        attackDetails.damageAmount = damage;
+        //attackDetails.damageAmount = damage;
     }
 
     //Function OnDrawGizmos

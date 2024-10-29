@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 463948189949701751}
-  - component: {fileID: 9103210483014477195}
   - component: {fileID: 1691095648172912263}
   - component: {fileID: 7512013369655321637}
+  - component: {fileID: 6139349698950053966}
   m_Layer: 0
   m_Name: ScarabHitParticle
   m_TagString: Untagged
@@ -34,18 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9103210483014477195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8752440067677641566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da77b31454b8111408beccc2c618870e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1691095648172912263
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -85,9 +73,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1242827863
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 10
-  m_Sprite: {fileID: -1968487678, guid: aa3030f0fbe38994abd0783765b6f764, type: 3}
+  m_Sprite: {fileID: 1900941058, guid: c3014930931d1b84aa32d6ed61e745c8, type: 3}
   m_Color: {r: 0.8396226, g: 0.6517825, b: 0.5109024, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -108,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 8752440067677641566}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 70c8b875a16e6e34b86e514fe467ef54, type: 2}
+  m_Controller: {fileID: 9100000, guid: 13db2a30741c67c4a9d07a03932fa213, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -118,3 +106,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &6139349698950053966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8752440067677641566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: becd854112790474cbc581dda680b7c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
