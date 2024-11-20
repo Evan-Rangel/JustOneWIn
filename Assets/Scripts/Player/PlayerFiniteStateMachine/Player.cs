@@ -3,8 +3,8 @@ using Avocado.CoreSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Player : MonoBehaviour
+using Mirror;
+public class Player : NetworkBehaviour
 {
     //---Player Vars---//
     #region Player States Variables
@@ -106,23 +106,27 @@ public class Player : MonoBehaviour
         MovementCollider = GetComponent<BoxCollider2D>();
         //Initialize First StateMachine
         StateMachine.Initialize(IdleState);
-
+        GameManager.instance.FindLocalPlayer();
 
     }
 
     private void Update()
     {
-        //Core Update
-        Core.LogicUpdate();
-
-        //Update Logics
-        StateMachine.CurrentState.LogicUpdate();
+        if (gameObject.name== "LocalGamePlayer")
+        { 
+            //Core Update
+            Core.LogicUpdate();
+            //Update Logics
+            StateMachine.CurrentState.LogicUpdate();
+        }
     }
 
     private void FixedUpdate()
     {
         //Fixed Update Physics
-        StateMachine.CurrentState.PhysicsUpdate();
+        if (gameObject.name == "LocalGamePlayer")
+
+            StateMachine.CurrentState.PhysicsUpdate();
     }
     #endregion
 

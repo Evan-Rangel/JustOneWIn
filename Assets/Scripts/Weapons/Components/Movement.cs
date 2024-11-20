@@ -28,17 +28,22 @@ namespace Avocado.Weapons.Components
         protected override void Start()
         {
             base.Start();
+            if (transform.root.name == "LocalGamePlayer")
+            {
+                eventHandler.OnStartMovement += HandlerStartMovement;
+                eventHandler.OnStopMovement += HandlerStopMovement;
 
-            eventHandler.OnStartMovement += HandlerStartMovement;
-            eventHandler.OnStopMovement += HandlerStopMovement;
+            }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            eventHandler.OnStartMovement -= HandlerStartMovement;
-            eventHandler.OnStopMovement -= HandlerStopMovement;
+            if (transform.root.name == "LocalGamePlayer")
+            {
+                eventHandler.OnStartMovement -= HandlerStartMovement;
+                eventHandler.OnStopMovement -= HandlerStopMovement;
+            }
         }
         #endregion
     }

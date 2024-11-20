@@ -18,6 +18,7 @@ namespace Avocado.Weapons.Components
 
         #region Integers
         private int currentWeaponSpriteIndex;
+        public void SetCurrentWeaponSpriteIndex(int idx) { currentWeaponSpriteIndex = idx; }
         #endregion
 
         private Sprite[] currentPhaseSprites;
@@ -32,9 +33,11 @@ namespace Avocado.Weapons.Components
 
         private void HandleEnterAttackPhase(AttackPhases phase)
         {
-            currentWeaponSpriteIndex = 0;
 
-            currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
+            currentWeaponSpriteIndex = 0;
+//            if (transform.root.name == "LocalGamePlayer")
+
+                currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
         }
 
         private void HandlerBaseSpriteChange(SpriteRenderer sr)
@@ -54,6 +57,7 @@ namespace Avocado.Weapons.Components
             weaponSpriteRenderer.sprite = currentPhaseSprites[currentWeaponSpriteIndex];
 
             currentWeaponSpriteIndex++;
+            GameManager.instance.ChangeWeaponSprite(currentWeaponSpriteIndex);
         }
 
         protected override void Start()
@@ -66,8 +70,9 @@ namespace Avocado.Weapons.Components
             data = weapon.Data.GetData<WeaponSpriteData>();
 
             baseSpriteRenderer.RegisterSpriteChangeCallback(HandlerBaseSpriteChange);
+//            if (transform.root.name== "LocalGamePlayer")
 
-            eventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
+                eventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
         }
 
         protected override void OnDestroy()
@@ -75,8 +80,9 @@ namespace Avocado.Weapons.Components
             base.OnDestroy();
 
             baseSpriteRenderer.UnregisterSpriteChangeCallback(HandlerBaseSpriteChange);
+          //  if (transform.root.name == "LocalGamePlayer")
 
-            eventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
+                eventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
         }
         #endregion
     }

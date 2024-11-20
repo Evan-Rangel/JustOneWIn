@@ -4,7 +4,6 @@ using UnityEngine;
 using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
-
 using System;
 public class PlayerObjectController : NetworkBehaviour
 {
@@ -69,7 +68,6 @@ public class PlayerObjectController : NetworkBehaviour
     public override void OnStartClient()
     {
         Manager.gamePlayers.Add(this);
-       
         if (SceneManager.GetActiveScene().name == "Lobby")
         {
             LobbyController.instance.UpdateLobbyName();
@@ -250,32 +248,61 @@ public class PlayerObjectController : NetworkBehaviour
         LevelSelectorController.instance.UpdateLevelList();
     }
     
-
-    /*
-    [SyncVar(hook = nameof(SendMapChoiced))] public int voteTime;
+    [SyncVar(hook = nameof(SendWeaponIndex))] public int weaponIndex;
     [Command]
-    public void CmdUpdateVoteTime(int newData)
+    public void CmdUpdateWeaponIndex(int newData)
     {
-        SendVoteTime(this.voteTime, newData);
+        SendWeaponIndex(this.weaponIndex, newData);
     }
-    public void ChangeVoteTime(int value)
+    public void ChangeWeaponIndex(int weaponI)
     {
-        CmdUpdateVoteTime(value);
+        CmdUpdateWeaponIndex(weaponI);
     }
-    public void SendVoteTime(int oldValue, int newValue)
+    public void SendWeaponIndex(int oldValue, int newValue)
     {
         if (isServer)
         {
-            this.voteTime = newValue;
+            this.weaponIndex = newValue;
         }
         if (isClient && oldValue!= newValue)
         {
-            UpdateVoteTime(newValue);
+            UpdateWeaponIndex(newValue);
         }
     }
-    void UpdateVoteTime(int message)
+    void UpdateWeaponIndex(int message)
     {
-        voteTime = message;
-        LevelSelectorController.instance.UpdateLevelList();
-    }*/
+        weaponIndex = message;
+        GameManager.instance.UpdatePlayers();
+    }   
+    
+    
+    [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
+    [Command]
+    public void CmdUpdateAttackActive(bool newData)
+    {
+        SendAttackActive(this.attackActive, newData);
+    }
+    public void ChangeAttackActive(bool value)
+    {
+        CmdUpdateAttackActive(value);
+    }
+    public void SendAttackActive(bool oldValue, bool newValue)
+    {
+        if (isServer)
+        {
+            this.attackActive = newValue;
+        }
+        if (isClient && oldValue!= newValue)
+        {
+            UpdateAttackActive(newValue);
+        }
+    }
+    void UpdateAttackActive(bool message)
+    {
+        attackActive = message;
+        GameManager.instance.UpdatePlayers();
+    }
+    
+
+
 }

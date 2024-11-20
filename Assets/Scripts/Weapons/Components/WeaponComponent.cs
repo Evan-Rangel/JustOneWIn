@@ -18,6 +18,7 @@ namespace Avocado.Weapons.Components
 
         #region Flags
         protected bool isAttackActive;
+        public void SetIsAttackActive(bool value) { isAttackActive = value; }
         #endregion
 
         #region Functions
@@ -43,11 +44,14 @@ namespace Avocado.Weapons.Components
         protected virtual void HandleEnter()
         {
             isAttackActive = true;
+            GameManager.instance.ChangeAttacActive(isAttackActive);
         }
 
         protected virtual void HandleExit()
         {
-            isAttackActive = false; 
+            isAttackActive = false;
+            GameManager.instance.ChangeAttacActive(isAttackActive);
+
         }
 
         protected virtual void OnDestroy()

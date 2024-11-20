@@ -25,5 +25,5 @@ namespace Avocado.Weapons
         private void MinHoldPassedTrigger() => OnMinHoldPassed?.Invoke();
         private void EnterAttackPhase(AttackPhases phase) => OnEnterAttackPhase?.Invoke(phase);
         #endregion
-    }
+    }   
 }

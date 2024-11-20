@@ -17,7 +17,12 @@ public class PlayerAfterImagePool : MonoBehaviour
     //Awake
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this);
+
+        DontDestroyOnLoad(this);
         GrowPool();
     }
 

@@ -28,17 +28,25 @@ public class PlayerAfterImageSprite : MonoBehaviour
     //OnEnble
     private void OnEnable()
     {
-        //Get Reference
-        sR = GetComponent<SpriteRenderer>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerSR = player.GetComponent<SpriteRenderer>();
+        try
+        {
 
-        //Set Values
-        alpha = alphaSet;
-        sR.sprite = playerSR.sprite;
-        transform.position = player.position;
-        transform.rotation = player.rotation;
-        timeActivated = Time.time;
+            player = GameObject.Find("LocalGamePlayer").transform;
+            //Get Reference
+            sR = GetComponent<SpriteRenderer>();
+
+            //player = GameObject.FindGameObjectWithTag("Player").transform;
+            playerSR = player.GetComponent<SpriteRenderer>();
+
+            //Set Values
+            alpha = alphaSet;
+            sR.sprite = playerSR.sprite;
+            transform.position = player.position;
+            transform.rotation = player.rotation;
+            timeActivated = Time.time;
+        }
+        catch { return; }
+
     }
 
     //Update
@@ -54,6 +62,5 @@ public class PlayerAfterImageSprite : MonoBehaviour
             //Add to the pool
             PlayerAfterImagePool.Instance.AddToPool(gameObject);
         }
-
     }
 }

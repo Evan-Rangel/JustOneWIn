@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
-using Unity.VisualScripting;
+using Avocado.Weapons.Components;
+using System.Threading;
 public class GameManager : MonoBehaviour
 {
     LevelData levelData;
@@ -16,17 +17,61 @@ public class GameManager : MonoBehaviour
     public Sprite[] itemsSprites;
     public Transform cursor;
     public static GameManager instance;
+
+
+    public PlayerObjectController localPlayerController;
+    public GameObject localPlayerObject;
+    private CustomNetworkManager manager;
+    private CustomNetworkManager Manager
+    {
+        get
+        {
+            if (manager != null)
+            {
+                return manager;
+            }
+            return manager = CustomNetworkManager.singleton as CustomNetworkManager;
+        }
+    }
     private void Awake()
     {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
+        DontDestroyOnLoad(gameObject);
     }
     public void Start()
     {
-        levelData= Helpers.GetCurrentLevel();
-        AudioManager.instance.PlayMusic(levelData.levelMusic);
-        StartCoroutine(StartGame());
+        //levelData= Helpers.GetCurrentLevel();
+        //AudioManager.instance.PlayMusic(levelData.levelMusic);
+        //StartCoroutine(StartGame());
     }
+    public void SetPlayerSpawns(Transform[] _spawns)
+    {
+        localPlayerObject.transform.position = _spawns[manager.gamePlayers.IndexOf(localPlayerController)].position;
+    }
+    public void FindLocalPlayer()
+    { 
+        localPlayerObject = GameObject.Find("LocalGamePlayer");
+        localPlayerController = localPlayerObject.GetComponent<PlayerObjectController>();
+
+    }
+    public void ChangeWeaponSprite(int weaponIdx)
+    { 
+        localPlayerController.ChangeWeaponIndex(weaponIdx);
+    }
+    public void ChangeAttacActive(bool attackActive)
+    { 
+        localPlayerController.ChangeAttackActive(attackActive);
+    }
+    public void UpdatePlayers()
+    {
+        foreach (PlayerObjectController player in Manager.gamePlayers)
+        {
+            player.gameObject.GetComponentInChildren<WeaponComponent>().SetIsAttackActive(player.attackActive);
+            player.gameObject.GetComponentInChildren<WeaponSprite>().SetCurrentWeaponSpriteIndex(player.weaponIndex);
+        }
+    }
+
     public GameObject RequestRandomItem()
     {
         return Instantiate( items[Random.Range(0, items.Length)]);

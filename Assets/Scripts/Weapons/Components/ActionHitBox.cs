@@ -33,17 +33,22 @@ namespace Avocado.Weapons.Components
         protected override void Start()
         {
             base.Start();
+            if (transform.root.name== "LocalGamePlayer")
+            {
 
-            movement = new CoreComp<CoreSystem.Movement>(Core);
+                movement = new CoreComp<CoreSystem.Movement>(Core);
 
-            eventHandler.OnAttackAction += HandleAttackAction;
+                eventHandler.OnAttackAction += HandleAttackAction;
+            }
+
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            if (transform.root.name == "LocalGamePlayer")
 
-            eventHandler.OnAttackAction -= HandleAttackAction;
+                eventHandler.OnAttackAction -= HandleAttackAction;
         }
 
         private void OnDrawGizmosSelected()

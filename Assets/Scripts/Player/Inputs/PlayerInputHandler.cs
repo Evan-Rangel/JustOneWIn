@@ -10,7 +10,7 @@ public class PlayerInputHandler : MonoBehaviour
     #region Player Movement Vars
     //Reference
     private PlayerInput playerInput;
-    private Camera cam;
+    [SerializeField]private Camera cam;
     //Vectors
     public Vector2 RawMovementInput { get; private set; }
     public Vector2 RawDashDirectionInput { get; private set; }
@@ -47,9 +47,12 @@ public class PlayerInputHandler : MonoBehaviour
         int count = Enum.GetValues(typeof(CombatInputs)).Length;
         AttackInputs = new bool[count];
 
-        cam = Camera.main;
+        //cam = Camera.main;
     }
-
+    private void OnEnable()
+    {
+        //cam = Camera.main;
+    }
     private void Update()
     {
         //Constant Checks
@@ -133,17 +136,20 @@ public class PlayerInputHandler : MonoBehaviour
             DashInputStop = true;
         }
     }
-
     public void OnDashDirectionInput(InputAction.CallbackContext context)
     {
-        RawDashDirectionInput = context.ReadValue<Vector2>();
-
-        if (playerInput.currentControlScheme == "Keyboard")
+        if (gameObject.name=="LocalGamePlayer")
         {
-            RawDashDirectionInput = cam.ScreenToWorldPoint((Vector3)RawDashDirectionInput) - transform.position;
-        }
 
-        DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
+            RawDashDirectionInput = context.ReadValue<Vector2>();
+
+            if (playerInput.currentControlScheme == "Keyboard")
+            {
+                RawDashDirectionInput = cam.ScreenToWorldPoint((Vector3)RawDashDirectionInput) - transform.position;
+            }
+
+            DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
+        }
     }
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)

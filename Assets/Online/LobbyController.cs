@@ -8,6 +8,8 @@ using TMPro;
 using System.Linq;
 using System;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 [Serializable]
 public enum AllCharacters
@@ -220,6 +222,11 @@ public class LobbyController : MonoBehaviour
                         playerListItemScript.IsInteractuable(true);
                         UpdateButton();
                     }
+                    else
+                    {
+                        player.gameObject.GetComponent<PlayerInput>().enabled =  false;
+                        player.gameObject.GetComponent<PlayerInputHandler>().enabled = false;
+                    }
                 }
             }
         }
@@ -250,6 +257,4 @@ public class LobbyController : MonoBehaviour
     {
         localPlayerController.CanStartGame(sceneName);
     }
-
-    
 }
