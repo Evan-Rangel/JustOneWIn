@@ -23,29 +23,39 @@ public class PlatformParent : Interactuable
     public override void Start()
     {
         base.Start();
-        transform.position = targets[currentTarget].position;
+        if (circlesHolder != null)
+            transform.position = targets[currentTarget].position;
     }
     public override void Activate()
     {
+        if (active)
+            return;
+        StopAllCoroutines();
         base.Activate();
+        //Debug.Log(movePlatform);
+        movePlatform= MovePlatform();
         StartCoroutine(movePlatform);
     }
     public override void Deactivate()
     {
         base.Deactivate();
         rb.velocity = Vector2.zero;
-        currentTarget = (currentTarget < targets.Length - 1) ? currentTarget + 1 : 0;
+       // currentTarget = (currentTarget < targets.Length - 1) ? currentTarget + 1 : 0;
         StopCoroutine(movePlatform);
+        movePlatform = null;
+
     }
     IEnumerator MovePlatform()
     {
+        currentTarget = (currentTarget < targets.Length - 1) ? currentTarget + 1 : 0;
+        Debug.Log("Move plataform "+ targets.Length);
         while (active)
         {
             rb.velocity = (targets[currentTarget].position - transform.position).normalized * speed;
-            yield return new WaitUntil(() => Vector2.Distance(transform.position, targets[currentTarget].position) < 1);
-            
-            yield return Helpers.GetWait(restTime);
-            currentTarget = (currentTarget < targets.Length - 1) ? currentTarget + 1 : 0;
+            yield return new WaitUntil(() => Vector2.Distance(transform.position, targets[currentTarget].position) < 0.01f);
+            Deactivate();
+            //yield return Helpers.GetWait(restTime);
+            //currentTarget = (currentTarget < targets.Length - 1) ? currentTarget + 1 : 0;
         }
     }
     private void OnDrawGizmos()

@@ -21,7 +21,7 @@ namespace Avocado.Weapons.Components
             offset.Set(transform.position.x + (currentAttackData.HitBox.center.x * movement.Comp.FacingDirection), transform.position.y + currentAttackData.HitBox.center.y);
 
             detected = Physics2D.OverlapBoxAll(offset, currentAttackData.HitBox.size, 0f, data.DetectableLayers);
-
+            Debug.Log(detected.Length);
             if (detected.Length == 0)
             {
                 return;

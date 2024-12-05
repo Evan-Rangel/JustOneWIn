@@ -4,28 +4,30 @@ using UnityEngine;
 
 public class PlatformFall : PlatformParent
 {
-    PlatformEffector2D effector;
-
+    Collider2D coll;
+    
     public override void Awake()
     {
         base.Awake();
-        effector = GetComponent<PlatformEffector2D>();
+        coll = GetComponent<Collider2D>();
+        active = false;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Player")&& !effector.enabled) 
+        if (collision.transform.CompareTag("Player")&& !coll.isTrigger &&!active) 
         {
             StartCoroutine(EnableEffector());
         }
     }
     IEnumerator EnableEffector()
     {
+        active = true;
         yield return Helpers.GetWait(3);
-        Debug.Log(effector.enabled);
-        effector.enabled = !effector.enabled;
+        coll.isTrigger = !coll.isTrigger;
         yield return Helpers.GetWait(3);
-        Debug.Log(effector.enabled);
-        effector.enabled = !effector.enabled;
+        coll.isTrigger = !coll.isTrigger;
+        active = false;
+
 
     }
 }

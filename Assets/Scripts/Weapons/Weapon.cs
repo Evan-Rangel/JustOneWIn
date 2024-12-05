@@ -61,7 +61,7 @@ namespace Avocado.Weapons
         #region Functions
         public void Enter()
         {
-            print($"{transform.name} enter");
+            //print($"{transform.name} enter");
 
             attackCounterResetTimer.StopTimer();
 

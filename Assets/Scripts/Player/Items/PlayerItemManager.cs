@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -64,6 +64,5 @@ public class PlayerItemManager : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(itemHolderFront.position, 0.2f);
         Gizmos.DrawWireSphere(itemHolderBack.position, 0.2f);
-
     }
 }

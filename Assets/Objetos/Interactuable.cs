@@ -1,10 +1,11 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class Interactuable : MonoBehaviour
+public abstract class Interactuable : NetworkBehaviour
 {
     [Header("Parent")]
     [SerializeField] Transform parentTransform;
@@ -12,7 +13,7 @@ public abstract class Interactuable : MonoBehaviour
     [Header("Carge Circles")]
     [SerializeField, Tooltip("Se cargan al iniciar si se ponen de hijo a este objeto")] LoadCircles[] circles;
     [SerializeField, Tooltip("Para que los circulos se activen gradualmente o al instante")] bool loadInstant;
-
+    [SerializeField] protected GameObject circlesHolder;
     [Header("Colors")]
     [SerializeField] CirclesColors activateColor;
     [SerializeField] CirclesColors deactivateColor;
@@ -21,17 +22,22 @@ public abstract class Interactuable : MonoBehaviour
     [SerializeField] UnityEvent onFinish;
     [SerializeField] UnityEvent onStart;
 
+
     bool inAction = false;
     float timeToActive;
     protected bool active;
 
     public virtual void Awake()
     {
-        circles = GetComponentsInChildren<LoadCircles>();
-        foreach (LoadCircles circle in circles)
+        if (circlesHolder != null)
         {
-            circle.gameObject.transform.parent = parentTransform;
+            circles = circlesHolder.GetComponentsInChildren<LoadCircles>();
+            foreach (LoadCircles circle in circles)
+            {
+                circle.gameObject.transform.parent = parentTransform;
+            }
         }
+
     }
     public virtual void Start()
     {
@@ -40,14 +46,8 @@ public abstract class Interactuable : MonoBehaviour
     [Tooltip("Al activar el trigger, el estado sera estado = !estado")]
     public void ActivateAndDeactivate()
     {
-        if (active)
-        {
-            Deactivate();
-        }
-        else
-        {
-            Activate();
-        }
+        if (active) Deactivate();
+        else Activate();
     }
     [Tooltip("Activa el objeto")]
     public virtual void Activate()
@@ -87,7 +87,7 @@ public abstract class Interactuable : MonoBehaviour
 
     IEnumerator ChangeCircleColors(CirclesColors _color, string _functionName1, string _functionName2)
     {
-        yield return new WaitForSeconds(0.05f);
+        yield return Helpers.GetWait(0.05f);
         foreach (var circle in circles)
         {
             circle.ChangeColor(timeToActive / circles.Length, _color, false);
