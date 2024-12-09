@@ -22,7 +22,6 @@ public abstract class Interactuable : NetworkBehaviour
     [SerializeField] UnityEvent onFinish;
     [SerializeField] UnityEvent onStart;
 
-
     bool inAction = false;
     float timeToActive;
     protected bool active;
