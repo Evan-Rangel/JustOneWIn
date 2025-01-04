@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using Avocado.Weapons.Components;
-using System.Threading;
 public class GameManager : MonoBehaviour
 {
     LevelData levelData;
@@ -118,6 +117,10 @@ public interface ItemAction
 {
     public void Action(PlayerItemManager _playerItemManager);
 
+}
+public interface ICollidable
+{
+    void OnCollision(GameObject obj);
 }
 public enum CHARACTERS
 { 

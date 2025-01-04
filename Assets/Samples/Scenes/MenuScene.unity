@@ -3180,6 +3180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa8669d0659624f45b3483a1bc3f7086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobbyIDs: []
   currentLobbyID: 0
 --- !u!114 &615243784
 MonoBehaviour:
@@ -3243,6 +3244,7 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 6916737856575203943, guid: d70111eb079723e469ada8c0bb9fa32d, type: 3}
+  - {fileID: 4426487469173729126, guid: 2d058b6529182414f819b3ae9955ab95, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2

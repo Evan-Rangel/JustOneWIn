@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
-using System;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -275,7 +272,7 @@ public class PlayerObjectController : NetworkBehaviour
         GameManager.instance.UpdatePlayers();
     }   
     
-    
+
     [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
     [Command]
     public void CmdUpdateAttackActive(bool newData)
@@ -302,7 +299,20 @@ public class PlayerObjectController : NetworkBehaviour
         attackActive = message;
         GameManager.instance.UpdatePlayers();
     }
-    
 
-
+    #region Collisions
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        ICollidable interactuable = collision.transform.GetComponent<ICollidable>();
+        if (interactuable != null)
+        {
+            CmdNotifyObjectCollidable(collision.gameObject);
+        }
+    }
+    [Command]
+    public void CmdNotifyObjectCollidable(GameObject obj)
+    {
+        obj.GetComponent<ICollidable>().OnCollision(gameObject);
+    }
+    #endregion
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+
 public abstract class Interactuable : NetworkBehaviour
 {
     [Header("Parent")]

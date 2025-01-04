@@ -13,25 +13,28 @@ public class PlatformFall : PlatformParent
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isServer)return;
+        Debug.Log("Name: " + collision.transform.name);
+      //  if (!isServer)return;
+        Debug.Log("Enter to collision");
         if (collision.transform.CompareTag("Player")&& !animator.GetBool("Activate") ) 
         {
-            EnableEffector();
+            ActivatePlarformFall();
         }
     }
-    [ClientRpc]
+    //[ClientRpc]
+
     public void DeactivatePlarformFall()
     {
         //if (!isServer) return;
         animator.SetBool("Activate", false);
-        Debug.Log("Platform Dectivated");
+       // Debug.Log("Platform Dectivated");
 
     }
     [ClientRpc]
-    void EnableEffector()
+    void ActivatePlarformFall()
     {
         animator.SetBool("Activate", true);
-        Debug.Log("Platform Activated");
+        //Debug.Log("Platform Activated");
 
     }
 }
