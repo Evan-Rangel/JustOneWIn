@@ -2,6 +2,8 @@ using UnityEngine;
 using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Linq;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -27,6 +29,7 @@ public class PlayerObjectController : NetworkBehaviour
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+        propertyBlock = new MaterialPropertyBlock();
     }
 
     private void PlayerReadyUpdate(bool oldValue, bool newValue)
@@ -60,7 +63,7 @@ public class PlayerObjectController : NetworkBehaviour
             LobbyController.instance.FindLocalPlayer();
             LobbyController.instance.UpdateLobbyName();
         }
-        
+
     }
     public override void OnStartClient()
     {
@@ -70,7 +73,7 @@ public class PlayerObjectController : NetworkBehaviour
             LobbyController.instance.UpdateLobbyName();
             LobbyController.instance.UpdatePlayerList();
         }
-        
+
     }
     public override void OnStopClient()
     {
@@ -80,7 +83,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             LobbyController.instance.UpdatePlayerList();
         }
-        
+
     }
     [Command]
     private void CmdSetPlayerName(string playerName)
@@ -99,7 +102,7 @@ public class PlayerObjectController : NetworkBehaviour
             {
                 LobbyController.instance.UpdatePlayerList();
             }
-            
+
         }
     }
 
@@ -115,6 +118,9 @@ public class PlayerObjectController : NetworkBehaviour
     {
         Manager.StartGame(sceneName);
     }
+
+
+
 
     [SyncVar(hook = nameof(SendPlayerCharacter))] public int character;
     [Command]
@@ -148,12 +154,29 @@ public class PlayerObjectController : NetworkBehaviour
     void UpdateCharacter(int message)
     {
         character = message;
+        propertyBlock.SetColor("_Color", charsData[character].color);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
         if (SceneManager.GetActiveScene().name == "Lobby")
         {
             LobbyController.instance.UpdatePlayerList();
         }
-        
+
     }
+    [Space]
+    [Header("Player Color")]
+    SpriteRenderer spr;
+    [SerializeField] List<SpriteRenderer> sprs;
+    public MaterialPropertyBlock propertyBlock { get; private set; }
+
+    //Color[] playerColors = { Color.cyan, Color.red };
+    [SerializeField] CharacterData[] charsData;
+
+
+
+
 
     [SyncVar] public bool isLocked;
     [Command]
@@ -179,13 +202,14 @@ public class PlayerObjectController : NetworkBehaviour
     }
     void SetCharactersLocked(bool newValue)
     {
-        isLocked= newValue;
+        isLocked = newValue;
         if (SceneManager.GetActiveScene().name == "Lobby")
         {
             LobbyController.instance.UpdatePlayerList();
         }
-        
+
     }
+
 
     [SyncVar(hook = nameof(SendCharacterSkin))] public int skinIdx;
     [Command]
@@ -203,7 +227,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.skinIdx = newValue;
         }
-        if (isClient&&(oldValue!=newValue))
+        if (isClient && (oldValue != newValue))
         {
             UpdateSkin(newValue);
         }
@@ -212,10 +236,10 @@ public class PlayerObjectController : NetworkBehaviour
     {
         skinIdx = message;
         if (SceneManager.GetActiveScene().name == "Lobby")
-        { 
+        {
             LobbyController.instance.UpdatePlayerList();
         }
-        
+
     }
 
     [SyncVar(hook = nameof(SendMapChoiced))] public int mapChoice;
@@ -234,7 +258,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.mapChoice = newValue;
         }
-        if (isClient && oldValue!= newValue)
+        if (isClient && oldValue != newValue)
         {
             UpdateMapChoice(newValue);
         }
@@ -244,7 +268,7 @@ public class PlayerObjectController : NetworkBehaviour
         mapChoice = message;
         LevelSelectorController.instance.UpdateLevelList();
     }
-    
+
     [SyncVar(hook = nameof(SendWeaponIndex))] public int weaponIndex;
     [Command]
     public void CmdUpdateWeaponIndex(int newData)
@@ -261,7 +285,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.weaponIndex = newValue;
         }
-        if (isClient && oldValue!= newValue)
+        if (isClient && oldValue != newValue)
         {
             UpdateWeaponIndex(newValue);
         }
@@ -270,8 +294,8 @@ public class PlayerObjectController : NetworkBehaviour
     {
         weaponIndex = message;
         GameManager.instance.UpdatePlayers();
-    }   
-    
+    }
+
 
     [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
     [Command]
@@ -289,7 +313,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.attackActive = newValue;
         }
-        if (isClient && oldValue!= newValue)
+        if (isClient && oldValue != newValue)
         {
             UpdateAttackActive(newValue);
         }
@@ -300,6 +324,8 @@ public class PlayerObjectController : NetworkBehaviour
         GameManager.instance.UpdatePlayers();
     }
 
+
+
     #region Collisions
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -307,6 +333,10 @@ public class PlayerObjectController : NetworkBehaviour
         if (interactuable != null)
         {
             CmdNotifyObjectCollidable(collision.gameObject);
+            ActiveShadowEffect();
+        }
+        if (collision.transform.CompareTag("Player"))
+        {
         }
     }
     [Command]
@@ -314,5 +344,14 @@ public class PlayerObjectController : NetworkBehaviour
     {
         obj.GetComponent<ICollidable>().OnCollision(gameObject);
     }
+    #endregion
+
+    #region Effects
+    public void ActiveShadowEffect()
+    {
+        FakeLight_S fLight = GetComponentInChildren<FakeLight_S>();
+        fLight.StartShadowEffect();
+    }
+
     #endregion
 }

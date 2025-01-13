@@ -25,6 +25,11 @@ public class PlayerAfterImageSprite : MonoBehaviour
     [SerializeField]
     private float alphaDecay = 1f;//This var change the velocity of the fade, more small number much faste will be
 
+    MaterialPropertyBlock propertyBlock;
+    private void Awake()
+    {
+        propertyBlock = new MaterialPropertyBlock();
+    }
     //OnEnble
     private void OnEnable()
     {
@@ -32,6 +37,7 @@ public class PlayerAfterImageSprite : MonoBehaviour
         {
 
             player = GameObject.Find("LocalGamePlayer").transform;
+            propertyBlock = player.GetComponent<PlayerObjectController>().propertyBlock;
             //Get Reference
             sR = GetComponent<SpriteRenderer>();
 
@@ -41,6 +47,9 @@ public class PlayerAfterImageSprite : MonoBehaviour
             //Set Values
             alpha = alphaSet;
             sR.sprite = playerSR.sprite;
+            //Mismo color que el player
+            playerSR.GetPropertyBlock(propertyBlock);
+            sR.SetPropertyBlock(propertyBlock) ;
             transform.position = player.position;
             transform.rotation = player.rotation;
             timeActivated = Time.time;
@@ -55,9 +64,12 @@ public class PlayerAfterImageSprite : MonoBehaviour
         alpha -= alphaDecay * Time.deltaTime;//Decreasing the alpha
         color = new Color(1f, 1f, 1f, alpha);//Crate new color with the alpha 
         sR.color = color;//Set the color to the sprite
+       // sR.SetPropertyBlock(propertyBlock);
 
+        //sR.SetPropertyBlock(player.GetComponent<PlayerObjectController>().propertyBlock);
+        //Debug.Log(sR.color);
         //Condition that helps to know if the time was long enough
-        if(Time.time >= (timeActivated + activeTime))
+        if (Time.time >= (timeActivated + activeTime))
         {
             //Add to the pool
             PlayerAfterImagePool.Instance.AddToPool(gameObject);

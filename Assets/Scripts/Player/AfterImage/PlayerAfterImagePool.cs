@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PlayerAfterImagePool : MonoBehaviour
+public class PlayerAfterImagePool : MonoBehaviour 
 {
     //Prefab Var
     [Header("Player Dash Image Pool")]

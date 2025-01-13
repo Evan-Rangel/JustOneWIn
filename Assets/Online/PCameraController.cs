@@ -7,7 +7,7 @@ using UnityEngine;
 public class PCameraController : NetworkBehaviour
 {
     [SerializeField] GameObject cameraHolder;
-
+    public Camera mainCamera;
     public override void OnStartAuthority()
     {
         cameraHolder.SetActive(true);

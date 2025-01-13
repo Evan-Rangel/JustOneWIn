@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using Mirror;
 namespace Avocado.Weapons.Components
 {
     public class WeaponSprite : WeaponComponent<WeaponSpriteData, AttackSprites>
@@ -70,18 +70,13 @@ namespace Avocado.Weapons.Components
             data = weapon.Data.GetData<WeaponSpriteData>();
 
             baseSpriteRenderer.RegisterSpriteChangeCallback(HandlerBaseSpriteChange);
-//            if (transform.root.name== "LocalGamePlayer")
-
                 eventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
             baseSpriteRenderer.UnregisterSpriteChangeCallback(HandlerBaseSpriteChange);
-          //  if (transform.root.name == "LocalGamePlayer")
-
                 eventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
         }
         #endregion

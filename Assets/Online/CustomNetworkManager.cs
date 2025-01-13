@@ -8,7 +8,6 @@ public class CustomNetworkManager : NetworkManager
 {
     [SerializeField] private PlayerObjectController gamePlayerPrefab;
     public List<PlayerObjectController> gamePlayers { get; } = new List<PlayerObjectController>();
-
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
         if (SceneManager.GetActiveScene().name == "Lobby")

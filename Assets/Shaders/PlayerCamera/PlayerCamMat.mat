@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6119527982960575857
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 6
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerCamMat
+  m_Shader: {fileID: -6465566751694194690, guid: 563530ad7e3f8b741aeb26faa9f76d9f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PositionsTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AbsorptionRadius: 0
+    - _AbsorptionRadiusEdge1: 1.5
+    - _AbsorptionStrength: 0
+    - _ActivateShader: 0
+    - _DistortionStrength: 0.5
+    - _Opacity: 1
+    - _ShockWaveStrenght: -5
+    - _ShockWaveStrenghtB: -0.51
+    - _ShockWaveStrenghtB_1: 0.025
+    - _Size: 0
+    - _SizeB: 0.05
+    - _TimeValue: -0.1
+    - _TimeValueA: 0
+    - _TimeValueB: 0
+    - _XSizeRatio: 1.777
+    m_Colors:
+    - _AbsorptionCenter: {r: 0.8, g: 0.5, b: 0, a: 0}
+    - _ExpasionSpawnPosition: {r: -0.32, g: 0.5, b: 0, a: 0}
+    - _RingSpawnPos: {r: 1.68, g: 0.5, b: 0, a: 0}
+  m_BuildTextureStacks: []

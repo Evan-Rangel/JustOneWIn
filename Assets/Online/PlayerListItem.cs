@@ -59,6 +59,7 @@ public class PlayerListItem : MonoBehaviour
         }
         charImage.sprite = characters[characterIdx].skins[skinIdx];
         charName.text = characters[characterIdx].cName;
+        //charImage.material.SetColor("_Color", characters[characterIdx].color);
 
         ChangeReadyStatus();
         if (!avatarReceived)
@@ -144,6 +145,9 @@ public class PlayerListItem : MonoBehaviour
         //data = _data;
         charName.text = characters[_data].cName;
         charImage.sprite = characters[_data].skins[0];
+        //Debug.Log(charImage.material.GetColor("MainColor"));
+        //charImage.material.SetColor("_Color", characters[_data].color);
+       // Debug.Log(charImage.material.GetColor("MainColor"));
         skinIdx = 0;
         //Setting the selector character
         selectButton.onClick.RemoveAllListeners();
