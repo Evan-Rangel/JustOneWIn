@@ -1,8 +1,5 @@
 using Avocado.Weapons;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Windows;
+
 
 namespace Avocado.CoreSystem
 {
@@ -33,12 +30,14 @@ namespace Avocado.CoreSystem
         #endregion
 
         #region Override Functions
+      
         public override void Enter()
         {
             base.Enter();
-
             weapon.Enter();
         }
+
+       
 
         public override void LogicUpdate()
         {

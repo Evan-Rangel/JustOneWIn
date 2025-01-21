@@ -222,4 +222,5 @@ public class PlayerListItem : MonoBehaviour
         charImage.sprite = characters[characterIdx].skins[skinIdx];
         LobbyController.instance.ChangeSkin(skinIdx);
     }
+  
 }

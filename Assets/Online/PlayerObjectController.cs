@@ -3,7 +3,9 @@ using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Linq;
+using Unity.VisualScripting;
+using Avocado.Weapons;
+using UnityEngine.UI;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -30,8 +32,10 @@ public class PlayerObjectController : NetworkBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         propertyBlock = new MaterialPropertyBlock();
-    }
 
+        //playerScript = GetComponent<Player>();
+    }
+    #region Initialization
     private void PlayerReadyUpdate(bool oldValue, bool newValue)
     {
         if (isServer)
@@ -118,9 +122,122 @@ public class PlayerObjectController : NetworkBehaviour
     {
         Manager.StartGame(sceneName);
     }
+    #endregion
+    #region MapChoice
+    [SyncVar(hook = nameof(SendMapChoiced))] public int mapChoice;
+    [Command]
+    public void CmdUpdateMapChoiced(int newData)
+    {
+        SendMapChoiced(this.mapChoice, newData);
+    }
+    public void ChangeMapChoice(int mapChoiced)
+    {
+        CmdUpdateMapChoiced(mapChoiced);
+    }
+    public void SendMapChoiced(int oldValue, int newValue)
+    {
+        if (isServer)
+        {
+            this.mapChoice = newValue;
+        }
+        if (isClient && oldValue != newValue)
+        {
+            UpdateMapChoice(newValue);
+        }
+    }
+    void UpdateMapChoice(int message)
+    {
+        mapChoice = message;
+        LevelSelectorController.instance.UpdateLevelList();
+    }
+    #endregion
+
+    #region Weapons
+
+    /*[SyncVar(hook = nameof(OnWeaponChanged))]
+    private int currentWeaponIndex;
+    public Weapon CurrentWeapon { get; private set; }
+    public Player playerScript;
+    void OnWeaponChanged(int oldWeapon, int newWeapon)
+    {
+        if (isClient)
+        {
+            EquipWeapon(newWeapon);
+        }
+    }
+    [Command]
+    public void CmdEquipWeapon(int weaponIndex)
+    {
+        currentWeaponIndex = weaponIndex;
+        EquipWeapon(weaponIndex);
+    }
+    private void EquipWeapon(int index)
+    {
+        // Asigna la nueva arma basada en el índice de los prefabs
+        CurrentWeapon = GetWeaponByIndex(index);
+    }
+    private Weapon GetWeaponByIndex(int index)
+    {
+        // Implementa lógica para obtener el arma correcta
+        return playerScript.weaponList[index];
+    }*/
+    /* [SyncVar(hook = nameof(SendWeaponIndex))] public int weaponIndex;
+     [Command]
+     public void CmdUpdateWeaponIndex(int newData)
+     {
+         SendWeaponIndex(this.weaponIndex, newData);
+     }
+     public void ChangeWeaponIndex(int weaponI)
+     {
+         CmdUpdateWeaponIndex(weaponI);
+     }
+     public void SendWeaponIndex(int oldValue, int newValue)
+     {
+         if (isServer)
+         {
+             this.weaponIndex = newValue;
+         }
+         if (isClient && oldValue != newValue)
+         {
+             UpdateWeaponIndex(newValue);
+         }
+     }
+     void UpdateWeaponIndex(int message)
+     {
+         weaponIndex = message;
+         GameManager.instance.UpdatePlayers();
+     }
 
 
-
+     [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
+     [Command]
+     public void CmdUpdateAttackActive(bool newData)
+     {
+         SendAttackActive(this.attackActive, newData);
+     }
+     public void ChangeAttackActive(bool value)
+     {
+         CmdUpdateAttackActive(value);
+     }
+     public void SendAttackActive(bool oldValue, bool newValue)
+     {
+         if (isServer)
+         {
+             this.attackActive = newValue;
+         }
+         if (isClient && oldValue != newValue)
+         {
+             UpdateAttackActive(newValue);
+         }
+     }
+     void UpdateAttackActive(bool message)
+     {
+         attackActive = message;
+         GameManager.instance.UpdatePlayers();
+     }
+    */
+    #endregion
+    #region Lobby
 
     [SyncVar(hook = nameof(SendPlayerCharacter))] public int character;
     [Command]
@@ -137,18 +254,14 @@ public class PlayerObjectController : NetworkBehaviour
     }
     public void SendPlayerCharacter(int oldValue, int newValue)
     {
-        //    if (!Manager.lockedCharacters.Contains(newValue))
+        if (isServer)
         {
-            if (isServer)
-            {
 
-                this.character = newValue;
-            }
-            if (isClient && (oldValue != newValue))
-            {
-                UpdateCharacter(newValue);
-            }
-            //Manager.LockCharacter(newValue);
+            this.character = newValue;
+        }
+        if (isClient && (oldValue != newValue))
+        {
+            UpdateCharacter(newValue);
         }
     }
     void UpdateCharacter(int message)
@@ -241,108 +354,58 @@ public class PlayerObjectController : NetworkBehaviour
         }
 
     }
+    #endregion
 
-    [SyncVar(hook = nameof(SendMapChoiced))] public int mapChoice;
+
+    #region UI
+    [SyncVar(hook = nameof(SendItemIdx))] public int itemIdx;
+    public Item currentItem { get; private set; }
     [Command]
-    public void CmdUpdateMapChoiced(int newData)
+    public void CmdUpdateItemIdx(int newData)
     {
-        SendMapChoiced(this.mapChoice, newData);
+        SendItemIdx(this.itemIdx, newData);
     }
-    public void ChangeMapChoice(int mapChoiced)
+    public void ChangeItemIdx(int newData)
     {
-        CmdUpdateMapChoiced(mapChoiced);
+        CmdUpdateItemIdx(newData);
     }
-    public void SendMapChoiced(int oldValue, int newValue)
+    public void SendItemIdx(int oldValue, int newValue) 
     {
         if (isServer)
         {
-            this.mapChoice = newValue;
+            this.itemIdx = newValue;
+            this.currentItem = GameManager.instance.GetItemByIndex(this.itemIdx);
         }
-        if (isClient && oldValue != newValue)
+        if (isClient )
         {
-            UpdateMapChoice(newValue);
+            UpdateItemIdx(newValue);
         }
     }
-    void UpdateMapChoice(int message)
+    void UpdateItemIdx(int message)
     {
-        mapChoice = message;
-        LevelSelectorController.instance.UpdateLevelList();
+        itemIdx = message;
+        currentItem= GameManager.instance.GetItemByIndex(itemIdx);
     }
 
-    [SyncVar(hook = nameof(SendWeaponIndex))] public int weaponIndex;
-    [Command]
-    public void CmdUpdateWeaponIndex(int newData)
-    {
-        SendWeaponIndex(this.weaponIndex, newData);
-    }
-    public void ChangeWeaponIndex(int weaponI)
-    {
-        CmdUpdateWeaponIndex(weaponI);
-    }
-    public void SendWeaponIndex(int oldValue, int newValue)
-    {
-        if (isServer)
-        {
-            this.weaponIndex = newValue;
-        }
-        if (isClient && oldValue != newValue)
-        {
-            UpdateWeaponIndex(newValue);
-        }
-    }
-    void UpdateWeaponIndex(int message)
-    {
-        weaponIndex = message;
-        GameManager.instance.UpdatePlayers();
-    }
-
-
-    [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
-    [Command]
-    public void CmdUpdateAttackActive(bool newData)
-    {
-        SendAttackActive(this.attackActive, newData);
-    }
-    public void ChangeAttackActive(bool value)
-    {
-        CmdUpdateAttackActive(value);
-    }
-    public void SendAttackActive(bool oldValue, bool newValue)
-    {
-        if (isServer)
-        {
-            this.attackActive = newValue;
-        }
-        if (isClient && oldValue != newValue)
-        {
-            UpdateAttackActive(newValue);
-        }
-    }
-    void UpdateAttackActive(bool message)
-    {
-        attackActive = message;
-        GameManager.instance.UpdatePlayers();
-    }
-
-
+    public RawImage playerIcon;
+  
+ 
+    #endregion
 
     #region Collisions
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        ICollidable interactuable = collision.transform.GetComponent<ICollidable>();
-        if (interactuable != null)
+        ICollidable coll = collision.transform.GetComponent<ICollidable>();
+        if (coll != null)
         {
             CmdNotifyObjectCollidable(collision.gameObject);
-            ActiveShadowEffect();
-        }
-        if (collision.transform.CompareTag("Player"))
-        {
+            //ActiveShadowEffect();
         }
     }
     [Command]
-    public void CmdNotifyObjectCollidable(GameObject obj)
+    public void CmdNotifyObjectCollidable(GameObject collision)
     {
-        obj.GetComponent<ICollidable>().OnCollision(gameObject);
+        collision.GetComponent<ICollidable>().OnCollision();
     }
     #endregion
 

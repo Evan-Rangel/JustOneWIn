@@ -5,8 +5,17 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using Avocado.Weapons.Components;
+using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
+    #region Items
+    [SerializeField] List<Item> itemList;
+    public Item GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
+    //[Range(1, 10)]
+    [field:SerializeField,Range(1, 10f)] public float itemTimeRespawn { get; private set; }
+    
+    
+    #endregion
     LevelData levelData;
     [SerializeField] Image loadImage;
     [SerializeField] TMP_Text loadText;
@@ -16,7 +25,6 @@ public class GameManager : MonoBehaviour
     public Sprite[] itemsSprites;
     public Transform cursor;
     public static GameManager instance;
-
 
     public PlayerObjectController localPlayerController;
     public GameObject localPlayerObject;
@@ -54,7 +62,7 @@ public class GameManager : MonoBehaviour
         localPlayerController = localPlayerObject.GetComponent<PlayerObjectController>();
 
     }
-    public void ChangeWeaponSprite(int weaponIdx)
+    /*public void ChangeWeaponSprite(int weaponIdx)
     { 
         localPlayerController.ChangeWeaponIndex(weaponIdx);
     }
@@ -70,7 +78,7 @@ public class GameManager : MonoBehaviour
             player.gameObject.GetComponentInChildren<WeaponSprite>().SetCurrentWeaponSpriteIndex(player.weaponIndex);
         }
     }
-
+    */
     public GameObject RequestRandomItem()
     {
         return Instantiate( items[Random.Range(0, items.Length)]);
@@ -120,7 +128,7 @@ public interface ItemAction
 }
 public interface ICollidable
 {
-    void OnCollision(GameObject obj);
+    void OnCollision();
 }
 public enum CHARACTERS
 { 

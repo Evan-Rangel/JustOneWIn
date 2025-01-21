@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxItem :Item, ItemAction
+public class BoxItem :Item
 {
+    /*
     [SerializeField]BoxCollider2D coll;
 
-    public void Action(PlayerItemManager _playerItemManager)
+    public override void Action(PlayerItemManager _playerItemManager)
     {
         transform.position = _playerItemManager.GetItemHolderBack().position;
         _playerItemManager.ResetCurrentItem();
@@ -21,5 +22,5 @@ public class BoxItem :Item, ItemAction
         {
             collision.transform.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         }
-    }
+    }*/
 }

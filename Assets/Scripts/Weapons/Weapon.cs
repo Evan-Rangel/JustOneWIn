@@ -59,18 +59,16 @@ namespace Avocado.Weapons
         #endregion
 
         #region Functions
-        public void Enter()
-        {
+         public void Enter()
+         {
             //print($"{transform.name} enter");
+             attackCounterResetTimer.StopTimer();
 
-            attackCounterResetTimer.StopTimer();
+             anim.SetBool("active", true);
+             anim.SetInteger("counter", currentAttackCounter);
 
-            anim.SetBool("active", true);
-            anim.SetInteger("counter", currentAttackCounter);
-
-            OnEnter?.Invoke();
-        }
-
+             OnEnter?.Invoke();
+         }
         public void SetCore(Core core)
         {
             Core = core;
@@ -91,6 +89,7 @@ namespace Avocado.Weapons
 
             OnExit?.Invoke();
         }
+        
 
         private void Awake()
         {
@@ -98,12 +97,11 @@ namespace Avocado.Weapons
             WeaponSpriteGameObject = transform.Find("WeaponSprite").gameObject;
 
             anim = BaseGameObject.GetComponent<Animator>();
-
+            
             EventHandler = BaseGameObject.GetComponent<AnimationEventHandler>();
 
             attackCounterResetTimer = new Timer(attackCounterResetCooldown);
         }
-
         private void Update()
         {
             attackCounterResetTimer.Tick();
@@ -113,6 +111,7 @@ namespace Avocado.Weapons
 
         private void OnEnable()
         {
+            Debug.Log("ON ENABLE");
             EventHandler.OnFinish += Exit;
             attackCounterResetTimer.OnTimerDone += ResetAttackCounter;
         }

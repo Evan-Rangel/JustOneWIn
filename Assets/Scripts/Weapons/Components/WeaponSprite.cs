@@ -17,6 +17,7 @@ namespace Avocado.Weapons.Components
         #endregion
 
         #region Integers
+
         private int currentWeaponSpriteIndex;
         public void SetCurrentWeaponSpriteIndex(int idx) { currentWeaponSpriteIndex = idx; }
         #endregion
@@ -42,6 +43,7 @@ namespace Avocado.Weapons.Components
 
         private void HandlerBaseSpriteChange(SpriteRenderer sr)
         {
+           
             if (!isAttackActive)
             {
                 weaponSpriteRenderer.sprite = null;
@@ -57,9 +59,8 @@ namespace Avocado.Weapons.Components
             weaponSpriteRenderer.sprite = currentPhaseSprites[currentWeaponSpriteIndex];
 
             currentWeaponSpriteIndex++;
-            GameManager.instance.ChangeWeaponSprite(currentWeaponSpriteIndex);
+            //GameManager.instance.ChangeWeaponSprite(currentWeaponSpriteIndex);
         }
-
         protected override void Start()
         {
             base.Start();

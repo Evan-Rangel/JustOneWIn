@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1897629473240721532
 Transform:
   m_ObjectHideFlags: 0
@@ -242,7 +242,6 @@ GameObject:
   - component: {fileID: 1890087431280452599}
   - component: {fileID: 7880788797927260487}
   - component: {fileID: 6420573070618473019}
-  - component: {fileID: 6174936454291731759}
   m_Layer: 11
   m_Name: Base
   m_TagString: Untagged
@@ -349,23 +348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4d50477ce05904a9a7ca0786583fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6174936454291731759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861827992515322373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  clientAuthority: 1
-  animator: {fileID: 7880788797927260487}
 --- !u!1 &2082415052950930798
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6489671215365419383
 Transform:
   m_ObjectHideFlags: 0
@@ -1167,7 +1149,6 @@ GameObject:
   - component: {fileID: 6512410552425986812}
   - component: {fileID: 3243829566336718924}
   - component: {fileID: 1819523884561132336}
-  - component: {fileID: 1579511781176831012}
   m_Layer: 11
   m_Name: Base
   m_TagString: Untagged
@@ -1274,23 +1255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff4d50477ce05904a9a7ca0786583fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1579511781176831012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6452744384390429454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  clientAuthority: 1
-  animator: {fileID: 3243829566336718924}
 --- !u!1 &6747866464842005781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1479,37 +1443,17 @@ MonoBehaviour:
     m_ActionId: cbd3cefc-45f0-404c-a4e7-740d85a07559
     m_ActionName: Gameplay/New action
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2007027878759110918}
-        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
-        m_MethodName: OnPrimaryAttackInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 5c87d3ee-2297-4a9f-95c8-610dd2555a2d
     m_ActionName: Gameplay/PrimaryAttack[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2007027878759110918}
-        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
-        m_MethodName: OnSecondaryAttackInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 6e07e798-3a6b-4f4a-971c-5f4aa3b712e5
     m_ActionName: Gameplay/SecondaryAttack[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e130ebe8-0133-4794-8cb8-2a4365333179
+    m_ActionName: Gameplay/Item[/Keyboard/1]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1531,6 +1475,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   playerData: {fileID: 11400000, guid: 788ee0c84820b5d47aaa7e27c0466e1a, type: 2}
+  weaponList: []
 --- !u!114 &2007027878759110918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1684,6 +1629,7 @@ MonoBehaviour:
   playerSteamID: 0
   playerName: 
   ready: 0
+  mapChoice: 0
   character: 0
   sprs:
   - {fileID: 623591726627142299}
@@ -1698,9 +1644,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d15367ba1b08dc940b54d7e7cd9c8f2e, type: 2}
   isLocked: 0
   skinIdx: 0
-  mapChoice: 0
-  weaponIndex: 0
-  attackActive: 0
+  itemIdx: 0
+  item: {fileID: 0}
 --- !u!114 &1000449356004690649
 MonoBehaviour:
   m_ObjectHideFlags: 0

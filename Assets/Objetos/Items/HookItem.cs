@@ -2,15 +2,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class HookItem : Item, ItemAction
+public class HookItem : Item
 {
+    /*
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] float hookTrowSpeed;
     [SerializeField] float hookGrabSpeed;
     [SerializeField] float endForce;
     PlayerInput playerInput;
   
-    public void Action(PlayerItemManager _playerItemManager)
+    public override void Action(PlayerItemManager _playerItemManager)
     {
         //Debug.Log("Hook Item");
         playerInput= _playerItemManager.GetPlayerInput();
@@ -81,5 +82,5 @@ public class HookItem : Item, ItemAction
         }
         Destroy(gameObject);
         yield break;
-    }
+    }*/
 }

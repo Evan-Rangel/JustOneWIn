@@ -46,7 +46,6 @@ public class PlayerCamera_S : MonoBehaviour
     }
     public void AddToPool(ShaderEffectCamera obj)
     {
-        Debug.Log("AddToPool");
         spr.enabled = true;
 
         for (int i = 0; i < objectsToTrack.Count; i++)
@@ -61,7 +60,6 @@ public class PlayerCamera_S : MonoBehaviour
     }
     public void RemoveFromPool(ShaderEffectCamera obj)
     {
-        Debug.Log("RemoveFromPool");
         for (int i = 0; i < objectsToTrack.Count; i++)
         {
             if (objectsToTrack[i] == obj)
@@ -96,7 +94,6 @@ public class PlayerCamera_S : MonoBehaviour
             if (objectsToTrack[i] == null)
                 continue;
             Vector3 viewportPos = mainCamera.WorldToViewportPoint(objectsToTrack[i].transform.position);
-            //Debug.Log("Value= "+ viewportPos);
             positionsTexture.SetPixel(i, (int)objectsToTrack[i].effectType, new Color(viewportPos.x, viewportPos.y, objectsToTrack[i].timeValue, 1));
         }
         positionsTexture.Apply();

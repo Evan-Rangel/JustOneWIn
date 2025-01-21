@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Steamworks;
 
 public class PlayerUIPanel : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class PlayerUIPanel : MonoBehaviour
     [SerializeField] GameObject powerUpImage;
     [SerializeField] GameObject playerObject;
     [SerializeField] CharacterData[] characters;
-
+    [SerializeField] RawImage playerIcon; 
+    PlayerObjectController player;
     private void Awake()
     {
         if (transform.parent!=null)
@@ -25,8 +27,13 @@ public class PlayerUIPanel : MonoBehaviour
     public void SetPlayerObject()
     {
         playerObject = GameObject.Find("LocalGamePlayer");
-        PlayerObjectController player= playerObject.GetComponent<PlayerObjectController>();
-        nameTxt.text = characters[player.character].cName;
-        charImage.GetComponent<Image>().sprite = characters[player.character].skins[player.skinIdx];
+        player= playerObject.GetComponent<PlayerObjectController>();
+        nameTxt.text = player.playerName;
+        playerIcon = player.playerIcon;
+        playerIcon.transform.parent= transform;
+        playerIcon.rectTransform.localPosition= new Vector3(-14.1f, 13.5f, 0);
+        //charImage.GetComponent<Image>().sprite = characters[player.character].skins[player.skinIdx];
     }
+
+
 }

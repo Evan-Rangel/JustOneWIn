@@ -55,6 +55,7 @@ public class Player : NetworkBehaviour
 
     private Weapon primaryWeapon;
     private Weapon secondaryWeapon;
+    public List<Weapon> weaponList;
     #endregion
     //-----------------//
 
@@ -90,8 +91,11 @@ public class Player : NetworkBehaviour
         CrouchMoveState = new PlayerCrouchMoveState(this, StateMachine, playerData, "crouchMove");
         PrimaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", primaryWeapon, CombatInputs.primary);
         SecondaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", secondaryWeapon, CombatInputs.secondary);
+       
+        
+        //ListaDeArmas
+        weaponList = new List<Weapon>() { primaryWeapon, secondaryWeapon };
     }
-
     private void Start()
     {
         //Initialize Aniamtor

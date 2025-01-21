@@ -140,31 +140,25 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (gameObject.name=="LocalGamePlayer")
         {
-
             RawDashDirectionInput = context.ReadValue<Vector2>();
-
             if (playerInput.currentControlScheme == "Keyboard")
             {
                 RawDashDirectionInput = cam.ScreenToWorldPoint((Vector3)RawDashDirectionInput) - transform.position;
             }
-
             DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
         }
     }
-
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            AttackInputs[(int)CombatInputs.primary] = true;
-        }
-
+         if (context.started)
+         {
+             AttackInputs[(int)CombatInputs.primary] = true;
+         }
         if (context.canceled)
         {
             AttackInputs[(int)CombatInputs.primary] = false;
         }
     }
-
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -177,6 +171,11 @@ public class PlayerInputHandler : MonoBehaviour
             AttackInputs[(int)CombatInputs.secondary] = false;
         }
     }
+    public void OnItemInput(InputAction.CallbackContext context) 
+    { 
+    
+    }
+   
     #endregion
 
     #region Player Input Set Functions

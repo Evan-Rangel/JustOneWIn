@@ -35,7 +35,7 @@ public class LevelButton : MonoBehaviour
                 break;
             if (image.sprite != null)
                 continue;
-            image.sprite = characters[charIdx].skins[skinIdx];
+            //image.sprite = characters[charIdx].skins[skinIdx];
             playersID.Add(playerID); ;
             break;
         }

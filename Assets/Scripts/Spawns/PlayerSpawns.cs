@@ -10,7 +10,7 @@ public class PlayerSpawns : MonoBehaviour
     private void Start()
     {
         spawns = GetComponentsInChildren<Transform>();
-        GameManager.instance.SetPlayerSpawns(spawns);
+       // GameManager.instance.SetPlayerSpawns(spawns);
     }
 
 }

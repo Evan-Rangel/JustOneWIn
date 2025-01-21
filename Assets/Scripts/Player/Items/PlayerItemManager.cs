@@ -38,7 +38,7 @@ public class PlayerItemManager : MonoBehaviour
         {
             currentItem = GameManager.instance.RequestRandomItem();
             action = currentItem.gameObject.GetComponent<ItemAction>();
-            itemSprite.sprite = currentItem.GetComponent<Item>().GetSprite();
+           // itemSprite.sprite = currentItem.GetComponent<Item>().GetSprite;
             StartCoroutine(ActiveItem());
             //yield return new WaitUntil(() => currentItem==null);
         }

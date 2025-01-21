@@ -255,6 +255,17 @@ public class LobbyController : MonoBehaviour
     }
     public void StartGame(string sceneName)
     {
+        foreach (PlayerObjectController player in Manager.gamePlayers)
+        {
+            foreach (PlayerListItem playerListItem in playerListItems)
+            {
+                if (playerListItem.connectionID==player.connectionID)
+                {
+                    player.playerIcon = playerListItem.playerIcon;
+                    playerListItem.playerIcon.transform.parent= player.transform;
+                }
+            }
+        }
         localPlayerController.CanStartGame(sceneName);
     }
 }

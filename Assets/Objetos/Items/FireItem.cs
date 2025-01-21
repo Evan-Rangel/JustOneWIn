@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FireItem : Item, ItemAction
+public class FireItem : Item
 {
+    /*
     [SerializeField] GameObject bullet;
     [SerializeField] float forceSpeed;
-    public void Action(PlayerItemManager _playerItemManager)
+    public override void Action(PlayerItemManager _playerItemManager)
     {
         Transform originTransform = _playerItemManager.GetItemHolderFront();
         Transform player = _playerItemManager.transform;
@@ -15,5 +16,5 @@ public class FireItem : Item, ItemAction
         _bullet.GetComponent<Rigidbody2D>().AddForce((GameManager.instance.cursor.position - originTransform.position).normalized*forceSpeed);
         Destroy( _bullet,10 );
         Destroy(gameObject);
-    }
+    }*/
 }

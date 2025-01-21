@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class FreezeItem : Item, ItemAction
+public class FreezeItem : Item
 {
-
-    public void Action(PlayerItemManager _playerItemManager)
+/*
+    public override void Action(PlayerItemManager _playerItemManager)
     {
         transform.position= _playerItemManager.GetItemHolderFront().position;
         RaycastHit2D[] hits;
@@ -23,7 +23,7 @@ public class FreezeItem : Item, ItemAction
         Destroy(gameObject);
 
        // StartCoroutine(Freeze(_playerItemManager));
-    }
+    }*/
     /*IEnumerator Freeze(PlayerItemManager _playerItemManager)
     {
         RaycastHit2D[] hits;

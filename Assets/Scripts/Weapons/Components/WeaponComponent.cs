@@ -44,13 +44,13 @@ namespace Avocado.Weapons.Components
         protected virtual void HandleEnter()
         {
             isAttackActive = true;
-            GameManager.instance.ChangeAttacActive(isAttackActive);
+           // GameManager.instance.ChangeAttacActive(isAttackActive);
         }
 
         protected virtual void HandleExit()
         {
             isAttackActive = false;
-            GameManager.instance.ChangeAttacActive(isAttackActive);
+            //GameManager.instance.ChangeAttacActive(isAttackActive);
 
         }
 

@@ -8,7 +8,6 @@ public class P_Fall : NetworkBehaviour, ICollidable
     Collider2D m_Collider;
     SpriteRenderer spr;
     [SerializeField] Color m_color, f_color;
-    //[Server]
     private void Awake()
     {
         spr = GetComponent<SpriteRenderer>();
@@ -16,7 +15,7 @@ public class P_Fall : NetworkBehaviour, ICollidable
         m_Collider = GetComponent<Collider2D>();
     }
     [Server]
-    public void OnCollision(GameObject obj)
+    public void OnCollision()
     {
         if(isServer)
         RpcNotifyClients();

@@ -1,13 +1,33 @@
 using System;
 using UnityEngine;
+using Mirror;
+using System.Collections;
 [Serializable]
-public class Item : MonoBehaviour
+public class Item : NetworkBehaviour, ICollidable
 {
-    [SerializeField] Sprite sprite;
-    public Sprite GetSprite (){ return sprite; }
-    
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-        //if (collision.transform.CompareTag("Player")) GameManager.instance.StartCoroutine(GameManager.instance.ReEnableItem(gameObject));
-    //}
+    SpriteRenderer sr;
+    Collider2D coll;
+    private void Awake()
+    {
+        coll = GetComponent<Collider2D>();
+        sr=GetComponent<SpriteRenderer>();
+    }
+    [Server]
+    public void OnCollision()
+    {
+        if (isServer) RpcNotifyClients(); 
+    }
+    [ClientRpc]
+    private void RpcNotifyClients()
+    {
+        StartCoroutine(Deactivate());
+    }
+    private IEnumerator Deactivate()
+    { 
+        coll.enabled = false;
+        sr.enabled = false;
+        yield return Helpers.GetWait( GameManager.instance.itemTimeRespawn);
+        coll.enabled =true;
+        sr.enabled = true;
+    }
 }
