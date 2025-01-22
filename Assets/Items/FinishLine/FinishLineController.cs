@@ -38,6 +38,7 @@ namespace Avocado
 
                 tempName = collision.transform.GetComponent<PlayerObjectController>().playerName;
                 tempIcon = collision.transform.GetComponent<PlayerObjectController>().iconText;
+                if(authority)
                 OnPlayerCollision();
             }    
         }
