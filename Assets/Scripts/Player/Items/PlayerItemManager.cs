@@ -16,8 +16,8 @@ public class PlayerItemManager : MonoBehaviour
     [SerializeField] PlayerInput playerInput;
     [SerializeField] int actives;
     public PlayerInput GetPlayerInput() { return playerInput; }
-    public Transform GetItemHolderFront() { return itemHolderFront; }
-    public Transform GetItemHolderBack() { return itemHolderBack; }
+    public Transform GetItemHolderFront (){ return itemHolderFront; }
+    public Transform GetItemHolderBack (){ return itemHolderBack; }
     public DistanceJoint2D distanceJoint { get; private set; }
     public void ResetCurrentItem()
     { currentItem = null; }
@@ -26,7 +26,7 @@ public class PlayerItemManager : MonoBehaviour
         distanceJoint = gameObject.GetComponent<DistanceJoint2D>();
     }
     public void ShowItemImage()
-    {
+    { 
         itemSprite.enabled = true;
     }
     IEnumerator RequestRandomItem()
@@ -34,16 +34,16 @@ public class PlayerItemManager : MonoBehaviour
         itemSprite.enabled = true;
         for (int i = 0; i < 10; i++)
         {
-            itemSprite.sprite = GameManager.instance.itemsSprites[Random.Range(0, GameManager.instance.itemsSprites.Length)];
+            itemSprite.sprite=GameManager.instance.itemsSprites[Random.Range(0, GameManager.instance.itemsSprites.Length)];
             yield return Helpers.GetWait(0.3f);
         }
-        for (int i = 0; i < actives; i++)
+       // for (int i = 0; i < actives; i++)
         {
             currentItem = GameManager.instance.RequestRandomItem();
             action = currentItem.gameObject.GetComponent<ItemAction>();
             itemSprite.sprite = currentItem.GetComponent<Item>().GetSprite();
             StartCoroutine(ActiveItem());
-            yield return new WaitUntil(() => currentItem == null);
+            //yield return new WaitUntil(() => currentItem==null);
         }
     }
     IEnumerator ActiveItem()
@@ -54,7 +54,7 @@ public class PlayerItemManager : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Item") && currentItem == null)
+        if (collision.transform.CompareTag("Item") && currentItem==null)
         {
             StartCoroutine(RequestRandomItem());
         }

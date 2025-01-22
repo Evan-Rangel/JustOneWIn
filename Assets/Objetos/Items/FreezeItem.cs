@@ -20,6 +20,8 @@ public class FreezeItem : Item, ItemAction
             if (hit.collider.transform.CompareTag("Enemy"))
                 Debug.Log(hit.transform.name);
         }
+        Destroy(gameObject);
+
        // StartCoroutine(Freeze(_playerItemManager));
     }
     /*IEnumerator Freeze(PlayerItemManager _playerItemManager)

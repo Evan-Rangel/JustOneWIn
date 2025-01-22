@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
+    LevelData levelData;
     [SerializeField] Image loadImage;
     [SerializeField] TMP_Text loadText;
     [SerializeField] string[] startCount;
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
+        levelData= Helpers.GetCurrentLevel();
+        AudioManager.instance.PlayMusic(levelData.levelMusic);
         StartCoroutine(StartGame());
     }
     public GameObject RequestRandomItem()
@@ -65,10 +68,14 @@ public class GameManager : MonoBehaviour
             loadImage.fillClockwise = !loadImage.fillClockwise;
         }
     }
-    
 }
 public interface ItemAction
 {
     public void Action(PlayerItemManager _playerItemManager);
+
+}
+public enum CHARACTERS
+{ 
+    Blue
 
 }
