@@ -44,7 +44,7 @@ namespace Avocado.CoreSystem
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            //This is here to to avoid the Entity to slice when recibe the Knockback
+            //This is here to to avoid the Entity to slice when takee the Knockback
             Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
         }
 

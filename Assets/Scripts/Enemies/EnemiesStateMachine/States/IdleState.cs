@@ -41,8 +41,6 @@ namespace Avocado.CoreSystem
             Movement?.SetVelocityX(0f);
             isIdleTimeOver = false;
             SetRandomIdleTime();
-
-
         }
 
         public override void Exit()
