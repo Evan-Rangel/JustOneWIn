@@ -58,13 +58,15 @@ namespace Avocado.CoreSystem
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
+            if (player==null ||player.InputHandler == null) return;
+            if (player.InputHandler.AttackInputs == null) return;
             //Read the inputs used
             xInput = player.InputHandler.NormInputX;
             yInput = player.InputHandler.NormInputY;
             jumpInput = player.InputHandler.JumpInput;
             grabInput = player.InputHandler.GrabInput;
             dashInput = player.InputHandler.DashInput;
+
 
             //Condition that check the Attack Inputs
             if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && !isTouchingCeiling)

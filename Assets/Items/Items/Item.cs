@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Mirror;
 using System.Collections;
-[Serializable]
+using System.Collections.Generic;
 public class Item : NetworkBehaviour, ICollidable
 {
     SpriteRenderer sr;

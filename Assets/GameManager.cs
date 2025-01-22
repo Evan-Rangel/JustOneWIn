@@ -9,8 +9,8 @@ using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
     #region Items
-    [SerializeField] List<Item> itemList;
-    public Item GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
+    public List<GameObject> itemList;
+    public GameObject GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
     //[Range(1, 10)]
     [field:SerializeField,Range(1, 10f)] public float itemTimeRespawn { get; private set; }
     

@@ -217,10 +217,11 @@ public class LobbyController : MonoBehaviour
                     playerListItemScript.characterIdx = player.character;
                     playerListItemScript.skinIdx = player.skinIdx;
                     playerListItemScript.SetPlayerValues();
-                    if (player==localPlayerController)
+                    if (player == localPlayerController)
                     {
                         playerListItemScript.IsInteractuable(true);
                         UpdateButton();
+                        player.ChangeIconTexture( (Texture2D)playerListItemScript.playerIcon.texture);
                     }
                     else
                     {
@@ -255,17 +256,19 @@ public class LobbyController : MonoBehaviour
     }
     public void StartGame(string sceneName)
     {
-        foreach (PlayerObjectController player in Manager.gamePlayers)
+       /* foreach (PlayerObjectController player in Manager.gamePlayers)
         {
             foreach (PlayerListItem playerListItem in playerListItems)
             {
                 if (playerListItem.connectionID==player.connectionID)
                 {
-                    player.playerIcon = playerListItem.playerIcon;
-                    playerListItem.playerIcon.transform.parent= player.transform;
+                    player.ChangeIconTexture((Texture2D)playerListItem.playerIcon.texture);
+                    //player.playerIcon = playerListItem.playerIcon;
+                   // player.iconText = (Texture2D)playerListItem.playerIcon.texture;
+                    //playerListItem.playerIcon.transform.parent= player.transform;
                 }
             }
-        }
+        }*/
         localPlayerController.CanStartGame(sceneName);
     }
 }

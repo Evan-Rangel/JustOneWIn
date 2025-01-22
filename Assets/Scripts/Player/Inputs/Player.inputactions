@@ -70,12 +70,12 @@
                 },
                 {
                     "name": "Item",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "e130ebe8-0133-4794-8cb8-2a4365333179",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -291,7 +291,7 @@
                 {
                     "name": "",
                     "id": "37453b2e-1427-4b35-9722-58ac64c7a45e",
-                    "path": "<Keyboard>/1",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",

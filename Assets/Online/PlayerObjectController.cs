@@ -3,9 +3,8 @@ using Mirror;
 using Steamworks;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Avocado.Weapons;
-using UnityEngine.UI;
+using UnityEngine.Events;
+using Avocado.CoreSystem;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -356,10 +355,41 @@ public class PlayerObjectController : NetworkBehaviour
     }
     #endregion
 
+    #region UI / Items / Player Icon
+    #region Items
+    public UnityEvent grabItem;
+    public UnityEvent useItem;
+    public UnityEvent dropItem;
+    [SerializeField] Transform itemSpawner;
 
-    #region UI
+    [Command]
+    public void InstantiateItem(Vector2 direction)
+    {
+        if (currentItem == null) return;
+        if (currentItem.GetComponent<Rigidbody2D>() == null)
+        {
+            NotifyFlash();
+        }
+        else
+        {
+            GameObject itemInstance = Instantiate(currentItem);
+            itemInstance.transform.position = itemSpawner.position;
+            itemInstance.GetComponent<Rigidbody2D>().velocity = direction * 15;
+            NetworkServer.Spawn(itemInstance);
+        }
+
+        currentItem = null;
+    }
+    
+    [ClientRpc(includeOwner = false)]
+    public void NotifyFlash()
+    {
+        FakeLight_S.instance.StartShadowEffect();
+    }
+
+
     [SyncVar(hook = nameof(SendItemIdx))] public int itemIdx;
-    public Item currentItem { get; private set; }
+    public GameObject currentItem;
     [Command]
     public void CmdUpdateItemIdx(int newData)
     {
@@ -375,6 +405,8 @@ public class PlayerObjectController : NetworkBehaviour
         {
             this.itemIdx = newValue;
             this.currentItem = GameManager.instance.GetItemByIndex(this.itemIdx);
+            grabItem.Invoke();
+
         }
         if (isClient )
         {
@@ -385,21 +417,64 @@ public class PlayerObjectController : NetworkBehaviour
     {
         itemIdx = message;
         currentItem= GameManager.instance.GetItemByIndex(itemIdx);
+        grabItem.Invoke();
     }
 
-    public RawImage playerIcon;
-  
- 
+    
     #endregion
 
+    #region PlayerIcon
+    [SyncVar(hook = nameof(SendIconTexture))] public Texture2D iconText;
+    [Command]
+    public void CmdUpdateIconTexture(Texture2D newData)
+    {
+        SendIconTexture(this.iconText, newData);
+    }
+    public void ChangeIconTexture(Texture2D newData)
+    {
+        CmdUpdateIconTexture(newData);
+    }
+    public void SendIconTexture(Texture2D oldValue, Texture2D newValue)
+    {
+        if (isServer)
+        {
+            this.iconText = newValue;
+        }
+        if (isClient)
+        {
+            UpdateIconTexture(newValue);
+        }
+    }
+    void UpdateIconTexture(Texture2D message)
+    {
+        iconText = message;
+    }
+
+    #endregion
+    #endregion
     #region Collisions
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!authority) return;
         ICollidable coll = collision.transform.GetComponent<ICollidable>();
         if (coll != null)
         {
             CmdNotifyObjectCollidable(collision.gameObject);
             //ActiveShadowEffect();
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        ICollidable coll = collision.transform.GetComponent<ICollidable>();
+        if (coll != null)
+        {
+            CmdNotifyObjectCollidable(collision.gameObject);
+        }
+        Item _item = collision.transform.GetComponent<Item>();
+        if (_item!=null)
+        {
+            ChangeItemIdx( Random.Range(0, GameManager.instance.itemList.Count));
         }
     }
     [Command]
@@ -410,8 +485,11 @@ public class PlayerObjectController : NetworkBehaviour
     #endregion
 
     #region Effects
+
+    
+
     public void ActiveShadowEffect()
-    {
+    {   
         FakeLight_S fLight = GetComponentInChildren<FakeLight_S>();
         fLight.StartShadowEffect();
     }

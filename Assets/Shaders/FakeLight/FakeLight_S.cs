@@ -5,8 +5,12 @@ public class FakeLight_S : MonoBehaviour
     [SerializeField] SpriteRenderer spr;
     [SerializeField] float speed;
     MaterialPropertyBlock propertyBlock;
+    GameObject player;
+    public static FakeLight_S instance; 
     private void Awake()
     {
+        instance = this;
+        DontDestroyOnLoad(this);
         propertyBlock = new MaterialPropertyBlock();
         spr = GetComponent<SpriteRenderer>();
     }
@@ -15,6 +19,14 @@ public class FakeLight_S : MonoBehaviour
         spr.GetPropertyBlock(propertyBlock);
         propertyBlock.SetFloat("_DarknessStrength", 0);
         spr.SetPropertyBlock(propertyBlock);
+    }
+    private void Update()
+    {
+
+        if (player == null) player=GameObject.Find("LocalGamePlayer");
+
+        if (player != null) transform.position = player.transform.position;
+
     }
     public void StartShadowEffect()
     { 
@@ -27,7 +39,6 @@ public class FakeLight_S : MonoBehaviour
         float t = Time.deltaTime * speed;
         while (propertyBlock.GetFloat("_DarknessStrength")>0)
         {
-            Debug.Log("Darness: "+propertyBlock.GetFloat("_DarknessStrength"));
             yield return Helpers.GetWait(t);
             float decrement = t * Mathf.Lerp(1f, 50, 1f - (propertyBlock.GetFloat("_DarknessStrength") / 75));
             spr.SetPropertyBlock(propertyBlock);

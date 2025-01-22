@@ -162,7 +162,6 @@ public class PlayerListItem : MonoBehaviour
         prevButton.onClick.RemoveAllListeners();
         prevButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });
         prevButton.onClick.AddListener(delegate { GetPrevCharacterSkin(); });
-        Debug.Log("Select");
         //Setting the next button
         nextButton.onClick.RemoveAllListeners();
         nextButton.onClick.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(clickSound); });

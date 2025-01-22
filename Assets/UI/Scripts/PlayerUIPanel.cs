@@ -29,11 +29,22 @@ public class PlayerUIPanel : MonoBehaviour
         playerObject = GameObject.Find("LocalGamePlayer");
         player= playerObject.GetComponent<PlayerObjectController>();
         nameTxt.text = player.playerName;
-        playerIcon = player.playerIcon;
-        playerIcon.transform.parent= transform;
-        playerIcon.rectTransform.localPosition= new Vector3(-14.1f, 13.5f, 0);
+        //playerIcon = player.playerIcon;
+        playerIcon.texture = player.iconText;
+        player.grabItem.AddListener(delegate { GrabItem(); });
+        player.useItem.AddListener(delegate { UseItem(); });
         //charImage.GetComponent<Image>().sprite = characters[player.character].skins[player.skinIdx];
     }
+    void GrabItem()
+    { 
+        powerUpImage.SetActive(true);
+        powerUpImage.GetComponent<Image>().sprite=player.currentItem.GetComponent<SpriteRenderer>().sprite;
+    }
+    void UseItem()
+    {
+        powerUpImage.GetComponent<Image>().sprite=null;
+        powerUpImage.SetActive(false);
 
+    }
 
 }

@@ -62,12 +62,11 @@ public class PlayerCamera_S : MonoBehaviour
     {
         for (int i = 0; i < objectsToTrack.Count; i++)
         {
-            if (objectsToTrack[i] == obj)
-            {
-                positionsTexture.SetPixel(i, (int)objectsToTrack[i].effectType, new Color(0, 0, 0, 0));
-                objectsToTrack[i] = null;
-                break;
-            }
+            if (objectsToTrack[i]!=obj)continue;
+            
+            positionsTexture.SetPixel(i, (int)objectsToTrack[i].effectType, new Color(0, 0, 0, 0));
+            objectsToTrack[i] = null;
+            break;
         }
         positionsTexture.Apply();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);

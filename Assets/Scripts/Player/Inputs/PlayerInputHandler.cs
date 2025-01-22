@@ -11,6 +11,7 @@ public class PlayerInputHandler : MonoBehaviour
     //Reference
     private PlayerInput playerInput;
     [SerializeField]private Camera cam;
+    public Camera Camera { get { return cam; } }  
     //Vectors
     public Vector2 RawMovementInput { get; private set; }
     public Vector2 RawDashDirectionInput { get; private set; }
@@ -43,7 +44,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         //Intizlize
         playerInput = GetComponent<PlayerInput>();
-
+       // Debug.Log("START"+playerInput.currentControlScheme);
         int count = Enum.GetValues(typeof(CombatInputs)).Length;
         AttackInputs = new bool[count];
 
@@ -138,6 +139,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
     public void OnDashDirectionInput(InputAction.CallbackContext context)
     {
+        if (playerInput == null) return;
         if (gameObject.name=="LocalGamePlayer")
         {
             RawDashDirectionInput = context.ReadValue<Vector2>();
@@ -171,11 +173,29 @@ public class PlayerInputHandler : MonoBehaviour
             AttackInputs[(int)CombatInputs.secondary] = false;
         }
     }
-    public void OnItemInput(InputAction.CallbackContext context) 
+    #region Items
+
+    Vector2 itemDirection=Vector2.zero;
+    Vector2Int itemDirectionNOR = Vector2Int.zero;
+    public void OnItemInput(InputAction.CallbackContext context)
     { 
-    
+        PlayerObjectController controller= GetComponent<PlayerObjectController>();
+        controller.InstantiateItem(itemDirectionNOR);
+        controller.useItem.Invoke();
     }
-   
+    public void ItemDirection(InputAction.CallbackContext context)
+    {
+        if (playerInput == null) return;
+
+        itemDirection = context.ReadValue<Vector2>();
+        if (playerInput.currentControlScheme == "Keyboard")
+        {
+            itemDirection = cam.ScreenToWorldPoint((Vector3)itemDirection) - (transform.position+new Vector3(0,1.3f,0));
+        }
+        itemDirectionNOR = Vector2Int.RoundToInt(itemDirection.normalized);
+
+    }
+    #endregion
     #endregion
 
     #region Player Input Set Functions
