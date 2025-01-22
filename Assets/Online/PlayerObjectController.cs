@@ -483,11 +483,7 @@ public class PlayerObjectController : NetworkBehaviour
         collision.GetComponent<ICollidable>().OnCollision();
     }
     #endregion
-
     #region Effects
-
-    
-
     public void ActiveShadowEffect()
     {   
         FakeLight_S fLight = GetComponentInChildren<FakeLight_S>();
