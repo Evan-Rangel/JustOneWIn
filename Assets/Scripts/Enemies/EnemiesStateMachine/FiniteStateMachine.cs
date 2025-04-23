@@ -6,17 +6,14 @@ namespace Avocado.CoreSystem
 {
     public class FiniteStateMachine
     {
-        //States
         public State currentState { get; private set; }
 
-        //Function Initialize
-        public void Initialize(State startingState)//This will take the fisrt state when the game starts
+        public void Initialize(State startingState)
         {
             currentState = startingState;
             currentState.Enter();
         }
 
-        //Funtion ChangeState
         public void ChangeState(State newState)
         {
             currentState.Exit();

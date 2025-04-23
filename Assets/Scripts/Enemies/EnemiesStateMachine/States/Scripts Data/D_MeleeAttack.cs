@@ -5,14 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newMeleeAttackStateData", menuName = "Data/State Data/Melee Attack State")]
 public class D_MeleeAttack : ScriptableObject
 {
-    //Stats
     public float attackRadius = 0.5f;
-    public float attackDamage = 10.0f;
-    public float knoackbackStrength = 10f;
+    public float attackDamage = 10f;
 
-    //Vectors
-    public Vector2 knoackbackAngle = Vector2.one;
+    public Vector2 knockbackAngle = Vector2.one;
+    public float knockbackStrength = 10f;
 
-    //Layers
+    public float PoiseDamage;
+
     public LayerMask whatIsPlayer;
 }

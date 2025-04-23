@@ -1,68 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerWallJumpState : PlayerAbilityState
 {
-    public class PlayerWallJumpState : PlayerAbilityState
+    private int wallJumpDirection;
+
+    public PlayerWallJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-        //---PlayerWallJumpState Vars---//
-        #region PlayerWallJumpState Vars
-        private int wallJumpDirection;
-        #endregion
 
-        //---PlayerWallJumpState Construct---//
-        #region Construct
-        public PlayerWallJumpState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        player.InputHandler.UseJumpInput();
+        player.JumpState.ResetAmountOfJumpsLeft();
+        Movement?.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
+        Movement?.CheckIfShouldFlip(wallJumpDirection);
+        player.JumpState.DecreaseAmountOfJumpsLeft();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        player.Animator.SetFloat("yVelocity", Movement.CurrentVelocity.y);
+        player.Animator.SetFloat("xVelocity", Mathf.Abs(Movement.CurrentVelocity.x));
+
+        if (Time.time >= startTime + playerData.wallJumpTime)
         {
-
+            isAbilityDone = true;
         }
-        #endregion
+    }
 
-        //---Override Functions---//
-        #region Override Functions
-        public override void Enter()
+    public void DetermineWallJumpDirection(bool isTouchingWall)
+    {
+        if (isTouchingWall)
         {
-            base.Enter();
-
-            //Use the Jump Inputs
-            player.InputHandler.UseJumpInput();
-            //Set wall Jump Velocity
-            player.JumpState.ResetAmountOfJumps();
-            Movement?.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
-            Movement?.CheckIfShouldFlip(wallJumpDirection);
-            player.JumpState.DeecreaseAmountOfJumpsLeft();
+            wallJumpDirection = -Movement.FacingDirection;
         }
-
-        public override void LogicUpdate()
+        else
         {
-            base.LogicUpdate();
-
-            //Pass "X" and "Y" velocity to the animator
-            player.Animator.SetFloat("yVelocity", Movement.CurrentVelocity.y);
-            player.Animator.SetFloat("xVelocity", Mathf.Abs(Movement.CurrentVelocity.x));
-
-            //Condition that check if our walljump time is over
-            if (Time.time >= startTime + playerData.wallJumpTime)
-            {
-                isAbilityDone = true;
-            }
+            wallJumpDirection = Movement.FacingDirection;
         }
-        #endregion
-
-        //---Other Functions---//
-        #region Other Functions
-        public void DetermineWallJumpDirection(bool isTouchingWall)
-        {
-            if (isTouchingWall)
-            {
-                wallJumpDirection = -Movement.FacingDirection;
-            }
-            else
-            {
-                wallJumpDirection = Movement.FacingDirection;
-            }
-        }
-        #endregion
     }
 }

@@ -7,37 +7,23 @@ namespace Avocado.Weapons
 {
     public class Weapon : MonoBehaviour
     {
-        #region References
-        public WeaponDataSO Data { get; private set; }
+        public event Action<bool> OnCurrentInputChange;
 
-        private Animator anim;
-        public AnimationEventHandler EventHandler { get; private set; }
-
-        public Core Core { get; private set; }
-        public GameObject BaseGameObject {get; private set;}
-        public GameObject WeaponSpriteGameObject { get; private set;}
-        #endregion
-
-        #region Events
         public event Action OnEnter;
         public event Action OnExit;
+        public event Action OnUseInput;
 
-        public event Action<bool> OnCurrentInputChange;
-        #endregion
+        [SerializeField] private float attackCounterResetCooldown;
 
-        #region Timers
-        private Timer attackCounterResetTimer;
-        #endregion
+        public bool CanEnterAttack { get; private set; }
 
-        #region Properties
+        public WeaponDataSO Data { get; private set; }
 
         public int CurrentAttackCounter
         {
             get => currentAttackCounter;
-            private set => currentAttackCounter = value >= Data.NumberOfAttacks ? 0 : value; 
+            private set => currentAttackCounter = value >= Data.NumberOfAttacks ? 0 : value;
         }
-        private int currentAttackCounter;
-
 
         public bool CurrentInput
         {
@@ -51,24 +37,53 @@ namespace Avocado.Weapons
                 }
             }
         }
+
+        public float AttackStartTime { get; private set; }
+
+        public Animator Anim { get; private set; }
+        public GameObject BaseGameObject { get; private set; }
+        public GameObject WeaponSpriteGameObject { get; private set; }
+
+        public AnimationEventHandler EventHandler
+        {
+            get
+            {
+                if (!initDone)
+                {
+                    GetDependencies();
+                }
+
+                return eventHandler;
+            }
+            private set => eventHandler = value;
+        }
+
+        public Core Core { get; private set; }
+
+        private int currentAttackCounter;
+
+        private TimeNotifier attackCounterResetTimeNotifier;
+
         private bool currentInput;
-        #endregion
 
-        #region Floats
-        [SerializeField] private float attackCounterResetCooldown;
-        #endregion
+        private bool initDone;
+        private AnimationEventHandler eventHandler;
 
-        #region Functions
-         public void Enter()
-         {
-            //print($"{transform.name} enter");
-             attackCounterResetTimer.StopTimer();
+        public void Enter()
+        {
+            // Debug.Break();
+            print($"{transform.name} enter");
 
-             anim.SetBool("active", true);
-             anim.SetInteger("counter", currentAttackCounter);
+            AttackStartTime = Time.time;
 
-             OnEnter?.Invoke();
-         }
+            attackCounterResetTimeNotifier.Disable();
+
+            Anim.SetBool("active", true);
+            Anim.SetInteger("counter", currentAttackCounter);
+
+            OnEnter?.Invoke();
+        }
+
         public void SetCore(Core core)
         {
             Core = core;
@@ -77,51 +92,74 @@ namespace Avocado.Weapons
         public void SetData(WeaponDataSO data)
         {
             Data = data;
+
+            if (Data is null)
+                return;
+
+            ResetAttackCounter();
         }
 
-        private void Exit()
+        public void SetCanEnterAttack(bool value) => CanEnterAttack = value;
+
+        public void Exit()
         {
-            anim.SetBool("active", false);
+            Anim.SetBool("active", false);
 
             CurrentAttackCounter++;
-
-            attackCounterResetTimer.StartTimer();
+            attackCounterResetTimeNotifier.Init(attackCounterResetCooldown);
 
             OnExit?.Invoke();
         }
-        
 
         private void Awake()
         {
+            GetDependencies();
+
+            attackCounterResetTimeNotifier = new TimeNotifier();
+        }
+
+        private void GetDependencies()
+        {
+            if (initDone)
+                return;
+
             BaseGameObject = transform.Find("Base").gameObject;
             WeaponSpriteGameObject = transform.Find("WeaponSprite").gameObject;
 
-            anim = BaseGameObject.GetComponent<Animator>();
-            
+            Anim = BaseGameObject.GetComponent<Animator>();
+
             EventHandler = BaseGameObject.GetComponent<AnimationEventHandler>();
 
-            attackCounterResetTimer = new Timer(attackCounterResetCooldown);
-        }
-        private void Update()
-        {
-            attackCounterResetTimer.Tick();
+            initDone = true;
         }
 
-        private void ResetAttackCounter() => CurrentAttackCounter = 0;
+        private void Update()
+        {
+            attackCounterResetTimeNotifier.Tick();
+        }
+
+        private void ResetAttackCounter()
+        {
+            print("Reset Attack Counter");
+            CurrentAttackCounter = 0;
+        }
 
         private void OnEnable()
         {
-            Debug.Log("ON ENABLE");
-            EventHandler.OnFinish += Exit;
-            attackCounterResetTimer.OnTimerDone += ResetAttackCounter;
+            EventHandler.OnUseInput += HandleUseInput;
+            attackCounterResetTimeNotifier.OnNotify += ResetAttackCounter;
         }
 
         private void OnDisable()
         {
-            EventHandler.OnFinish -= Exit;
-            attackCounterResetTimer.OnTimerDone -= ResetAttackCounter;
+            EventHandler.OnUseInput -= HandleUseInput;
+            attackCounterResetTimeNotifier.OnNotify -= ResetAttackCounter;
         }
-        #endregion
+
+        /// <summary>
+        /// Invokes event to pass along information from the AnimationEventHandler to a non-weapon class.
+        /// </summary>
+        private void HandleUseInput() => OnUseInput?.Invoke();
     }
 }
 

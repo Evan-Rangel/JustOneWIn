@@ -38,7 +38,6 @@ namespace Avocado.Weapons
 
             showAddComponentButtons = EditorGUILayout.Foldout(showAddComponentButtons, "Add Components");
 
-
             if (showAddComponentButtons)
             {
                 foreach (var dataCompType in dataCompTypes)
@@ -48,9 +47,7 @@ namespace Avocado.Weapons
                         var comp = Activator.CreateInstance(dataCompType) as ComponentData;
 
                         if (comp == null)
-                        {
                             return;
-                        }
 
                         comp.InitializeAttackData(dataSO.NumberOfAttacks);
 
@@ -61,7 +58,7 @@ namespace Avocado.Weapons
                 }
             }
 
-            showForceUpdateButtons = EditorGUILayout.Foldout(showForceUpdateButtons, "Add Force Update Buttons");
+            showForceUpdateButtons = EditorGUILayout.Foldout(showForceUpdateButtons, "Force Update Buttons");
 
             if (showForceUpdateButtons)
             {
@@ -80,7 +77,7 @@ namespace Avocado.Weapons
                         item.SetAttackDataNames();
                     }
                 }
-            }            
+            }
         }
 
         [DidReloadScripts]
@@ -88,7 +85,9 @@ namespace Avocado.Weapons
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = assemblies.SelectMany(assembly => assembly.GetTypes());
-            var filteredTypes = types.Where(type => type.IsSubclassOf(typeof(ComponentData)) && !type.ContainsGenericParameters && type.IsClass);
+            var filteredTypes = types.Where(
+                type => type.IsSubclassOf(typeof(ComponentData)) && !type.ContainsGenericParameters && type.IsClass
+            );
             dataCompTypes = filteredTypes.ToList();
         }
     }

@@ -39,7 +39,7 @@ namespace Avocado.Weapons.Components
             {
                 anim.SetBool("hold", input);
                 return;
-            }    
+            }
 
             if (minHoldPassed)
             {
@@ -54,7 +54,7 @@ namespace Avocado.Weapons.Components
             anim = GetComponentInChildren<Animator>();
 
             weapon.OnCurrentInputChange += HandleCurrentInputChange;
-            eventHandler.OnMinHoldPassed += HandleMinHoldPassed;
+            AnimationEventHandler.OnMinHoldPassed += HandleMinHoldPassed;
         }
 
         protected override void OnDestroy()
@@ -62,7 +62,7 @@ namespace Avocado.Weapons.Components
             base.OnDestroy();
 
             weapon.OnCurrentInputChange -= HandleCurrentInputChange;
-            eventHandler.OnMinHoldPassed -= HandleMinHoldPassed;
+            AnimationEventHandler.OnMinHoldPassed -= HandleMinHoldPassed;
         }
     }
 }

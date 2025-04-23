@@ -10,5 +10,5 @@ public class D_RangeAttackState : ScriptableObject
 
     public float projectileDamage = 10f;
     public float projectileSpeed = 12f;
-    public float projectileTravelDistance = 10f;
+    public float projectileTravelDistance;
 }

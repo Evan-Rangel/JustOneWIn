@@ -1,94 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerWallGrabState : PlayerTouchingWallState
 {
-    public class PlayerWallGrabState : PlayerTouchingWallState
+    private Vector2 holdPosition;
+
+    public PlayerWallGrabState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-        //---PlayerWallGrabState Vars---//
-        #region PlayerWallGrabState Vars
-        private Vector2 holdPosition;
-        #endregion
 
-        //---PlayerWallGrabState Construct---//
-        #region Construct
-        public PlayerWallGrabState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    }
+
+    public override void AnimationFinishTrigger()
+    {
+        base.AnimationFinishTrigger();
+    }
+
+    public override void AnimationTrigger()
+    {
+        base.AnimationTrigger();
+    }
+
+    public override void DoChecks()
+    {
+        base.DoChecks();
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        holdPosition = player.transform.position;
+
+        HoldPosition();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        if (!isExitingState)
         {
-
-        }
-        #endregion
-
-        //---Override Functions---//
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-
-            //Equal to position of the player to take track of that 
-            holdPosition = player.transform.position;
-
-            //Call the function to hold the postion at the start
             HoldPosition();
-        }
 
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            //Condition tha check the flags that indicate iwe stop be in a state, likes "JumpState"
-            if (!isExitingState)
+            if (yInput > 0)
             {
-                //Call the function to hold the postion and here to continuos hold will the input grab is pressed
-                HoldPosition();
-
-                //Condition that check if we are pushing the yInput up to change the state to "WallClimbState"
-                if (yInput > 0)
-                {
-                    stateMachine.ChangeState(player.WallClimbState);
-                }
-                else if (yInput < 0 || !grabInput)
-                {
-                    stateMachine.ChangeState(player.WallSlideState);
-                }
+                stateMachine.ChangeState(player.WallClimbState);
+            }
+            else if (yInput < 0 || !grabInput)
+            {
+                stateMachine.ChangeState(player.WallSlideState);
             }
         }
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-        public override void DoChecks()
-        {
-            base.DoChecks();
-        }
+    private void HoldPosition()
+    {
+        player.transform.position = holdPosition;
 
-        public override void AnimationFinishTrigger()
-        {
-            base.AnimationFinishTrigger();
-        }
+        Movement?.SetVelocityX(0f);
+        Movement?.SetVelocityY(0f);
+    }
 
-        public override void AnimationTrigger()
-        {
-            base.AnimationTrigger();
-        }
-        #endregion
-
-        //---Other Functions---//
-        #region Other Functions
-        private void HoldPosition()
-        {
-            player.transform.position = holdPosition;
-            //Set velocity when grab a wall
-            //--EXTRA COMMENT--// => No idea why the camera works with tha player velocity, so if we dont make the velocity to 0 the camera will fall
-            Movement.SetVelocityX(0f);
-            Movement.SetVelocityY(0f);
-        }
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

@@ -1,11 +1,12 @@
 using Avocado.Interfaces;
+using Avocado.Combat.PoiseDamage;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avocado.Weapons.Components
 {
-    public class PoiseDamage  : WeaponComponent<PoiseDamageData, AttackPoiseDamage>
+    public class PoiseDamage : WeaponComponent<PoiseDamageData, AttackPoiseDamage>
     {
         private ActionHitBox hitBox;
 
@@ -15,7 +16,7 @@ namespace Avocado.Weapons.Components
             {
                 if (item.TryGetComponent(out IPoiseDamageable poiseDamageable))
                 {
-                    poiseDamageable.DamagePoise(currentAttackData.Amount);
+                    poiseDamageable.DamagePoise(new Combat.PoiseDamage.PoiseDamageData(currentAttackData.Amount, Core.Root));
                 }
             }
         }

@@ -1,90 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class ChargeState : State
 {
-    public class ChargeState : State
+    private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+
+    protected D_ChargeState stateData;
+
+    protected bool isPlayerInMinAgroRange;
+    protected bool isDetectingLedge;
+    protected bool isDetectingWall;
+    protected bool isChargeTimeOver;
+    protected bool performCloseRangeAction;
+
+    public ChargeState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_ChargeState stateData) : base(entity, stateMachine, animBoolName)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_ChargeState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
 
-        #region Flags
-        protected bool isPlayerInMinAgroRange;
-        protected bool isDetectingLedge;
-        protected bool isDetectingWall;
-        protected bool isChargeTimeOver;
-        protected bool performCloseRangeAction;
-        #endregion
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isDetectingLedge = CollisionSenses.LedgeVertical;
+        isDetectingWall = CollisionSenses.WallFront;
 
-        #region Construct
-        public ChargeState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_ChargeState stateData) : base(entity, stateMachine, animBoolName)
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        isChargeTimeOver = false;
+        Movement?.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        Movement?.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
+
+        if (Time.time >= startTime + stateData.chargeTime)
         {
-            this.stateData = stateData;
+            isChargeTimeOver = true;
         }
-        #endregion
+    }
 
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-
-            isChargeTimeOver = false;
-
-            //Set velocity of the charge
-            Movement?.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            Movement?.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
-
-            //Condition thats if the time while the scarab is charging then stop that
-            if (Time.time >= startTime + stateData.chargeTime)
-            {
-                isChargeTimeOver = true;
-            }
-        }
-
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-
-            //Check Range
-            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-        }
-
-        public override void DoChecks()
-        {
-            base.DoChecks();
-
-            //Check Range
-            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-
-            //Check for a wall or ledge to stop the charge when reach one of those
-            isDetectingLedge = CollisionSenses.LedgeVertical;
-            isDetectingWall = CollisionSenses.WallFront;
-
-            //Check for Attack
-            performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
-        }
-        #endregion
-
-        //-------OTHER FUNCTIONS-------//
-
-        //-------END OTHERS FUNCTIONS-------//
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

@@ -1,71 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Projectiles;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class RangedAttackState : AttackState
 {
-    public class RangeAttackState : AttackState
+    protected D_RangeAttackState stateData;
+
+    protected GameObject projectile;
+    protected Projectile projectileScript;
+
+    public RangedAttackState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition, D_RangeAttackState stateData) : base(etity, stateMachine, animBoolName, attackPosition)
     {
-        #region References 
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_RangeAttackState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
+    }
 
-        #region Projectiles
-        protected GameObject projectile;
-        protected Projectile projectileScript;
-        #endregion
+    public override void Enter()
+    {
+        base.Enter();
+    }
 
-        #region Constructor
-        public RangeAttackState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition, D_RangeAttackState stateData) : base(entity, stateMachine, animBoolName, attackPosition)
-        {
-            this.stateData = stateData;
-        }
-        #endregion
+    public override void Exit()
+    {
+        base.Exit();
+    }
 
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-        }
+    public override void FinishAttack()
+    {
+        base.FinishAttack();
+    }
 
-        public override void Exit()
-        {
-            base.Exit();
-        }
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+    }
 
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-        }
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-        public override void DoChecks()
-        {
-            base.DoChecks();
-        }
+    public override void TriggerAttack()
+    {
+        base.TriggerAttack();
 
-        public override void TriggerAttack()
-        {
-            base.TriggerAttack();
-
-            projectile = GameObject.Instantiate(stateData.projectile, attackPosition.position, attackPosition.rotation);
-            projectileScript = projectile.GetComponent<Projectile>();
-            projectileScript.FireProjectil(stateData.projectileSpeed, stateData.projectileTravelDistance, stateData.projectileDamage);
-
-        }
-
-        public override void FinishAttack()
-        {
-            base.FinishAttack();
-        }
-        #endregion
+        projectile = GameObject.Instantiate(stateData.projectile, attackPosition.position, attackPosition.rotation);
+        projectileScript = projectile.GetComponent<Projectile>();
+        projectileScript.FireProjectile(stateData.projectileSpeed, stateData.projectileTravelDistance, stateData.projectileDamage);
     }
 }

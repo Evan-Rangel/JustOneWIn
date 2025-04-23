@@ -18,14 +18,15 @@ namespace Avocado.Weapons.Components
 
         private void HandleAttackAction()
         {
-            offset.Set(transform.position.x + (currentAttackData.HitBox.center.x * movement.Comp.FacingDirection), transform.position.y + currentAttackData.HitBox.center.y);
+            offset.Set(
+                transform.position.x + (currentAttackData.HitBox.center.x * movement.Comp.FacingDirection),
+                transform.position.y + currentAttackData.HitBox.center.y
+            );
 
             detected = Physics2D.OverlapBoxAll(offset, currentAttackData.HitBox.size, 0f, data.DetectableLayers);
-            Debug.Log(detected.Length);
+
             if (detected.Length == 0)
-            {
                 return;
-            }
 
             OnDetectedCollider2D?.Invoke(detected);
         }
@@ -33,40 +34,31 @@ namespace Avocado.Weapons.Components
         protected override void Start()
         {
             base.Start();
-            if (transform.root.name== "LocalGamePlayer")
-            {
 
-                movement = new CoreComp<CoreSystem.Movement>(Core);
+            movement = new CoreComp<CoreSystem.Movement>(Core);
 
-                eventHandler.OnAttackAction += HandleAttackAction;
-            }
-
+            AnimationEventHandler.OnAttackAction += HandleAttackAction;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            if (transform.root.name == "LocalGamePlayer")
-
-                eventHandler.OnAttackAction -= HandleAttackAction;
+            AnimationEventHandler.OnAttackAction -= HandleAttackAction;
         }
 
         private void OnDrawGizmosSelected()
         {
             if (data == null)
-            {
                 return;
-            }
 
-            foreach (var item in data.AttackData)
+            foreach (var item in data.GetAllAttackData())
             {
                 if (!item.Debug)
-                {
                     continue;
-                }
 
                 Gizmos.DrawWireCube(transform.position + (Vector3)item.HitBox.center, item.HitBox.size);
             }
         }
     }
 }
+

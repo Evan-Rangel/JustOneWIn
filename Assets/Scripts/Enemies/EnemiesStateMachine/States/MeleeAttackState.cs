@@ -1,90 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Combat.Damage;
+using Avocado.Combat.KnockBack;
+using Avocado.Combat.PoiseDamage;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class MeleeAttackState : AttackState
 {
-    public class MeleeAttackState : AttackState
+    private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    protected D_MeleeAttack stateData;
+
+    public MeleeAttackState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition, D_MeleeAttack stateData) : base(etity, stateMachine, animBoolName, attackPosition)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_MeleeAttack stateData;
-        #endregion
+    public override void TriggerAttack()
+    {
+        base.TriggerAttack();
 
-        #region Flags
-        #endregion
+        Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attackPosition.position, stateData.attackRadius, stateData.whatIsPlayer);
 
-        #region Transforms
-        #endregion
-
-        #region Construct
-        public MeleeAttackState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, Transform attackPosition, D_MeleeAttack stateData) : base(entity, stateMachine, animBoolName, attackPosition)
+        foreach (Collider2D collider in detectedObjects)
         {
-            this.stateData = stateData;
-        }
-        #endregion
+            IDamageable damageable = collider.GetComponent<IDamageable>();
 
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-        }
-
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-
-        public override void DoChecks()
-        {
-            base.DoChecks();
-        }
-
-        public override void TriggerAttack()
-        {
-            base.TriggerAttack();
-
-            //Detectd Objects
-            Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attackPosition.position, stateData.attackRadius, stateData.whatIsPlayer);
-
-            //Damage Player
-            foreach (Collider2D collider in detectedObjects)
+            if (damageable != null)
             {
-                IDamageable damageable = collider.GetComponent<IDamageable>();
+                damageable.Damage(new DamageData(stateData.attackDamage, core.Root));
+            }
 
-                if (damageable != null)
-                {
-                    damageable.Damage(stateData.attackDamage);
-                }
+            IKnockBackable knockBackable = collider.GetComponent<IKnockBackable>();
 
-                IKnockBackable knockbackable = collider.GetComponent<IKnockBackable>();
+            if (knockBackable != null)
+            {
+                knockBackable.KnockBack(new KnockBackData(stateData.knockbackAngle, stateData.knockbackStrength, Movement.FacingDirection, core.Root));
+            }
 
-                //Condition that check if the player attack something that is considerable "knockbackable" then put that in the list
-                if (knockbackable != null)
-                {
-                    knockbackable.KnockBack(stateData.knoackbackAngle, stateData.knoackbackStrength, Movement.FacingDirection);
-                }
+            if (collider.TryGetComponent(out IPoiseDamageable poiseDamageable))
+            {
+                poiseDamageable.DamagePoise(new PoiseDamageData(stateData.PoiseDamage, core.Root));
             }
         }
-
-        public override void FinishAttack()
-        {
-            base.FinishAttack();
-        }
-        #endregion
     }
 }

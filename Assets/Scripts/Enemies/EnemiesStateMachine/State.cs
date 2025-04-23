@@ -1,65 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class State
 {
-    public class State
+    protected FiniteStateMachine stateMachine;
+    protected Entity entity;
+    protected Core core;
+
+    public float startTime { get; protected set; }
+
+    protected string animBoolName;
+
+    public State(Entity etity, FiniteStateMachine stateMachine, string animBoolName)
     {
-        #region References
-        protected FiniteStateMachine stateMachine;
-        protected Entity entity;
-        protected Core core;
-        #endregion
+        this.entity = etity;
+        this.stateMachine = stateMachine;
+        this.animBoolName = animBoolName;
+        core = entity.Core;
+    }
 
-        #region Floats
-        public float startTime { get; protected set; }
-        #endregion
+    public virtual void Enter()
+    {
+        startTime = Time.time;
+        entity.anim.SetBool(animBoolName, true);
+        DoChecks();
+    }
 
-        #region Strings
-        protected string animBoolName;
-        #endregion
+    public virtual void Exit()
+    {
+        entity.anim.SetBool(animBoolName, false);
+    }
 
-        #region Construct
-        public State(Entity entity, FiniteStateMachine stateMachine, string animBoolName)
-        {
-            //Note for my self, "this" is to identify the var with the same name
-            this.entity = entity;
-            this.stateMachine = stateMachine;
-            this.animBoolName = animBoolName;
-            core = entity.Core;
-        }
-        #endregion
+    public virtual void LogicUpdate()
+    {
 
-        #region Virtual Functions
-        //Virtual Enter
-        public virtual void Enter()//"Virtual" means that this can be redefind in the derived classes
-        {
-            startTime = Time.time;//Every time this enter function gets called on whatever state it is it's going to store the star time and any other state reference this without having to set the start time in each one of our state's
-            entity.animator.SetBool(animBoolName, true);//For our different State we don't have to care about setting the animation parameters true or false, we insted add more parameters if we need to, but the base parameter is going to be there, we just have to change the name and that will change in our animator
-            DoChecks();
+    }
 
-        }
-        //Virtual Exit
-        public virtual void Exit()//"Virtual" means that this can be redefind in the derived classes
-        {
-            entity.animator.SetBool(animBoolName, false);//Stops the animation
-        }
-        //Virtual LogicUpdate
-        public virtual void LogicUpdate()//"Virtual" means that this can be redefind in the derived classes
-        {
+    public virtual void PhysicsUpdate()
+    {
+        DoChecks();
+    }
 
-        }
-        //Virtual PhysicsUpdate
-        public virtual void PhysicsUpdate()//"Virtual" means that this can be redefind in the derived classes
-        {
-            DoChecks();
-        }
-        //Virtual DoChecks
-        public virtual void DoChecks()
-        {
+    public virtual void DoChecks()
+    {
 
-        }
-        #endregion
     }
 }

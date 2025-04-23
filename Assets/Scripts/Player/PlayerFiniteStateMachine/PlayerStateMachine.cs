@@ -2,27 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerStateMachine
 {
-    public class PlayerStateMachine
+    public PlayerState CurrentState { get; private set; }
+
+    public void Initialize(PlayerState startingState)
     {
-        //---Player States Machine Vars---//
-        //-Getters and Setters-//
-        public PlayerState CurrentState { get; private set; }
+        CurrentState = startingState;
+        CurrentState.Enter();
+    }
 
-        //---States Machine Controlls Functions---//
-        public void Initialize(PlayerState startingState)
-        {
-            CurrentState = startingState;
-            CurrentState.Enter();
-        }
-
-        public void ChangeState(PlayerState newState)
-        {
-            CurrentState.Exit();
-            CurrentState = newState;
-            CurrentState.Enter();
-        }
-        //---End of State Machine Controlls Functions---//
+    public void ChangeState(PlayerState newState)
+    {
+        CurrentState.Exit();
+        CurrentState = newState;
+        CurrentState.Enter();
     }
 }

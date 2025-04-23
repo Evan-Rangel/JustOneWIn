@@ -1,74 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class DodgeState : State
 {
-    public class DodgeState : State
+    private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    protected D_DodgeState stateData;
+
+    protected bool performCloseRangeAction;
+    protected bool isPlayerInMaxAgroRange;
+    protected bool isGrounded;
+    protected bool isDodgeOver;
+
+    public DodgeState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, D_DodgeState stateData) : base(etity, stateMachine, animBoolName)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_DodgeState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
 
-        #region Flags
-        protected bool performCloseRangeAction;
-        protected bool isPlayerInMaxAgroRange;
-        protected bool isGrounded;
-        protected bool isDodgeOver;
-        #endregion
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+        isGrounded = CollisionSenses.Ground;
+    }
 
-        #region Construct
-        public DodgeState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_DodgeState stateData) : base(entity, stateMachine, animBoolName)
+    public override void Enter()
+    {
+        base.Enter();
+
+        isDodgeOver = false;
+
+        Movement?.SetVelocity(stateData.dodgeSpeed, stateData.dodgeAngle, -Movement.FacingDirection);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        if (Time.time >= startTime + stateData.dodgeTime && isGrounded)
         {
-            this.stateData = stateData;
+            isDodgeOver = true;
         }
-        #endregion
+    }
 
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-
-            //Initialize off
-            isDodgeOver = false;
-            //Set Velocity
-            Movement?.SetVelocity(stateData.dodgeSpeed, stateData.dodgeAngle, -Movement.FacingDirection);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            //Condition that check the time used and left of the dodge
-            if (Time.time >= startTime + stateData.dodgeTime && isGrounded)
-            {
-                isDodgeOver = true;
-            }
-        }
-
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-        public override void DoChecks()
-        {
-            base.DoChecks();
-
-            //Equal checks
-            performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
-            isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
-            isGrounded = CollisionSenses.Ground;
-        }
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

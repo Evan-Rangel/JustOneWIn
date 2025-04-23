@@ -1,87 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class StunState : State
 {
-    public class StunState : State
+    private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    protected D_StunState stateData;
+
+    protected bool isStunTimeOver;
+    protected bool isGrounded;
+    protected bool isMovementStopped;
+    protected bool performCloseRangeAction;
+    protected bool isPlayerInMinAgroRange;
+
+    public StunState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, D_StunState stateData) : base(etity, stateMachine, animBoolName)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_StunState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
 
-        #region Flags
-        protected bool isStunTimeOver;
-        protected bool isGrounded;
-        protected bool isMovementStopped;
-        protected bool performCloseRangeAction;
-        protected bool isPlayerInMinAgroRange;
-        #endregion
+        isGrounded = CollisionSenses.Ground;
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+    }
 
-        #region Constructor
-        public StunState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_StunState stateData) : base(entity, stateMachine, animBoolName)
+    public override void Enter()
+    {
+        base.Enter();
+
+        isStunTimeOver = false;
+        isMovementStopped = false;
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        entity.ResetStunResistance();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        if (Time.time >= startTime + stateData.stunTime)
         {
-            this.stateData = stateData;
-        }
-        #endregion
-
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-
-            //Stun start off
-            isStunTimeOver = false;
-            isMovementStopped = false;
-            //Set stun
-            Movement?.SetVelocity(stateData.stunKnockbackSpeed, stateData.stunKnockbackAngle, entity.lastDamageDirection);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-
-            //Stun reset
-            entity.ResetStunResistance();
+            isStunTimeOver = true;
         }
 
-        public override void LogicUpdate()
+        if (isGrounded && Time.time >= startTime + stateData.stunKnockbackTime && !isMovementStopped)
         {
-            base.LogicUpdate();
-
-            //Condition that keep track of stuntime
-            if (Time.time >= startTime + stateData.stunTime)
-            {
-                isStunTimeOver = true;
-            }
-            //Condition that know when the enemy is grounded and the time of knockback ends to allow another knockback
-            if (isGrounded && Time.time >= startTime + stateData.stunKnockbackTime && !isMovementStopped)
-            {
-                isMovementStopped = true;
-                Movement?.SetVelocityX(0f);
-            }
+            isMovementStopped = true;
+            Movement?.SetVelocityX(0f);
         }
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-
-        public override void DoChecks()
-        {
-            base.DoChecks();
-
-            //Ground Check
-            isGrounded = CollisionSenses.Ground;
-            //Player Check
-            performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
-            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-        }
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

@@ -1,4 +1,5 @@
 using Avocado.CoreSystem;
+using Avocado.Weapons.Components;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,44 +8,69 @@ namespace Avocado.Weapons.Components
 {
     public class Movement : WeaponComponent<MovementData, AttackMovement>
     {
-        #region References
         private CoreSystem.Movement coreMovement;
-        private CoreSystem.Movement CoreMovement => coreMovement ? coreMovement : Core.GetCoreComponent(ref coreMovement);
-        #endregion
 
-        #region Functions
-        private void HandlerStartMovement()
+        private float velocity;
+        private Vector2 direction;
+
+        private void HandleStartMovement()
         {
-            CoreMovement.SetVelocity(currentAttackData.Velocity, currentAttackData.Direction, CoreMovement.FacingDirection);
+            velocity = currentAttackData.Velocity;
+            direction = currentAttackData.Direction;
+
+            SetVelocity();
         }
 
-        private void HandlerStopMovement()
+        private void HandleStopMovement()
         {
-            CoreMovement.SetVelocityZero();
-        }
-        #endregion
+            velocity = 0f;
+            direction = Vector2.zero;
 
-        #region Override Functions
+            SetVelocity();
+        }
+
+        protected override void HandleEnter()
+        {
+            base.HandleEnter();
+
+            velocity = 0f;
+            direction = Vector2.zero;
+        }
+
+        private void FixedUpdate()
+        {
+            if (!isAttackActive)
+                return;
+
+            SetVelocityX();
+        }
+
+        private void SetVelocity()
+        {
+            coreMovement.SetVelocity(velocity, direction, coreMovement.FacingDirection);
+        }
+
+        private void SetVelocityX()
+        {
+            coreMovement.SetVelocityX((direction * velocity).x * coreMovement.FacingDirection);
+        }
+
         protected override void Start()
         {
             base.Start();
-            if (transform.root.name == "LocalGamePlayer")
-            {
-                eventHandler.OnStartMovement += HandlerStartMovement;
-                eventHandler.OnStopMovement += HandlerStopMovement;
 
-            }
+            coreMovement = Core.GetCoreComponent<CoreSystem.Movement>();
+
+            AnimationEventHandler.OnStartMovement += HandleStartMovement;
+            AnimationEventHandler.OnStopMovement += HandleStopMovement;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            if (transform.root.name == "LocalGamePlayer")
-            {
-                eventHandler.OnStartMovement -= HandlerStartMovement;
-                eventHandler.OnStopMovement -= HandlerStopMovement;
-            }
+
+            AnimationEventHandler.OnStartMovement -= HandleStartMovement;
+            AnimationEventHandler.OnStopMovement -= HandleStopMovement;
         }
-        #endregion
     }
 }

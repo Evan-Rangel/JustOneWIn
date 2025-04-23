@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class GenericNotImplementedError<T>
 {
-    #region No Component Error
     public static T TryGet(T value, string name)
     {
         if (value != null)
@@ -15,5 +14,4 @@ public static class GenericNotImplementedError<T>
         Debug.LogError(typeof(T) + " not implemented on " + name);
         return default;
     }
-    #endregion
 }

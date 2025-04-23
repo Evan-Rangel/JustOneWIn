@@ -17,7 +17,8 @@ namespace Avocado.Weapons.Components
             {
                 if (item.TryGetComponent(out IKnockBackable knockBackable))
                 {
-                    knockBackable.KnockBack(currentAttackData.Angle, currentAttackData.Strength, movement.FacingDirection);
+                    knockBackable.KnockBack(new Combat.KnockBack.KnockBackData(currentAttackData.Angle,
+                        currentAttackData.Strength, movement.FacingDirection, Core.Root));
                 }
             }
         }

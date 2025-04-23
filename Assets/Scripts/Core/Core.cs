@@ -1,41 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Avocado.CoreSystem;
 using System.Linq;
 
 namespace Avocado.CoreSystem
 {
     public class Core : MonoBehaviour
     {
-        #region States
-
+        /*
+        * The GameObject representing the root of this entity. For most of my cases the Core sits on a child GO of the root GO so awake defaults to that. But
+        * you also have the option of manually assigning it
+        */
+        [field: SerializeField] public GameObject Root { get; private set; }
 
         private readonly List<CoreComponent> CoreComponents = new List<CoreComponent>();
-        #endregion
 
-        #region Unity CallBack Functions
         private void Awake()
         {
-
+            Root = Root ? Root : transform.parent.gameObject;
         }
 
-        private void Start()
-        {
-
-        }
-
-        private void Update()
-        {
-
-        }
-
-        private void FixedUpdate()
-        {
-
-        }
-        #endregion
-
-        #region Get Own Functions
         public void LogicUpdate()
         {
             foreach (CoreComponent component in CoreComponents)
@@ -57,19 +42,14 @@ namespace Avocado.CoreSystem
             var comp = CoreComponents.OfType<T>().FirstOrDefault();
 
             if (comp)
-            {
                 return comp;
-            }
 
             comp = GetComponentInChildren<T>();
 
             if (comp)
-            {
                 return comp;
-            }
 
             Debug.LogWarning($"{typeof(T)} not found on {transform.parent.name}");
-
             return null;
         }
 
@@ -78,7 +58,6 @@ namespace Avocado.CoreSystem
             value = GetCoreComponent<T>();
             return value;
         }
-        #endregion
     }
 }
 

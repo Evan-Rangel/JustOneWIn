@@ -1,6 +1,7 @@
-using Avocado.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Combat.PoiseDamage;
+using Avocado.ModifierSystem;
 using UnityEngine;
 
 namespace Avocado.CoreSystem
@@ -9,9 +10,13 @@ namespace Avocado.CoreSystem
     {
         private Stats stats;
 
-        public void DamagePoise(float amount)
+        public Modifiers<Modifier<PoiseDamageData>, PoiseDamageData> Modifiers { get; } = new();
+
+        public void DamagePoise(PoiseDamageData data)
         {
-            stats.Poise.Decrease(amount);
+            data = Modifiers.ApplyAllModifiers(data);
+
+            stats.Poise.Decrease(data.Amount);
         }
 
         protected override void Awake()

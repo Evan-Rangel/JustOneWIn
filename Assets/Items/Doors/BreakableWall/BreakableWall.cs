@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class BreakableWall : DoorParent, IDamageable
+public class BreakableWall : DoorParent//, IDamageable
 {
     [SerializeField] int hitsToBreak;
     [SerializeField] Collider2D playercoll;
@@ -13,8 +13,9 @@ public class BreakableWall : DoorParent, IDamageable
         base.Awake();
         anim = GetComponent<Animator>();
         anim.SetInteger("Damage", hitsToBreak);
-        playercoll= GetComponentInChildren<Collider2D>();
+        playercoll = GetComponentInChildren<Collider2D>();
     }
+    /*
     void IDamageable.Damage(float amount)
     {
         hitsToBreak--;
@@ -22,4 +23,5 @@ public class BreakableWall : DoorParent, IDamageable
         anim.SetInteger("Damage", hitsToBreak);
         
     }
+    */
 }

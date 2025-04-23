@@ -1,154 +1,123 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class Entity : MonoBehaviour
 {
-    public class Entity : MonoBehaviour
+    private Movement Movement { get => movement ?? Core.GetCoreComponent(ref movement); }
+
+    private Movement movement;
+
+    public FiniteStateMachine stateMachine;
+
+    public D_Entity entityData;
+
+    public Animator anim { get; private set; }
+    public AnimationToStatemachine atsm { get; private set; }
+    public int lastDamageDirection { get; private set; }
+    public Core Core { get; private set; }
+
+    [SerializeField]
+    private Transform wallCheck;
+    [SerializeField]
+    private Transform ledgeCheck;
+    [SerializeField]
+    private Transform playerCheck;
+    [SerializeField]
+    private Transform groundCheck;
+
+    private float currentHealth;
+    private float currentStunResistance;
+    private float lastDamageTime;
+
+    private Vector2 velocityWorkspace;
+
+    protected bool isStunned;
+    protected bool isDead;
+
+    protected Stats stats;
+    protected ParryReceiver parryReceiver;
+
+    public virtual void Awake()
     {
-        #region References
-        private Movement Movement { get => movement ?? Core.GetCoreComponent(ref movement); }
-        private Movement movement;
+        Core = GetComponentInChildren<Core>();
 
-        public Core Core { get; private set; }
-        public FiniteStateMachine stateMachine;
+        stats = Core.GetCoreComponent<Stats>();
+        parryReceiver = Core.GetCoreComponent<ParryReceiver>();
 
-        protected Stats stats;
+        parryReceiver.OnParried += HandleParry;
 
-        //D_Entity 
-        [Header("Base Enemy Data")]
-        public D_Entity entityData;
-        #endregion
+        currentHealth = entityData.maxHealth;
+        currentStunResistance = entityData.stunResistance;
 
-        #region Integers
-        public int lastDamageDirection { get; private set; }
-        #endregion
+        anim = GetComponent<Animator>();
+        atsm = GetComponent<AnimationToStatemachine>();
 
-        #region Floats
-        private float currentHealth;
-        private float currentStunResistance;
-        private float lastDamageTime;
-        #endregion
+        stateMachine = new FiniteStateMachine();
+    }
 
-        #region Flags
-        protected bool isStunned;
-        protected bool isDead;
-        #endregion
+    public virtual void Update()
+    {
+        Core.LogicUpdate();
+        stateMachine.currentState.LogicUpdate();
 
-        #region Components
-        public Animator animator { get; private set; }
-        public AnimationToStateMachine atsm { get; private set; }
-        #endregion
+        anim.SetFloat("yVelocity", Movement.RB.velocity.y);
 
-        #region Transforms
-        //Detectors
-        [Header("Detectors")]
-        [SerializeField]
-        [Tooltip("This will detect a wall to enemy turn around")]
-        private Transform wallCheck;
-        [SerializeField]
-        [Tooltip("This will detect a ledge to enemy avoid fall")]
-        private Transform ledgeCheck;
-        [SerializeField]
-        [Tooltip("This will detect a GameObject with the tag and layer -Player-")]
-        private Transform playerCheck;
-        [SerializeField]
-        [Tooltip("This will detect the ground to do thinks like friction, and stop the enemy")]
-        private Transform groundCheck;
-        #endregion
-
-        #region Vectors
-        private Vector2 velocityWorkspace;
-        #endregion
-
-        #region Virtual Functions
-        //Virtual Start
-        public virtual void Awake()//"Virtual" means that this can be redefind in the derived classes
+        if (Time.time >= lastDamageTime + entityData.stunRecoveryTime)
         {
-            Core = GetComponentInChildren<Core>();
-
-            stats = Core.GetCoreComponent<Stats>();
-
-            currentHealth = entityData.maxHealth;
-            currentStunResistance = entityData.stunResistance;
-
-            //Initialice Reference
-            animator = GetComponent<Animator>();
-            atsm = GetComponent<AnimationToStateMachine>();
-
-            stateMachine = new FiniteStateMachine();//Every entity have his own state machine, that a instance of finite state machine.
+            ResetStunResistance();
         }
+    }
 
-        //Virtual Update
-        public virtual void Update()
+    protected virtual void HandleParry()
+    {
+
+    }
+
+    public virtual void FixedUpdate()
+    {
+        stateMachine.currentState.PhysicsUpdate();
+    }
+
+    public virtual bool CheckPlayerInMinAgroRange()
+    {
+        return Physics2D.Raycast(playerCheck.position, transform.right, entityData.minAgroDistance, entityData.whatIsPlayer);
+    }
+
+    public virtual bool CheckPlayerInMaxAgroRange()
+    {
+        return Physics2D.Raycast(playerCheck.position, transform.right, entityData.maxAgroDistance, entityData.whatIsPlayer);
+    }
+
+    public virtual bool CheckPlayerInCloseRangeAction()
+    {
+        return Physics2D.Raycast(playerCheck.position, transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
+    }
+
+    public virtual void DamageHop(float velocity)
+    {
+        velocityWorkspace.Set(Movement.RB.velocity.x, velocity);
+        Movement.RB.velocity = velocityWorkspace;
+    }
+
+    public virtual void ResetStunResistance()
+    {
+        isStunned = false;
+        currentStunResistance = entityData.stunResistance;
+    }
+
+    public virtual void OnDrawGizmos()
+    {
+        if (Core != null)
         {
-            Core.LogicUpdate();
+            Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * entityData.wallCheckDistance));
+            Gizmos.DrawLine(ledgeCheck.position, ledgeCheck.position + (Vector3)(Vector2.down * entityData.ledgeCheckDistance));
 
-            stateMachine.currentState.LogicUpdate();
-
-            animator.SetFloat("yVelocity", Movement.RB.velocity.y);
-
-            //Condition that take track of the stunRecovery to indicate that stun is over
-            if (Time.time >= lastDamageTime + entityData.stunRecoveryTime)
-            {
-                ResetStunResistance();
-            }
+            Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.closeRangeActionDistance), 0.2f);
+            Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.minAgroDistance), 0.2f);
+            Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * entityData.maxAgroDistance), 0.2f);
         }
-
-        //Virtual FixedUpdate
-        public virtual void FixedUpdate()
-        {
-            stateMachine.currentState.PhysicsUpdate();//Physics in FixedUpdate to avoid frame errors
-        }
-
-        //Virtual CheckPlayerInMinAgroRange
-        public virtual bool CheckPlayerInMinAgroRange()
-        {
-            return Physics2D.Raycast(playerCheck.position, transform.right, entityData.minAgroDistance, entityData.whatIsPlayer);
-        }
-
-        //Virtual CheckPlayerInMaxAgroRange
-        public virtual bool CheckPlayerInMaxAgroRange()
-        {
-            return Physics2D.Raycast(playerCheck.position, transform.right, entityData.maxAgroDistance, entityData.whatIsPlayer);
-        }
-
-        //Virtual CheckPlayerInCloseRangeAction
-        public virtual bool CheckPlayerInCloseRangeAction()
-        {
-            return Physics2D.Raycast(playerCheck.position, transform.right, entityData.closeRangeActionDistance, entityData.whatIsPlayer);
-        }
-
-        //Virtual DamageHop
-        public virtual void DamageHop(float velocity)
-        {
-            velocityWorkspace.Set(Movement.RB.velocity.x, velocity);
-            Movement.RB.velocity = velocityWorkspace;
-        }
-        //Virtual ResetStunResistance
-        public virtual void ResetStunResistance()
-        {
-            isStunned = false;
-            currentStunResistance = entityData.stunResistance;
-        }
-
-        //Virtual OnDrawGizmos
-        public virtual void OnDrawGizmos()
-        {
-            if (Core != null)
-            {
-                //Wall Detector
-                Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * entityData.wallCheckDistance));
-                //Ledge Detector
-                Gizmos.DrawLine(ledgeCheck.position, ledgeCheck.position + (Vector3)(Vector2.down * Movement.FacingDirection * entityData.ledgeCheckDistance));
-                //Detect Player to Melee Attack Detector
-                Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * entityData.minAgroDistance), 0.2f);
-                //Detect Player Detector
-                Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * entityData.minAgroDistance), 0.2f);
-                Gizmos.DrawWireSphere(playerCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * entityData.maxAgroDistance), 0.2f);
-            }
-        }
-        #endregion
     }
 }

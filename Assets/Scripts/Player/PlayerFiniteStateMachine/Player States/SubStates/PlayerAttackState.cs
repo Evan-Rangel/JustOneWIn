@@ -1,56 +1,108 @@
+using System.Collections;
+using System.Collections.Generic;
 using Avocado.Weapons;
+using Avocado.CoreSystem;
+using UnityEngine;
 
-
-namespace Avocado.CoreSystem
+public class PlayerAttackState : PlayerAbilityState
 {
-    public class PlayerAttackState : PlayerAbilityState
+    private Weapon weapon;
+    private WeaponGenerator weaponGenerator;
+
+    private int inputIndex;
+
+    private bool canInterrupt;
+
+    private bool checkFlip;
+
+    public PlayerAttackState(
+        Player player,
+        PlayerStateMachine stateMachine,
+        PlayerData playerData,
+        string animBoolName,
+        Weapon weapon,
+        CombatInputs input
+    ) : base(player, stateMachine, playerData, animBoolName)
     {
-        //---PlayerAttackState Vars---//
-        #region PlayerAttackState Vars
-        private Weapon weapon;
-        #endregion
+        this.weapon = weapon;
 
-        #region Values
-        private int inputIndex;
-        #endregion
+        weaponGenerator = weapon.GetComponent<WeaponGenerator>();
 
-        #region Flags
-        #endregion
+        inputIndex = (int)input;
 
-        //---PlayerAttackState Construct---//
-        #region Construct
-        public PlayerAttackState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName, Weapon weapon, CombatInputs input) : base(player, stateMachine, playerData, animBoolName)
+        weapon.OnUseInput += HandleUseInput;
+
+        weapon.EventHandler.OnEnableInterrupt += HandleEnableInterrupt;
+        weapon.EventHandler.OnFinish += HandleFinish;
+        weapon.EventHandler.OnFlipSetActive += HandleFlipSetActive;
+    }
+
+    private void HandleFlipSetActive(bool value)
+    {
+        checkFlip = value;
+    }
+
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        var playerInputHandler = player.InputHandler;
+
+        var xInput = playerInputHandler.NormInputX;
+        var attackInputs = playerInputHandler.AttackInputs;
+
+        weapon.CurrentInput = attackInputs[inputIndex];
+
+        if (checkFlip)
         {
-            this.weapon = weapon;
-
-            inputIndex = (int)input;
-
-            weapon.OnExit += ExitHandler;
-        }
-        #endregion
-
-        #region Override Functions
-      
-        public override void Enter()
-        {
-            base.Enter();
-            weapon.Enter();
-        }
-
-       
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            weapon.CurrentInput = player.InputHandler.AttackInputs[inputIndex];
+            Movement.CheckIfShouldFlip(xInput);
         }
 
-        private void ExitHandler()
+        if (!canInterrupt)
+            return;
+
+        if (xInput != 0 || attackInputs[0] || attackInputs[1])
         {
-            AnimationFinishTrigger();
             isAbilityDone = true;
         }
-        #endregion
+    }
+    private void HandleWeaponGenerating()
+    {
+        stateMachine.ChangeState(player.IdleState);
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        weaponGenerator.OnWeaponGenerating += HandleWeaponGenerating;
+
+        checkFlip = true;
+        canInterrupt = false;
+
+        weapon.Enter();
+    }
+
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        weaponGenerator.OnWeaponGenerating -= HandleWeaponGenerating;
+
+        weapon.Exit();
+    }
+
+    public bool CanTransitionToAttackState() => weapon.CanEnterAttack;
+
+    private void HandleEnableInterrupt() => canInterrupt = true;
+
+    private void HandleUseInput() => player.InputHandler.UseAttackInput(inputIndex);
+
+    private void HandleFinish()
+    {
+        AnimationFinishTrigger();
+        isAbilityDone = true;
     }
 }

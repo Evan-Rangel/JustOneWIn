@@ -6,43 +6,12 @@ namespace Avocado.CoreSystem
 {
     public class CollisionSenses : CoreComponent
     {
-        #region References
         private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+
         private Movement movement;
-        #endregion
-
-        #region Integers
-        #endregion
-
-        #region Floats
-        [Header("Values of Detectors")]
-        [SerializeField] private float groundCheckRadius;
-        [SerializeField] private float wallCheckDistance;
-        #endregion
-
-        #region ReDeclare Floats
-        public float GroundCheckRadius { get => groundCheckRadius; set => groundCheckRadius = value; }
-        public float WallCheckDistance { get => wallCheckDistance; set => wallCheckDistance = value; }
-
-        #endregion
-
-        #region Flags
-        #endregion
-
-        #region Components
-        #endregion
 
         #region Check Transforms
-        [Header("Detectors")]
 
-        [SerializeField][Tooltip("For Player And Enemy")] private Transform groundCheck;
-        [SerializeField][Tooltip("For Player And Enemy")] private Transform wallCheck;
-        [SerializeField][Tooltip("For Player")] private Transform ledgeCheckHorizontal;
-        [SerializeField][Tooltip("For Enemy")] private Transform ledgeCheckVertical;
-        [SerializeField][Tooltip("For Player")] private Transform ceilingCheck;
-        #endregion
-
-        #region ReDeclare Check Transforms
         public Transform GroundCheck
         {
             get => GenericNotImplementedError<Transform>.TryGet(groundCheck, core.transform.parent.name);
@@ -68,40 +37,32 @@ namespace Avocado.CoreSystem
             get => GenericNotImplementedError<Transform>.TryGet(ceilingCheck, core.transform.parent.name);
             private set => ceilingCheck = value;
         }
-        #endregion
-
-        #region Vectors
-        #endregion
-
-        #region LayerMasks
-        [SerializeField] private LayerMask whatIsGround;
-        #endregion
-
-        #region ReDeclare LayerMasks
+        public float GroundCheckRadius { get => groundCheckRadius; set => groundCheckRadius = value; }
+        public float WallCheckDistance { get => wallCheckDistance; set => wallCheckDistance = value; }
         public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
+
+
+        [SerializeField] private Transform groundCheck;
+        [SerializeField] private Transform wallCheck;
+        [SerializeField] private Transform ledgeCheckHorizontal;
+        [SerializeField] private Transform ledgeCheckVertical;
+        [SerializeField] private Transform ceilingCheck;
+
+        [SerializeField] private float groundCheckRadius;
+        [SerializeField] private float wallCheckDistance;
+
+        [SerializeField] private LayerMask whatIsGround;
+
         #endregion
-
-        #region Unity CallBack Functions Override
-
-        #endregion
-
-        #region Own Functions
-
-        #endregion
-
-        #region Set Funtions
-
-        #endregion
-
-        #region Check Functions
-        public bool Ground
-        {
-            get => Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, whatIsGround);
-        }
 
         public bool Ceiling
         {
             get => Physics2D.OverlapCircle(CeilingCheck.position, groundCheckRadius, whatIsGround);
+        }
+
+        public bool Ground
+        {
+            get => Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, whatIsGround);
         }
 
         public bool WallFront
@@ -123,11 +84,6 @@ namespace Avocado.CoreSystem
         {
             get => Physics2D.Raycast(WallCheck.position, Vector2.right * -Movement.FacingDirection, wallCheckDistance, whatIsGround);
         }
-        #endregion
-
-        #region Other Functions
-
-        #endregion
     }
 }
 

@@ -1,7 +1,8 @@
-using Avocado.Weapons;
-using Avocado.CoreSystem;
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Weapons;
+using Avocado.FSM;
+using Avocado.CoreSystem;
 using UnityEngine;
 using Mirror;
 public class Player : NetworkBehaviour
@@ -28,6 +29,8 @@ public class Player : NetworkBehaviour
     public PlayerAttackState PrimaryAttackState { get; private set; }
     public PlayerAttackState SecondaryAttackState { get; private set; }
 
+    public PlayerStunState PlayerStunState { get; private set; }
+
     //Player Data
     [Header("Player Base Data")]
     [SerializeField]
@@ -35,18 +38,14 @@ public class Player : NetworkBehaviour
     #endregion
 
     #region Player Components
-    //Core
     public Core Core { get; private set; }
-    //Animator
     public Animator Animator { get; private set; }
-    //PlayerInputs
     public PlayerInputHandler InputHandler { get; private set; }
-    //RigidBody 2D
     public Rigidbody2D RB { get; private set; }
-    //DashDirection
     public Transform DashDirectionIndicator { get; private set; }
-    //Collider 2D
     public BoxCollider2D MovementCollider { get; private set; }
+    public Stats Stats { get; private set; }
+    public InteractableDetector InteractableDetector { get; private set; }
     #endregion
 
     #region Player Other Variables
@@ -55,7 +54,7 @@ public class Player : NetworkBehaviour
 
     private Weapon primaryWeapon;
     private Weapon secondaryWeapon;
-    public List<Weapon> weaponList;
+    //public List<Weapon> weaponList;
     #endregion
     //-----------------//
 
@@ -91,27 +90,31 @@ public class Player : NetworkBehaviour
         CrouchMoveState = new PlayerCrouchMoveState(this, StateMachine, playerData, "crouchMove");
         PrimaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", primaryWeapon, CombatInputs.primary);
         SecondaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", secondaryWeapon, CombatInputs.secondary);
-       
-        
+        PlayerStunState = new PlayerStunState(this, StateMachine, playerData, "stun");
+
+
         //ListaDeArmas
-        weaponList = new List<Weapon>() { primaryWeapon, secondaryWeapon };
+        //weaponList = new List<Weapon>() { primaryWeapon, secondaryWeapon };
     }
     private void Start()
     {
-        //Initialize Aniamtor
         Animator = GetComponent<Animator>();
-        //Initialize Inputs
         InputHandler = GetComponent<PlayerInputHandler>();
-        //Initialize RigidBody2D
-        RB = GetComponent<Rigidbody2D>();
-        //Initialize DashIndicator
-        DashDirectionIndicator = transform.Find("DashDirectionIndicator");
-        //Initialize BoxCollider2D
-        MovementCollider = GetComponent<BoxCollider2D>();
-        //Initialize First StateMachine
-        StateMachine.Initialize(IdleState);
-        GameManager.instance.FindLocalPlayer();
 
+        InputHandler.OnInteractInputChanged += InteractableDetector.TryInteract;
+
+        RB = GetComponent<Rigidbody2D>();
+        DashDirectionIndicator = transform.Find("DashDirectionIndicator");
+        MovementCollider = GetComponent<BoxCollider2D>();
+
+        Stats.Poise.OnCurrentValueZero += HandlePoiseCurrentValueZero;
+
+        StateMachine.Initialize(IdleState);
+    }
+
+    private void HandlePoiseCurrentValueZero()
+    {
+        StateMachine.ChangeState(PlayerStunState);
     }
 
     private void Update()
@@ -131,6 +134,12 @@ public class Player : NetworkBehaviour
         if (gameObject.name == "LocalGamePlayer")
 
             StateMachine.CurrentState.PhysicsUpdate();
+    }
+
+    private void OnDestroy()
+    {
+        if (gameObject.name == "LocalGamePlayer")
+            Stats.Poise.OnCurrentValueZero -= HandlePoiseCurrentValueZero;
     }
     #endregion
 

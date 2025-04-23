@@ -6,26 +6,16 @@ namespace Avocado.CoreSystem
 {
     public class Death : CoreComponent
     {
-        #region References
-        private ParticleManager ParticleManager => particleManager ? particleManager : core.GetCoreComponent(ref particleManager);
+        [SerializeField] private GameObject[] deathParticles;
+
+        private ParticleManager ParticleManager =>
+            particleManager ? particleManager : core.GetCoreComponent(ref particleManager);
+
         private ParticleManager particleManager;
 
         private Stats Stats => stats ? stats : core.GetCoreComponent(ref stats);
         private Stats stats;
-        #endregion
 
-        #region GameObjects
-        [SerializeField] private GameObject[] deathParticles;
-        #endregion
-
-        #region Unity CallBack Functions Override
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-        #endregion
-
-        #region Own Functions
         public void Die()
         {
             foreach (var particle in deathParticles)
@@ -45,9 +35,5 @@ namespace Avocado.CoreSystem
         {
             Stats.Health.OnCurrentValueZero -= Die;
         }
-        #endregion
-
-        #region Other Functions
-        #endregion
     }
 }

@@ -6,8 +6,53 @@ using TMPro;
 using UnityEngine.Events;
 using Avocado.Weapons.Components;
 using Unity.VisualScripting;
-public class GameManager : MonoBehaviour
+using System;
+
+public class GameManager: MonoBehaviour
 {
+    #region Prone UI Weapons Manager
+    public event Action<GameState> OnGameStateChanged;
+    private GameState currentGameState = GameState.Gameplay;
+
+    public void ChangeState(GameState state)
+    {
+        if (state == currentGameState)
+            return;
+
+        switch (state)
+        {
+            case GameState.UI:
+                EnterUIState();
+                break;
+            case GameState.Gameplay:
+                EnterGameplayState();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+
+        currentGameState = state;
+        OnGameStateChanged?.Invoke(currentGameState);
+    }
+
+    private void EnterUIState()
+    {
+        Time.timeScale = 0f;
+    }
+
+    private void EnterGameplayState()
+    {
+        Time.timeScale = 1f;
+    }
+
+
+    public enum GameState
+    {
+        UI,
+        Gameplay
+    }
+    #endregion
+
     #region Items
     public List<GameObject> itemList;
     public GameObject GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
@@ -81,7 +126,7 @@ public class GameManager : MonoBehaviour
     */
     public GameObject RequestRandomItem()
     {
-        return Instantiate( items[Random.Range(0, items.Length)]);
+        return Instantiate( items[UnityEngine.Random.Range(0, items.Length)]);
     }
     //Para reaparecer el item en el mapa
     public IEnumerator ReEnableItem(GameObject item)

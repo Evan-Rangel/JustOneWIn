@@ -1,66 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class MoveState : State
 {
-    public class MoveState : State
+    private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    protected D_MoveState stateData;
+
+    protected bool isDetectingWall;
+    protected bool isDetectingLedge;
+    protected bool isPlayerInMinAgroRange;
+
+    public MoveState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(etity, stateMachine, animBoolName)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_MoveState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
 
-        #region Flags
-        protected bool isDetectingWall;
-        protected bool isDetectingLedge;
-        protected bool isPlayerInMinAgroRange;
-        #endregion
+        isDetectingLedge = CollisionSenses.LedgeVertical;
+        isDetectingWall = CollisionSenses.WallFront;
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+    }
 
-        #region Constructor
-        public MoveState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_MoveState stateData) : base(entity, stateMachine, animBoolName)
-        {
-            this.stateData = stateData;
-        }
-        #endregion
+    public override void Enter()
+    {
+        base.Enter();
+        Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
 
-        #region Oberride Functions
-        public override void Enter()
-        {
-            base.Enter();//"base" means that when this enter funtion gets called it's going to also call the enter funtion in our base class, which is "State", So if we want to change to completely the functionality of a function we can just remove this based on enter and the code inside of our "State" base won't get call.
-                         //Entity Movement
-            Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
-        }
+    }
 
-        public override void Exit()
-        {
-            base.Exit();
-        }
+    public override void Exit()
+    {
+        base.Exit();
+    }
 
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-            //This is here to to avoid the Entity to slice when takee the Knockback
-            Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
-        }
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+        Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-        public override void DoChecks()
-        {
-            base.DoChecks();
-
-            //Equal to same function
-            isDetectingWall = CollisionSenses.WallFront;
-            isDetectingLedge = CollisionSenses.LedgeVertical;
-            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-        }
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

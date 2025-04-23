@@ -4,7 +4,5 @@ using UnityEngine;
 
 public interface ILogicUpdate
 {
-    #region Interface Functions
     void LogicUpdate();
-    #endregion
 }

@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    public event Action<bool> OnInteractInputChanged;
+
     //---Player Inputs Vars---//
     #region Player Movement Vars
     //Reference
@@ -64,35 +66,49 @@ public class PlayerInputHandler : MonoBehaviour
 
     //---Input Functions---//
     #region Player Input Functions
+    public void OnInteractInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnInteractInputChanged?.Invoke(true);
+            return;
+        }
+
+        if (context.canceled)
+        {
+            OnInteractInputChanged?.Invoke(false);
+        }
+    }
+
+    public void OnPrimaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            AttackInputs[(int)CombatInputs.primary] = true;
+        }
+        if (context.canceled)
+        {
+            AttackInputs[(int)CombatInputs.primary] = false;
+        }
+    }
+    public void OnSecondaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            AttackInputs[(int)CombatInputs.secondary] = true;
+        }
+
+        if (context.canceled)
+        {
+            AttackInputs[(int)CombatInputs.secondary] = false;
+        }
+    }
+
     public void OnMoveInput(InputAction.CallbackContext context)
     {
-        //Movement
         RawMovementInput = context.ReadValue<Vector2>();
 
-        //Axe "X"
-        //This to Condition give a little tolerance with a joystick to avoid giving problembs when we ant to top be in certain state like all WallStates
-        /*if (Mathf.Abs(RawMovementInput.x) > 0.5f)
-        {
-
-            NormInputX = (int)(RawMovementInput * Vector2.right).normalized.x;
-        }
-        else
-        {
-            NormInputX = 0;
-        }*/
-        //Simplify option
         NormInputX = Mathf.RoundToInt(RawMovementInput.x);
-
-        //Axe "Y"
-        /*if (Mathf.Abs(RawMovementInput.y) > 0.5f)
-        {
-            NormInputY = (int)(RawMovementInput * Vector2.up).normalized.y;
-        }
-        else
-        {
-            NormInputY = 0;
-        }*/
-        //Simplify option
         NormInputY = Mathf.RoundToInt(RawMovementInput.y);
     }
 
@@ -150,29 +166,7 @@ public class PlayerInputHandler : MonoBehaviour
             DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
         }
     }
-    public void OnPrimaryAttackInput(InputAction.CallbackContext context)
-    {
-         if (context.started)
-         {
-             AttackInputs[(int)CombatInputs.primary] = true;
-         }
-        if (context.canceled)
-        {
-            AttackInputs[(int)CombatInputs.primary] = false;
-        }
-    }
-    public void OnSecondaryAttackInput(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            AttackInputs[(int)CombatInputs.secondary] = true;
-        }
 
-        if (context.canceled)
-        {
-            AttackInputs[(int)CombatInputs.secondary] = false;
-        }
-    }
     #region Items
 
     Vector2 itemDirection=Vector2.zero;
@@ -202,6 +196,11 @@ public class PlayerInputHandler : MonoBehaviour
     public void UseJumpInput() => JumpInput = false; //--RECORDATORIO PARA PRONE--// -> Esto es lo mismo que un "public void" vacio, solo a la izquierda le di al destornillador y lo ocnverti en una version simplificada ya que esta funcion solo cambia una cosa simple que es true to false.
 
     public void UseDashInput() => DashInput = false;
+
+    /// <summary>
+    /// Used to set the specific attack input back to false. Usually passed through the player attack state from an animation event.
+    /// </summary>
+    public void UseAttackInput(int i) => AttackInputs[i] = false;
     #endregion
 
     #region Player Input Check Funtions

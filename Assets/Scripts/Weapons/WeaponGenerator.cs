@@ -1,16 +1,18 @@
-using Avocado.Weapons.Components;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Avocado.CoreSystem;
+using Avocado.Weapons.Components;
 using UnityEngine;
 
 namespace Avocado.Weapons
 {
     public class WeaponGenerator : MonoBehaviour
     {
+        public event Action OnWeaponGenerating;
+
         [SerializeField] private Weapon weapon;
-        [SerializeField] private WeaponDataSO data;
+        [SerializeField] private CombatInputs combatInput;
 
         private List<WeaponComponent> componentAlreadyOnWeapon = new List<WeaponComponent>();
 
@@ -20,24 +22,20 @@ namespace Avocado.Weapons
 
         private Animator anim;
 
-        private void Start()
-        {
-            anim = GetComponentInChildren<Animator>();
+        private WeaponInventory weaponInventory;
 
-            GenerateWeapon(data);
-        }
-
-        [ContextMenu("Text Generate")]
-        private void TestGeneration()
+        private void GenerateWeapon(WeaponDataSO data)
         {
-            GenerateWeapon(data);
-        }
+            OnWeaponGenerating?.Invoke();
 
-        public void GenerateWeapon(WeaponDataSO data)
-        {
             weapon.SetData(data);
 
-            componentAlreadyOnWeapon.Clear();
+            if (data is null)
+            {
+                weapon.SetCanEnterAttack(false);
+                return;
+            }
+
             componentAlreadyOnWeapon.Clear();
             componentsAddedToWeapon.Clear();
             componentDependencies.Clear();
@@ -49,11 +47,10 @@ namespace Avocado.Weapons
             foreach (var dependency in componentDependencies)
             {
                 if (componentsAddedToWeapon.FirstOrDefault(component => component.GetType() == dependency))
-                {
                     continue;
-                }
 
-                var weaponComponent = componentAlreadyOnWeapon.FirstOrDefault(component => component.GetType() == dependency);
+                var weaponComponent =
+                    componentAlreadyOnWeapon.FirstOrDefault(component => component.GetType() == dependency);
 
                 if (weaponComponent == null)
                 {
@@ -73,6 +70,39 @@ namespace Avocado.Weapons
             }
 
             anim.runtimeAnimatorController = data.AnimatorController;
+
+            weapon.SetCanEnterAttack(true);
         }
+
+        private void HandleWeaponDataChanged(int inputIndex, WeaponDataSO data)
+        {
+            if (inputIndex != (int)combatInput)
+                return;
+
+            GenerateWeapon(data);
+        }
+
+        #region Plumbing
+
+        private void Start()
+        {
+            weaponInventory = weapon.Core.GetCoreComponent<WeaponInventory>();
+
+            weaponInventory.OnWeaponDataChanged += HandleWeaponDataChanged;
+
+            anim = GetComponentInChildren<Animator>();
+
+            if (weaponInventory.TryGetWeapon((int)combatInput, out var data))
+            {
+                GenerateWeapon(data);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            weaponInventory.OnWeaponDataChanged -= HandleWeaponDataChanged;
+        }
+
+        #endregion
     }
 }

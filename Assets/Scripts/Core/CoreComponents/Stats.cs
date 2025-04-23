@@ -13,7 +13,6 @@ namespace Avocado.CoreSystem
 
         [SerializeField] private float poiseRecoveryRate;
 
-        #region Unity CallBack Functions Override
         protected override void Awake()
         {
             base.Awake();
@@ -25,12 +24,9 @@ namespace Avocado.CoreSystem
         private void Update()
         {
             if (Poise.CurrentValue.Equals(Poise.MaxValue))
-            {
                 return;
-            }
 
             Poise.Increase(poiseRecoveryRate * Time.deltaTime);
         }
-        #endregion
     }
 }

@@ -1,81 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Combat.KnockBack;
+using Avocado.ModifierSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Avocado.CoreSystem
 {
     public class KnockBackReceiver : CoreComponent, IKnockBackable
     {
-        #region References
-        private CoreComp<Movement> movement;
-        private CoreComp<CollisionSenses> collisionSenses;
-        #endregion
+        public Modifiers<Modifier<KnockBackData>, KnockBackData> Modifiers { get; } = new();
 
-        #region Integers
-        #endregion
-
-        #region Floats
         [SerializeField] private float maxKnockBackTime = 0.2f;
-        private float knockBackStartTime;
-        #endregion
 
-        #region Flags
         private bool isKnockBackActive;
-        #endregion
+        private float knockBackStartTime;
 
-        #region Components
-        #endregion
+        private Movement movement;
+        private CollisionSenses collisionSenses;
 
-        #region Transforms
-        #endregion
+        public override void LogicUpdate()
+        {
+            CheckKnockBack();
+        }
 
-        #region Vectors
-        #endregion
+        public void KnockBack(KnockBackData data)
+        {
+            data = Modifiers.ApplyAllModifiers(data);
 
-        #region Unity CallBack Functions Override
+            movement.SetVelocity(data.Strength, data.Angle, data.Direction);
+            movement.CanSetVelocity = false;
+            isKnockBackActive = true;
+            knockBackStartTime = Time.time;
+        }
+
+        private void CheckKnockBack()
+        {
+            if (isKnockBackActive
+                && ((movement.CurrentVelocity.y <= 0.01f && collisionSenses.Ground)
+                    || Time.time >= knockBackStartTime + maxKnockBackTime)
+               )
+            {
+                isKnockBackActive = false;
+                movement.CanSetVelocity = true;
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
 
-            movement = new CoreComp<Movement>(core);
-            collisionSenses = new CoreComp<CollisionSenses>(core);
+            movement = core.GetCoreComponent<Movement>();
+            collisionSenses = core.GetCoreComponent<CollisionSenses>();
         }
-        #endregion
-
-        #region Own Functions
-        public override void LogicUpdate()
-        {
-            CheckKnoackBack();
-        }
-        #endregion
-
-        #region Set Funtions
-        #endregion
-
-        #region Interfaces Function
-        public void KnockBack(Vector2 angle, float strength, int direction)
-        {
-            movement.Comp?.SetVelocity(strength, angle, direction);
-            movement.Comp.CanSetVelocity = false;
-            isKnockBackActive = true;
-            knockBackStartTime = Time.time;
-        }
-        #endregion
-
-        #region Check Functions
-        private void CheckKnoackBack()
-        {
-            //Condition that check the position og the Entity to know that is in ground and stop moving
-            if (isKnockBackActive && (movement.Comp?.CurrentVelocity.y <= 0.01f && collisionSenses.Comp.Ground) || Time.time >= knockBackStartTime + maxKnockBackTime)
-            {
-                isKnockBackActive = false;
-                movement.Comp.CanSetVelocity = true;
-            }
-        }
-        #endregion
-
-        #region Other Functions
-        #endregion
     }
 }
 

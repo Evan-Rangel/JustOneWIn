@@ -1,27 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class AnimationToStatemachine : MonoBehaviour
 {
-    public class AnimationToStateMachine : MonoBehaviour
+    public AttackState attackState;
+
+    private void TriggerAttack()
     {
-        //---AnimationToStateMachine Vars---//
-        #region References
-        public AttackState attackState;
-        #endregion
+        attackState.TriggerAttack();
+    }
 
-        #region Other Functions
-        private void TriggerAttack()
-        {
-            attackState.TriggerAttack();
-        }
+    private void FinishAttack()
+    {
+        attackState.FinishAttack();
+    }
 
-        private void FinishAttack()
-        {
-            attackState.FinishAttack();
-        }
-        #endregion
+    private void SetParryWindowActive(int value)
+    {
+        attackState.SetParryWindowActive(Convert.ToBoolean(value));
     }
 }
 

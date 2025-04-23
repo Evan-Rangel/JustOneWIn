@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Avocado.CoreSystem.StatsSystem
 {
     [Serializable]
-    public class Stat 
+    public class Stat
     {
         public event Action OnCurrentValueZero;
 
@@ -15,8 +15,8 @@ namespace Avocado.CoreSystem.StatsSystem
         public float CurrentValue
         {
             get => currentValue;
-            private set 
-            { 
+            set
+            {
                 currentValue = Mathf.Clamp(value, 0f, MaxValue);
 
                 if (currentValue <= 0f)

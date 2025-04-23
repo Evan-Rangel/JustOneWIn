@@ -1,123 +1,106 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerGroundedState : PlayerState
 {
-    public class PlayerGroundedState : PlayerState
+    protected int xInput;
+    protected int yInput;
+
+    protected bool isTouchingCeiling;
+
+    protected Movement Movement
     {
-        //---PlayerGroundedStates Vars---//
-        #region References
-        protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
-        #endregion
+        get => movement ?? core.GetCoreComponent(ref movement);
+    }
 
-        #region Integers
-        protected int xInput;
-        protected int yInput;
-        #endregion
+    private Movement movement;
 
-        #region Flags
-        protected bool isTouchingCeiling;
+    private CollisionSenses CollisionSenses
+    {
+        get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses);
+    }
 
-        private bool jumpInput;
-        private bool grabInput;
-        private bool dashInput;
+    private CollisionSenses collisionSenses;
 
-        private bool isGrounded;
-        private bool isTouchingWall;
-        private bool isTouchingLedge;
-        #endregion
+    private bool jumpInput;
+    private bool grabInput;
+    private bool isGrounded;
+    private bool isTouchingWall;
+    private bool isTouchingLedge;
+    private bool dashInput;
 
-        //---PlayerGroundedState Construct---//
-        #region Construct
-        public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData,
+        string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    {
+    }
+
+    public override void DoChecks()
+    {
+        base.DoChecks();
+
+        if (CollisionSenses)
         {
-
+            isGrounded = CollisionSenses.Ground;
+            isTouchingWall = CollisionSenses.WallFront;
+            isTouchingLedge = CollisionSenses.LedgeHorizontal;
+            isTouchingCeiling = CollisionSenses.Ceiling;
         }
-        #endregion
+    }
 
-        //---Override Functions---//
-        #region Override Functions
-        public override void Enter()
+    public override void Enter()
+    {
+        base.Enter();
+
+        player.JumpState.ResetAmountOfJumpsLeft();
+        player.DashState.ResetCanDash();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        xInput = player.InputHandler.NormInputX;
+        yInput = player.InputHandler.NormInputY;
+        jumpInput = player.InputHandler.JumpInput;
+        grabInput = player.InputHandler.GrabInput;
+        dashInput = player.InputHandler.DashInput;
+
+        if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && !isTouchingCeiling && player.PrimaryAttackState.CanTransitionToAttackState())
         {
-            base.Enter();
-
-            //Resets
-            player.JumpState.ResetAmountOfJumps();
-            player.DashState.ResetCanDash();
+            stateMachine.ChangeState(player.PrimaryAttackState);
         }
-
-        public override void Exit()
+        else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary] && !isTouchingCeiling && player.SecondaryAttackState.CanTransitionToAttackState())
         {
-            base.Exit();
+            stateMachine.ChangeState(player.SecondaryAttackState);
         }
-
-        public override void LogicUpdate()
+        else if (jumpInput && player.JumpState.CanJump() && !isTouchingCeiling)
         {
-            base.LogicUpdate();
-            if (player==null ||player.InputHandler == null) return;
-            if (player.InputHandler.AttackInputs == null) return;
-            //Read the inputs used
-            xInput = player.InputHandler.NormInputX;
-            yInput = player.InputHandler.NormInputY;
-            jumpInput = player.InputHandler.JumpInput;
-            grabInput = player.InputHandler.GrabInput;
-            dashInput = player.InputHandler.DashInput;
-
-
-            //Condition that check the Attack Inputs
-            if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && !isTouchingCeiling)
-            {
-                stateMachine.ChangeState(player.PrimaryAttackState);
-            }
-            else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary] && !isTouchingCeiling)
-            {
-                stateMachine.ChangeState(player.SecondaryAttackState);
-            }
-            //Condition that check the flag of "Jump" to change thse state to "JumpState"
-            else if (jumpInput && player.JumpState.CanJump() && !isTouchingCeiling)//---> JumpState
-            {
-                stateMachine.ChangeState(player.JumpState);
-            }
-            else if (!isGrounded)//---> InAirState
-            {
-                player.InAirState.StartCoyoteTime();
-                stateMachine.ChangeState(player.InAirState);
-            }
-            else if (isTouchingWall && grabInput && !isTouchingLedge)//---> WallGrabState
-            {
-                stateMachine.ChangeState(player.WallGrabState);
-            }
-            else if (dashInput && player.DashState.CheckIfCanDash() && !isTouchingCeiling)//---> DashState
-            {
-                stateMachine.ChangeState(player.DashState);
-            }
+            stateMachine.ChangeState(player.JumpState);
         }
-
-        public override void PhysicsUpdate()
+        else if (!isGrounded)
         {
-            base.PhysicsUpdate();
+            player.InAirState.StartCoyoteTime();
+            stateMachine.ChangeState(player.InAirState);
         }
-
-        public override void DoChecks()
+        else if (isTouchingWall && grabInput && isTouchingLedge)
         {
-            base.DoChecks();
-
-            if (CollisionSenses)
-            {
-                //Check for Ground
-                isGrounded = CollisionSenses.Ground;
-                //Check for Wall
-                isTouchingWall = CollisionSenses.WallFront;
-                //Check for Ledge
-                isTouchingLedge = CollisionSenses.LedgeHorizontal;
-                //Check for ceiling
-                isTouchingCeiling = CollisionSenses.Ceiling;
-            }
+            stateMachine.ChangeState(player.WallGrabState);
         }
-        #endregion
+        else if (dashInput && player.DashState.CheckIfCanDash() && !isTouchingCeiling)
+        {
+            stateMachine.ChangeState(player.DashState);
+        }
+    }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

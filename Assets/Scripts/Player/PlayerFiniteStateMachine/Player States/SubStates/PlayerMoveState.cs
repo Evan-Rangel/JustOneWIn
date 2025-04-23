@@ -1,73 +1,53 @@
+using Avocado.CoreSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerMoveState : PlayerGroundedState
 {
-    public class PlayerMoveState : PlayerGroundedState
+    public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
-        //---PlayerMoveState Vars---//
-        #region PlayerMoveState Vars
-        #endregion
 
-        //---PlayerMoveState Construct---//
-        #region Construct
-        public PlayerMoveState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
+    }
+
+    public override void DoChecks()
+    {
+        base.DoChecks();
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        Movement?.CheckIfShouldFlip(xInput);
+
+        Movement?.SetVelocityX(playerData.movementVelocity * xInput);
+
+        if (!isExitingState)
         {
-
-        }
-        #endregion
-
-        //---Override Functions---//
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            //Check if should Flip the face direction
-            Movement?.CheckIfShouldFlip(xInput);
-
-            //Set velocity
-            Movement?.SetVelocityX(playerData.movementVelocity * xInput);
-
-            //Condition that check that we are not exiting a state
-            if (!isExitingState)
+            if (xInput == 0)
             {
-                //Condition that know when player not move on axe "x", if is true then change the state to "MoveState"
-                if (xInput == 0)//---> IdleState
-                {
-                    stateMachine.ChangeState(player.IdleState);
-                }
-                else if (yInput == -1)//---> CrouchMoveState
-                {
-                    stateMachine.ChangeState(player.CrouchMoveState);
-                }
+                stateMachine.ChangeState(player.IdleState);
+            }
+            else if (yInput == -1)
+            {
+                stateMachine.ChangeState(player.CrouchMoveState);
             }
         }
+    }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-        public override void DoChecks()
-        {
-            base.DoChecks();
-        }
-        #endregion
-
-        //---Other Functions---//
-        #region Other Functions
-
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

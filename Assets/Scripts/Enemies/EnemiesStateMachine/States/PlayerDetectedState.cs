@@ -1,83 +1,66 @@
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.CoreSystem;
 using UnityEngine;
 
-namespace Avocado.CoreSystem
+public class PlayerDetectedState : State
 {
-    public class PlayerDetectedState : State
+    protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    protected D_PlayerDetectedState stateData;
+
+    protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
+    protected bool performLongRangeAction;
+    protected bool performCloseRangeAction;
+    protected bool isDetectingLedge;
+
+    public PlayerDetectedState(Entity etity, FiniteStateMachine stateMachine, string animBoolName, D_PlayerDetectedState stateData) : base(etity, stateMachine, animBoolName)
     {
-        #region References
-        private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-        private Movement movement;
-        private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
-        private CollisionSenses collisionSenses;
+        this.stateData = stateData;
+    }
 
-        protected D_PlayerDetectedState stateData;
-        #endregion
+    public override void DoChecks()
+    {
+        base.DoChecks();
 
-        #region Flags
-        protected bool isPlayerInMinAgroRange;
-        protected bool isPlayerInMaxAgroRange;
-        protected bool performLongRangeAction;
-        protected bool performCloseRangeAction;
-        protected bool isDetectingLedge;
-        #endregion
+        isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+        isDetectingLedge = CollisionSenses.LedgeVertical;
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
+    }
 
-        #region Constructor
-        public PlayerDetectedState(Entity entity, FiniteStateMachine stateMachine, string animBoolName, D_PlayerDetectedState stateData) : base(entity, stateMachine, animBoolName)
+    public override void Enter()
+    {
+        base.Enter();
+
+        performLongRangeAction = false;
+        Movement?.SetVelocityX(0f);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        Movement?.SetVelocityX(0f);
+
+        if (Time.time >= startTime + stateData.longRangeActionTime)
         {
-            this.stateData = stateData;
+            performLongRangeAction = true;
         }
-        #endregion
+    }
 
-        #region Override Functions
-        public override void Enter()
-        {
-            base.Enter();
-
-            performLongRangeAction = false;
-
-            //Detects Player then Stop
-            Movement?.SetVelocityX(0f);
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-        }
-
-        public override void LogicUpdate()
-        {
-            base.LogicUpdate();
-
-            Movement?.SetVelocityX(0f);
-
-            //Condition thats check the time to realize the action
-            if (Time.time >= startTime + stateData.longRangeActionTime)
-            {
-                performLongRangeAction = true;
-            }
-        }
-
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-        }
-
-        public override void DoChecks()
-        {
-            base.DoChecks();
-
-            //Detect Player
-            isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-            isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
-
-            //Perform Attacks
-            performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
-
-            //Detectors
-            isDetectingLedge = CollisionSenses.LedgeVertical;
-        }
-        #endregion
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
     }
 }

@@ -1,30 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Avocado.Weapons.Components;
 using System.Linq;
 using UnityEngine;
 using Mirror;
+
 namespace Avocado.Weapons.Components
 {
     public class WeaponSprite : WeaponComponent<WeaponSpriteData, AttackSprites>
     {
-        #region References
-        #endregion
-
-        #region Components
         private SpriteRenderer baseSpriteRenderer;
         private SpriteRenderer weaponSpriteRenderer;
-        #endregion
-
-        #region Integers
 
         private int currentWeaponSpriteIndex;
-        public void SetCurrentWeaponSpriteIndex(int idx) { currentWeaponSpriteIndex = idx; }
-        #endregion
 
         private Sprite[] currentPhaseSprites;
 
-        #region Functions
         protected override void HandleEnter()
         {
             base.HandleEnter();
@@ -34,16 +26,13 @@ namespace Avocado.Weapons.Components
 
         private void HandleEnterAttackPhase(AttackPhases phase)
         {
-
             currentWeaponSpriteIndex = 0;
-//            if (transform.root.name == "LocalGamePlayer")
 
-                currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
+            currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
         }
 
-        private void HandlerBaseSpriteChange(SpriteRenderer sr)
+        private void HandleBaseSpriteChange(SpriteRenderer sr)
         {
-           
             if (!isAttackActive)
             {
                 weaponSpriteRenderer.sprite = null;
@@ -59,8 +48,8 @@ namespace Avocado.Weapons.Components
             weaponSpriteRenderer.sprite = currentPhaseSprites[currentWeaponSpriteIndex];
 
             currentWeaponSpriteIndex++;
-            //GameManager.instance.ChangeWeaponSprite(currentWeaponSpriteIndex);
         }
+
         protected override void Start()
         {
             base.Start();
@@ -70,16 +59,18 @@ namespace Avocado.Weapons.Components
 
             data = weapon.Data.GetData<WeaponSpriteData>();
 
-            baseSpriteRenderer.RegisterSpriteChangeCallback(HandlerBaseSpriteChange);
-                eventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
+            baseSpriteRenderer.RegisterSpriteChangeCallback(HandleBaseSpriteChange);
+
+            AnimationEventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            baseSpriteRenderer.UnregisterSpriteChangeCallback(HandlerBaseSpriteChange);
-                eventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
+
+            baseSpriteRenderer.UnregisterSpriteChangeCallback(HandleBaseSpriteChange);
+
+            AnimationEventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
         }
-        #endregion
     }
 }
