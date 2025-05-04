@@ -19,7 +19,13 @@ public class PlayerCamera_S : MonoBehaviour
     int textureWidth = 10;
     Camera mainCamera;
     private Texture2D positionsTexture;
-     static PlayerCamera_S instance;
+
+
+
+    private Texture2D playersPositionsTexture;
+    [SerializeField] List<GameObject> players;
+    
+    static PlayerCamera_S instance;
     public static PlayerCamera_S Instance { get { return instance; } }
     private void Awake()
     {
@@ -29,6 +35,7 @@ public class PlayerCamera_S : MonoBehaviour
     }
     void Start()
     {
+        //Items Texture Positions
         positionsTexture = new Texture2D(textureWidth, 3, TextureFormat.RGBAFloat, false);
         for (int i = 0; i < positionsTexture.width; i++)
         {
@@ -38,11 +45,37 @@ public class PlayerCamera_S : MonoBehaviour
 
             }
         }
+
+        //Players Texture Positions
+        playersPositionsTexture = new Texture2D(16, 1, TextureFormat.RGBAFloat, false);
+        for (int i = 0; i < playersPositionsTexture.width; i++)
+        {
+            for (int j = 0; j < playersPositionsTexture.height; j++)
+            {
+                playersPositionsTexture.SetPixel(i, j, new Color(0,0,0,0));
+            }
+        }
+
+
         propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);
+        propertyBlock.SetTexture("_PlayersPositionsTexture", playersPositionsTexture);
         spr.SetPropertyBlock(propertyBlock);
         objectsToTrack = new List<ShaderEffectCamera>(30);
         spr.enabled=false;
+    }
+    public void AddPlayerToPool(GameObject _player)
+    {
+        spr.enabled = true;
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i]==null)
+            {
+                players[i] = _player;
+                return;
+            }
+        }
+        players.Add(_player);
     }
     public void AddToPool(ShaderEffectCamera obj)
     {

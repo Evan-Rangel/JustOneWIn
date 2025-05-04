@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using Avocado.CoreSystem;
+using System.Collections;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -279,7 +280,6 @@ public class PlayerObjectController : NetworkBehaviour
     }
     [Space]
     [Header("Player Color")]
-    SpriteRenderer spr;
     [SerializeField] List<SpriteRenderer> sprs;
     public MaterialPropertyBlock propertyBlock { get; private set; }
 
@@ -380,11 +380,11 @@ public class PlayerObjectController : NetworkBehaviour
 
         currentItem = null;
     }
-    
+
     [ClientRpc(includeOwner = false)]
     public void NotifyFlash()
     {
-        FakeLight_S.instance.StartShadowEffect();
+        FakeLight_S.instance.StartBlindEffect();
     }
 
 
@@ -399,7 +399,7 @@ public class PlayerObjectController : NetworkBehaviour
     {
         CmdUpdateItemIdx(newData);
     }
-    public void SendItemIdx(int oldValue, int newValue) 
+    public void SendItemIdx(int oldValue, int newValue)
     {
         if (isServer)
         {
@@ -408,7 +408,7 @@ public class PlayerObjectController : NetworkBehaviour
             grabItem.Invoke();
 
         }
-        if (isClient )
+        if (isClient)
         {
             UpdateItemIdx(newValue);
         }
@@ -416,11 +416,11 @@ public class PlayerObjectController : NetworkBehaviour
     void UpdateItemIdx(int message)
     {
         itemIdx = message;
-        currentItem= GameManager.instance.GetItemByIndex(itemIdx);
+        currentItem = GameManager.instance.GetItemByIndex(itemIdx);
         grabItem.Invoke();
     }
 
-    
+
     #endregion
 
     #region PlayerIcon
@@ -454,9 +454,12 @@ public class PlayerObjectController : NetworkBehaviour
     #endregion
     #region Collisions
 
+    Transform respawn;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!authority) return;
+
+
         ICollidable coll = collision.transform.GetComponent<ICollidable>();
         if (coll != null)
         {
@@ -466,15 +469,27 @@ public class PlayerObjectController : NetworkBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.transform.name == "Respawn")
+        {
+            respawn = collision.transform;
+        }
+        if (collision.transform.name == "Death")
+        {
+            FakeLight_S.instance.StartRespawnEffect();
+
+            CmdNotifyRespawn();
+        }
+
+
         ICollidable coll = collision.transform.GetComponent<ICollidable>();
         if (coll != null)
         {
             CmdNotifyObjectCollidable(collision.gameObject);
         }
         Item _item = collision.transform.GetComponent<Item>();
-        if (_item!=null)
+        if (_item != null)
         {
-            ChangeItemIdx( Random.Range(0, GameManager.instance.itemList.Count));
+            ChangeItemIdx(Random.Range(0, GameManager.instance.itemList.Count));
         }
     }
     [Command]
@@ -482,13 +497,112 @@ public class PlayerObjectController : NetworkBehaviour
     {
         collision.GetComponent<ICollidable>().OnCollision();
     }
+    [Command]
+    public void CmdNotifyRespawn()
+    {
+        StartCoroutine(RespawnEffect());
+        StartCoroutine(ShakeCamera());
+    }
     #endregion
     #region Effects
+    [Header("Effects")]
+    [SerializeField] AnimationCurve curve;
+    [SerializeField] float shakeDuration;
+    IEnumerator ShakeCamera()
+    {
+        float elapsedTime=0;
+        while (elapsedTime < shakeDuration)
+        {
+            float strength = curve.Evaluate(elapsedTime/shakeDuration);
+            GetComponent<PCameraController>().shakeStrength = strength;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        GetComponent<PCameraController>().shakeStrength = 0;
+
+    }
+    IEnumerator RespawnEffect()
+    {
+      
+
+        yield return Helpers.GetWait(0.1f);
+        propertyBlock.SetFloat("_Alpha", 0);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+        yield return Helpers.GetWait(0.15f);
+        propertyBlock.SetFloat("_Alpha", 1);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        } 
+        
+        yield return Helpers.GetWait(0.3f);
+        propertyBlock.SetFloat("_Alpha", 0);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+        
+        yield return Helpers.GetWait(0.15f);
+        propertyBlock.SetFloat("_Alpha", 1);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        } 
+        
+        yield return Helpers.GetWait(0.3f);
+        propertyBlock.SetFloat("_Alpha", 0);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+        transform.position = respawn.position;
+
+        yield return Helpers.GetWait(0.15f);
+        propertyBlock.SetFloat("_Alpha", 1);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+        yield return Helpers.GetWait(0.3f);
+        propertyBlock.SetFloat("_Alpha", 0);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+        yield return Helpers.GetWait(0.15f);
+        propertyBlock.SetFloat("_Alpha", 1);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+
+        yield return Helpers.GetWait(0.3f);
+        propertyBlock.SetFloat("_Alpha", 0);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+
+        yield return Helpers.GetWait(0.1f);
+        propertyBlock.SetFloat("_Alpha", 1);
+        foreach (SpriteRenderer item in sprs)
+        {
+            item.SetPropertyBlock(propertyBlock);
+        }
+ 
+    }
     public void ActiveShadowEffect()
     {   
         FakeLight_S fLight = GetComponentInChildren<FakeLight_S>();
-        fLight.StartShadowEffect();
+        fLight.StartBlindEffect();
     }
-
     #endregion
 }
