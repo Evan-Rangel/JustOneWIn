@@ -1,29 +1,32 @@
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Avocado.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
+/*---------------------------------------------------------------------------------------------
+El componente StickToLayer permite que un proyectil se quede pegado a un objeto si colisiona 
+con uno de cierta capa (LayerMask). Cuando se pega, se detiene, se vuelve estático y opcionalmente 
+cambia su capa de dibujo (sortingLayer). Si el objeto al que está pegado desaparece o es destruido, 
+el proyectil se libera automáticamente y vuelve a ser afectado por la física. También puedes usar 
+los eventos setStuck y setUnstuck para activar o desactivar otros componentes como daño o efectos
+visuales.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.ProjectileSystem.Components
 {
-    /// <summary>
-    /// This component is responsible for ensuring the projectile gets stuck in a specific layer based on what the HitBox detects
-    /// </summary>
     [RequireComponent(typeof(HitBox))]
     public class StickToLayer : ProjectileComponent
     {
-        /*
-         * Unity events are used to facilitate building some logic in the editor. For example: Setting the Damage Component to Inactive
-         * when stuck, and active again when unstuck
-         */
+        // Eventos que puedes configurar desde el editor para ejecutar lógica cuando el proyectil se queda pegado o se despega.
         [SerializeField] public UnityEvent setStuck;
         [SerializeField] public UnityEvent setUnstuck;
 
+        // Capas con las que el proyectil puede quedarse pegado
         [field: SerializeField] public LayerMask LayerMask { get; private set; }
 
-        // SpriteRenderer sorting to be used when projectile is stuck
+        // Información visual al quedarse pegado
         [field: SerializeField] public string InactiveSortingLayerName { get; private set; }
         [field: SerializeField] public float CheckDistance { get; private set; }
 
@@ -31,9 +34,7 @@ namespace Avocado.ProjectileSystem.Components
         private bool subscribedToDisableNotifier;
 
         private HitBox hitBox;
-
         private string activeSortingLayerName;
-
         private SpriteRenderer sr;
 
         private OnDisableNotifier onDisableNotifier;
@@ -46,6 +47,7 @@ namespace Avocado.ProjectileSystem.Components
 
         private float gravityScale;
 
+        // Función que se llama al detectar colisiones por raycast del HitBox
         private void HandleRaycastHit2D(RaycastHit2D[] hits)
         {
             if (isStuck)
@@ -53,22 +55,18 @@ namespace Avocado.ProjectileSystem.Components
 
             SetStuck();
 
-            // The point returned by the boxcast can be weird, so we do one last check by firing a ray from the origin to the right to find
-            // a more suitable resting point
+            // Se lanza un raycast hacia adelante para encontrar un punto de impacto más preciso
             var lineHit = Physics2D.Raycast(_transform.position, _transform.right, CheckDistance, LayerMask);
 
-            //If out line hit finds a collider to use, then use it.
             if (lineHit)
             {
                 SetReferenceTransformAndPoint(lineHit.transform, lineHit.point);
                 return;
             }
 
-            // Otherwise look through the hits from the HitBox
+            // Si el raycast directo falla, revisa los impactos del HitBox
             foreach (var hit in hits)
             {
-                //HitBox might detect things on more layers than we care about so,
-                //did this hit happen with the correct LayerMask we are interested in?
                 if (!LayerMaskUtilities.IsLayerInMask(hit, LayerMask))
                     continue;
 
@@ -76,11 +74,11 @@ namespace Avocado.ProjectileSystem.Components
                 return;
             }
 
-            // If there is nothing to get stuck in, set isStuck to false and make body dynamic again so it will fall
+            // Si no hay nada válido, se libera el proyectil
             SetUnstuck();
         }
 
-        // Set projectile position to point and set new reference transform for projectile to track
+        // Asocia el proyectil a un transform externo y guarda su offset
         private void SetReferenceTransformAndPoint(Transform newReferenceTransform, Vector2 newPoint)
         {
             if (newReferenceTransform.TryGetComponent(out onDisableNotifier))
@@ -89,16 +87,14 @@ namespace Avocado.ProjectileSystem.Components
                 subscribedToDisableNotifier = true;
             }
 
-            // Set projectile position to detected point
             _transform.position = newPoint;
 
-            // Set reference transform and cache position and rotation offset
             referenceTransform = newReferenceTransform;
             offsetPosition = _transform.position - referenceTransform.position;
             offsetRotation = Quaternion.Inverse(referenceTransform.rotation) * _transform.rotation;
         }
 
-        // Set Rigidbody2D bodyType to static so that it is not affected by gravity and set sorting layer such that projectile appears behind other items
+        // Cambia el estado del proyectil a "pegado"
         private void SetStuck()
         {
             isStuck = true;
@@ -110,7 +106,7 @@ namespace Avocado.ProjectileSystem.Components
             setStuck?.Invoke();
         }
 
-        // Set Rigidbody2D bodyType to dynamic so that it is affected by gravity again and set sorting layer such that projectile appears in front of other items
+        // Libera el proyectil y lo deja caer
         private void SetUnstuck()
         {
             isStuck = false;
@@ -122,7 +118,7 @@ namespace Avocado.ProjectileSystem.Components
             setUnstuck?.Invoke();
         }
 
-        // If the body we are stuck in gets disabled or destroyed, make projectile dynamic again
+        // Se llama si el objeto al que está pegado se destruye/desactiva
         private void HandleDisableNotifier()
         {
             SetUnstuck();
@@ -134,32 +130,28 @@ namespace Avocado.ProjectileSystem.Components
             subscribedToDisableNotifier = false;
         }
 
+        // Si el proyectil se reinicia, se deshace el estado pegado
         protected override void ResetProjectile()
         {
             base.ResetProjectile();
-
             SetUnstuck();
         }
-
-
-        #region Plumbing
 
         protected override void Awake()
         {
             base.Awake();
 
             gravityScale = rb.gravityScale;
-
             _transform = transform;
 
             sr = GetComponentInChildren<SpriteRenderer>();
             activeSortingLayerName = sr.sortingLayerName;
 
             hitBox = GetComponent<HitBox>();
-
             hitBox.OnRaycastHit2D.AddListener(HandleRaycastHit2D);
         }
 
+        // Si el proyectil está pegado, actualiza su posición y rotación con respecto al objeto al que está pegado
         protected override void Update()
         {
             base.Update();
@@ -167,7 +159,6 @@ namespace Avocado.ProjectileSystem.Components
             if (!isStuck)
                 return;
 
-            // Update position and rotation based on reference transform
             if (!referenceTransform)
             {
                 SetUnstuck();
@@ -179,6 +170,7 @@ namespace Avocado.ProjectileSystem.Components
             _transform.rotation = referenceRotation * offsetRotation;
         }
 
+        // Limpieza de eventos al destruir el objeto
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -186,11 +178,7 @@ namespace Avocado.ProjectileSystem.Components
             hitBox.OnRaycastHit2D.RemoveListener(HandleRaycastHit2D);
 
             if (subscribedToDisableNotifier)
-            {
                 onDisableNotifier.OnDisableEvent -= HandleDisableNotifier;
-            }
         }
-
-        #endregion
     }
 }

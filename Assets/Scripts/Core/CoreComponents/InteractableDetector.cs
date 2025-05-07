@@ -1,23 +1,28 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using Avocado.Interaction;
 using Avocado.Utilities;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script detecta los objetos interactuables dentro del Collider2D, manteniendo referencia 
+al más cercano. Permite intentar interactuar con el más cercano mediante el método TryInteract.
+Actualiza visualmente (activar/desactivar estado de interacción) al cambiar el objeto más cercano.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.CoreSystem
 {
     [RequireComponent(typeof(Collider2D))]
     public class InteractableDetector : CoreComponent
     {
+        [Header("Events")]
         public Action<IInteractable> OnTryInteract;
 
         private readonly List<IInteractable> interactables = new();
-
         private IInteractable closestInteractable;
-
         private float distanceToClosestInteractable = float.PositiveInfinity;
 
+        // Llama a la interacción con el objeto más cercano si el input es válido.
         [ContextMenu("TryInteract")]
         public void TryInteract(bool inputValue)
         {
@@ -29,34 +34,34 @@ namespace Avocado.CoreSystem
 
         private void Update()
         {
-            if (interactables.Count <= 0)
+            if (interactables.Count == 0)
                 return;
 
-            distanceToClosestInteractable = float.PositiveInfinity;
             var oldClosestInteractable = closestInteractable;
-
-            if (closestInteractable is not null)
-            {
-                distanceToClosestInteractable = FindDistanceTo(closestInteractable);
-            }
+            distanceToClosestInteractable = closestInteractable != null
+                ? FindDistanceTo(closestInteractable)
+                : float.PositiveInfinity;
 
             foreach (var interactable in interactables)
             {
                 if (interactable == closestInteractable)
                     continue;
 
-                if (FindDistanceTo(interactable) >= distanceToClosestInteractable)
-                    continue;
+                float distance = FindDistanceTo(interactable);
 
-                closestInteractable = interactable;
-                distanceToClosestInteractable = FindDistanceTo(closestInteractable);
+                if (distance < distanceToClosestInteractable)
+                {
+                    closestInteractable = interactable;
+                    distanceToClosestInteractable = distance;
+                }
             }
 
-            if (closestInteractable == oldClosestInteractable)
-                return;
-
-            oldClosestInteractable?.DisableInteraction();
-            closestInteractable?.EnableInteraction();
+            // Cambiar interacción visual si cambió el interactuable más cercano
+            if (closestInteractable != oldClosestInteractable)
+            {
+                oldClosestInteractable?.DisableInteraction();
+                closestInteractable?.EnableInteraction();
+            }
         }
 
         private float FindDistanceTo(IInteractable interactable)
@@ -88,10 +93,9 @@ namespace Avocado.CoreSystem
 
         private void OnDrawGizmosSelected()
         {
-            foreach (IInteractable interactable in interactables)
+            foreach (var interactable in interactables)
             {
                 Gizmos.color = interactable == closestInteractable ? Color.red : Color.white;
-
                 Gizmos.DrawLine(transform.position, interactable.GetPosition());
             }
         }

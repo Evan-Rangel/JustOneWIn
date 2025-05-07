@@ -1,22 +1,23 @@
-using System;
+﻿using System;
 using Avocado.ObjectPoolSystem;
 using Avocado.ProjectileSystem;
 using Avocado.Weapons.Components;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este archivo define una interfaz para estrategias de generación de proyectiles (IProjectileSpawnerStrategy). 
+Su propósito es permitir que diferentes clases implementen diversas formas de lanzar proyectiles, 
+facilitando un diseño flexible y extensible. Por ejemplo:
+-Una estrategia puede lanzar un solo proyectil (básica).
+-Otra puede lanzar múltiples en abanico (como viste en ChargeProjectileSpawnerStrategy).
+-Otra más puede generar proyectiles con retardo, en forma circular, etc.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons
 {
-    /*
-     * The ProjectileSpawnerStrategy interface. We have a single function that takes in the ProjectileSpawnInfo, the position of the spawner, the facingDirection of the spawner,
-     * the object pool to get the projectile from, and an action to invoke when a projectile is spawned.
-     */
+    // El método 'ExecuteSpawnStrategy' se llama cuando se quiere disparar uno o más proyectiles, y proporciona toda la información necesaria
     public interface IProjectileSpawnerStrategy
     {
-        void ExecuteSpawnStrategy(ProjectileSpawnInfo projectileSpawnInfo, Vector3 spawnerPos, int facingDirection,
-            ObjectPools objectPools, Action<Projectile> OnSpawnProjectile);
-
-
+        void ExecuteSpawnStrategy(ProjectileSpawnInfo projectileSpawnInfo, Vector3 spawnerPos, int facingDirection, ObjectPools objectPools, Action<Projectile> OnSpawnProjectile);
     }
 }

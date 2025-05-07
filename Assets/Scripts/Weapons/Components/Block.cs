@@ -1,37 +1,49 @@
-using System;
+﻿using System;
 using Avocado.CoreSystem;
 using Avocado.Utilities;
 using Avocado.Weapons.Modifiers;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+El script Block permite que un personaje bloquee ataques enemigos durante ventanas de tiempo 
+específicas (block windows) definidas en los datos del ataque. Lo hace aplicando tres modificadores:
+-DamageModifier para reducir o anular el daño.
+-BlockKnockBackModifier para evitar el retroceso.
+-BlockPoiseDamageModifier para resistir daño al temple o equilibrio.
+-El sistema detecta desde qué dirección proviene el ataque usando AngleUtilities y decide si 
+debe bloquearse o no. Además, lanza partículas visuales y emite el evento OnBlock para que 
+otros sistemas (como sonido o cámara) puedan reaccionar.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons.Components
 {
     public class Block : WeaponComponent<BlockData, AttackBlock>
     {
-        // Event fired off when an attack is blocked. The parameter is the GameObject of the entity that was blocked
+        // Evento que se lanza cuando un ataque es bloqueado exitosamente. El parámetro es el GameObject del atacante.
         public event Action<GameObject> OnBlock;
 
-        // The players DamageReceiver core component. We use the damage receiver's modifiers to modify the amount of damage successfully blocked attacks deal.
+        // Referencias a componentes del núcleo del jugador
         private DamageReceiver damageReceiver;
         private KnockBackReceiver knockBackReceiver;
         private PoiseDamageReceiver poiseDamageReceiver;
 
-        // The modifier that we give the DamageReceiver when the block window is active.
+        // Modificadores que se aplican durante la ventana de bloqueo
         private DamageModifier damageModifier;
         private BlockKnockBackModifier knockBackModifier;
         private BlockPoiseDamageModifier poiseDamageModifier;
 
+        // Referencias auxiliares
         private CoreSystem.Movement movement;
         private ParticleManager particleManager;
 
+        // Flags de control de ventana de bloqueo
         private bool isBlockWindowActive;
         private bool shouldUpdate;
 
+        // Tiempo exacto en que se debe iniciar/detener la ventana
         private float nextWindowTriggerTime;
 
-        // Starts the block window by passing modifiers to receivers.
+        // Activa la ventana de bloqueo y aplica los modificadores correspondientes.
         private void StartBlockWindow()
         {
             isBlockWindowActive = true;
@@ -44,7 +56,7 @@ namespace Avocado.Weapons.Components
             poiseDamageReceiver.Modifiers.AddModifier(poiseDamageModifier);
         }
 
-        // Stops block window by removing modifiers from windows.
+        // Desactiva la ventana de bloqueo y remueve los modificadores.
         private void StopBlockWindow()
         {
             isBlockWindowActive = false;
@@ -57,42 +69,34 @@ namespace Avocado.Weapons.Components
             poiseDamageReceiver.Modifiers.RemoveModifier(poiseDamageModifier);
         }
 
-        // Checks if source falls withing any blocked regions for the current attack. Also returns the block information
+        // Determina si un ataque fue bloqueado, según el ángulo desde donde vino el atacante.
         private bool IsAttackBlocked(Transform source, out DirectionalInformation directionalInformation)
         {
-            var angleOfAttacker = AngleUtilities.AngleFromFacingDirection(
-                Core.Root.transform,
-                source,
-                movement.FacingDirection
-            );
+            // Calcula el ángulo entre el jugador y el atacante, tomando en cuenta la dirección del jugador
+            var angleOfAttacker = AngleUtilities.AngleFromFacingDirection(Core.Root.transform, source, movement.FacingDirection);
 
             return currentAttackData.IsBlocked(angleOfAttacker, out directionalInformation);
         }
 
-        /*
-         * The modifier is what tells us if a block was performed. It fires off an event when used. This handles that event and broadcasts
-         * that information further
-         */
+        // Método llamado cuando el modificador de daño detecta un bloqueo.
+        // Lanza partículas y emite el evento OnBlock.
         private void HandleModified(GameObject source)
         {
             particleManager.StartWithRandomRotation(currentAttackData.Particles, currentAttackData.ParticlesOffset);
-
             OnBlock?.Invoke(source);
         }
 
+        // Maneja los eventos de entrada en fases de ataque para controlar cuándo activar la ventana de bloqueo.
         private void HandleEnterAttackPhase(AttackPhases phase)
         {
-            shouldUpdate = isBlockWindowActive
-                ? currentAttackData.BlockWindowEnd.TryGetTriggerTime(phase, out nextWindowTriggerTime)
-                : currentAttackData.BlockWindowStart.TryGetTriggerTime(phase, out nextWindowTriggerTime);
+            shouldUpdate = isBlockWindowActive ? currentAttackData.BlockWindowEnd.TryGetTriggerTime(phase, out nextWindowTriggerTime) : currentAttackData.BlockWindowStart.TryGetTriggerTime(phase, out nextWindowTriggerTime);
         }
-
-        #region Plumbing
 
         protected override void Start()
         {
             base.Start();
 
+            // Obtener referencias a componentes del núcleo
             movement = Core.GetCoreComponent<CoreSystem.Movement>();
             particleManager = Core.GetCoreComponent<ParticleManager>();
 
@@ -100,27 +104,25 @@ namespace Avocado.Weapons.Components
             damageReceiver = Core.GetCoreComponent<DamageReceiver>();
             poiseDamageReceiver = Core.GetCoreComponent<PoiseDamageReceiver>();
 
-            // Create the modifier objects.
+            // Crear los modificadores que usarán los receptores
             damageModifier = new DamageModifier(IsAttackBlocked);
             knockBackModifier = new BlockKnockBackModifier(IsAttackBlocked);
             poiseDamageModifier = new BlockPoiseDamageModifier(IsAttackBlocked);
 
+            // Suscribirse al evento que marca el cambio de fase de ataque
             AnimationEventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
         }
 
+        // Controla el momento exacto de iniciar o detener la ventana de bloqueo.
         private void Update()
         {
             if (!shouldUpdate || !IsPastTriggerTime())
                 return;
 
             if (isBlockWindowActive)
-            {
                 StopBlockWindow();
-            }
             else
-            {
                 StartBlockWindow();
-            }
         }
 
         private bool IsPastTriggerTime()
@@ -131,10 +133,7 @@ namespace Avocado.Weapons.Components
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
             AnimationEventHandler.OnEnterAttackPhase -= HandleEnterAttackPhase;
         }
-
-        #endregion
     }
 }

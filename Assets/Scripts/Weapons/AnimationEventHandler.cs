@@ -1,39 +1,43 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+AnimationEventHandler actúa como intermediario entre las animaciones y la lógica del juego. 
+Permite que eventos definidos en la animación (mediante los "Animation Events") disparen 
+funciones que otros scripts pueden escuchar, como iniciar movimiento, terminar una animación, 
+activar efectos visuales o iniciar fases de ataque. Esto facilita una programación modular y 
+flexible para sistemas de combate complejos.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons
 {
+    // Esta clase permite conectar eventos de animación con lógica del juego (como movimiento, ataque, etc.)
     public class AnimationEventHandler : MonoBehaviour
     {
+        // Eventos que otros scripts pueden escuchar y usar cuando ocurren ciertos eventos animados (en la animaciones como tal)
         public event Action OnFinish;
         public event Action OnStartMovement;
         public event Action OnStopMovement;
         public event Action OnAttackAction;
         public event Action OnMinHoldPassed;
 
-        /*
-         * This trigger is used to indicate in the weapon animation when the input should be "used" meaning the player has to release the input key and press it down again to trigger the next attack.
-         * Generally this animation event is added to the first "action" frame of an animation. e.g the first sword strike frame, or the frame where the bow is released.
-         */
+        // Este evento se dispara en un punto específico de la animación para indicar que el jugador debe soltar y volver a presionar el input.
+        //Se usa normalmente cuando ocurre la acción (como disparar un arco o golpear con una espada).
         public event Action OnUseInput;
 
-        public event Action OnEnableInterrupt;
+        public event Action OnEnableInterrupt; // Permite que una animación sea interrumpida
 
-        public event Action<bool> OnSetOptionalSpriteActive;
+        public event Action<bool> OnSetOptionalSpriteActive; // Activa o desactiva un sprite opcional (como un efecto visual)
+        public event Action<bool> OnFlipSetActive; // Activa o desactiva el flip (volteo) del sprite
 
-        public event Action<bool> OnFlipSetActive;
+        public event Action<AttackPhases> OnEnterAttackPhase; // Dispara cuando se entra en una nueva fase de ataque
 
-        public event Action<AttackPhases> OnEnterAttackPhase;
-
-        /*
-         * Animations events used to indicate when a specific time window starts and stops in an animation. These windows are identified using the
-         * AnimationWindows enum. These windows include things like when the shield's block is active and when it can parry.
-         */
+        // Eventos usados para definir ventanas específicas dentro de la animación (como una ventana de bloqueo o de parry)
+        // Estas se identifican mediante un enum llamado AnimationWindows.
         public event Action<AnimationWindows> OnStartAnimationWindow;
         public event Action<AnimationWindows> OnStopAnimationWindow;
 
+        // Métodos llamados desde eventos en la animación (Animation Events)
 
         private void AnimationFinishedTrigger() => OnFinish?.Invoke();
         private void StartMovementTrigger() => OnStartMovement?.Invoke();

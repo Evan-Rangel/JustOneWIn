@@ -1,17 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script Componente del Core que se encarga de detectar colisiones relevantes como suelo, 
+paredes, techos, bordes.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.CoreSystem
 {
-    public class CollisionSenses : CoreComponent
+	public class CollisionSenses : CoreComponent
     {
         private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-
         private Movement movement;
 
-        #region Check Transforms
+        #region Check Transforms Variables
 
+        // Propiedades que aseguran que los Transforms estén correctamente asignados o muestran un error si no.
         public Transform GroundCheck
         {
             get => GenericNotImplementedError<Transform>.TryGet(groundCheck, core.transform.parent.name);
@@ -37,10 +40,10 @@ namespace Avocado.CoreSystem
             get => GenericNotImplementedError<Transform>.TryGet(ceilingCheck, core.transform.parent.name);
             private set => ceilingCheck = value;
         }
+
         public float GroundCheckRadius { get => groundCheckRadius; set => groundCheckRadius = value; }
         public float WallCheckDistance { get => wallCheckDistance; set => wallCheckDistance = value; }
         public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
-
 
         [SerializeField] private Transform groundCheck;
         [SerializeField] private Transform wallCheck;
@@ -50,11 +53,11 @@ namespace Avocado.CoreSystem
 
         [SerializeField] private float groundCheckRadius;
         [SerializeField] private float wallCheckDistance;
-
         [SerializeField] private LayerMask whatIsGround;
 
         #endregion
 
+        // Propiedades para detectar estados de colisiones
         public bool Ceiling
         {
             get => Physics2D.OverlapCircle(CeilingCheck.position, groundCheckRadius, whatIsGround);
@@ -86,4 +89,3 @@ namespace Avocado.CoreSystem
         }
     }
 }
-

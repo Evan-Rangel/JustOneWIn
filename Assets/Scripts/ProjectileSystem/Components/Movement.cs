@@ -1,20 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+El componente Movement controla el movimiento básico del proyectil. Puede aplicarse de dos formas:
+-Una sola vez cuando el proyectil es lanzado, para proyectiles que simplemente se impulsan y 
+luego siguen su trayectoria por inercia.
+-De forma continua, útil para proyectiles que se comportan como cohetes o misiles que mantienen 
+su velocidad activamente.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.ProjectileSystem.Components
 {
-    /// <summary>
-    /// The Movement projectile component is responsible for applying a velocity to the projectile. The velocity can be applied only once upon the projectile
-    /// being fired, or can be applied continuously as if self powered. 
-    /// </summary>
     public class Movement : ProjectileComponent
     {
+        // Si está activado, la velocidad se aplicará en cada FixedUpdate
         [field: SerializeField] public bool ApplyContinuously { get; private set; }
+
+        // Velocidad del proyectil
         [field: SerializeField] public float Speed { get; private set; }
 
-        // On Init, set projectile velocity once
+        // En Init se aplica la velocidad una vez si ApplyContinuously está desactivado
         protected override void Init()
         {
             base.Init();
@@ -22,8 +27,10 @@ namespace Avocado.ProjectileSystem.Components
             SetVelocity();
         }
 
+        // Aplica la velocidad en la dirección hacia la derecha del transform
         private void SetVelocity() => rb.velocity = Speed * transform.right;
 
+        // Si ApplyContinuously está activado, se aplica la velocidad constantemente
         protected override void FixedUpdate()
         {
             base.FixedUpdate();

@@ -1,13 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Avocado.Combat.Parry;
 using Avocado.Utilities;
 using UnityEngine;
 
+/*---------------------------------------------------------------------------------------------
+Este script es una clase de utilidades que te permite aplicar retroceso (knockback) a objetos 
+de forma genérica, con múltiples overloads.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.Combat.KnockBack
 {
+    // Utilidad para aplicar efectos de KnockBack de forma genérica a objetos que implementen IKnockBackable.
     public static class CombatKnockBackUtilities
     {
+        // Aplica KnockBack a un GameObject si contiene un componente que implemente IKnockBackable.
         public static bool TryKnockBack(GameObject gameObject, KnockBackData data, out IKnockBackable knockBackable)
         {
             if (gameObject.TryGetComponentInChildren(out knockBackable))
@@ -19,11 +25,13 @@ namespace Avocado.Combat.KnockBack
             return false;
         }
 
+        // Versión sobrecargada que acepta un Component.
         public static bool TryKnockBack(Component component, KnockBackData data, out IKnockBackable knockBackable)
         {
             return TryKnockBack(component.gameObject, data, out knockBackable);
         }
 
+        // Aplica KnockBack a múltiples GameObjects.
         public static bool TryKnockBack(IEnumerable<GameObject> gameObjects, KnockBackData data,
             out List<IKnockBackable> knockBackables)
         {
@@ -42,6 +50,7 @@ namespace Avocado.Combat.KnockBack
             return hasKnockedBack;
         }
 
+        // Aplica KnockBack a múltiples componentes.
         public static bool TryKnockBack(IEnumerable<Component> components, KnockBackData data,
             out List<IKnockBackable> knockBackables)
         {

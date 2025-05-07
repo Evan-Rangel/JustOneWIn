@@ -1,8 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Avocado.Combat.Damage;
+﻿using Avocado.Combat.Damage;
 using Avocado.ModifierSystem;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script Componente que recibe daño en un objeto y aplica modificadores de daño.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.CoreSystem
 {
@@ -10,39 +12,42 @@ namespace Avocado.CoreSystem
     {
         [SerializeField] private GameObject damageParticles;
 
-        /*
-         * Modifiers allows us to perform some custom logic on our DamageData before we apply it here. An example where this is being used is by the Block weapon component.
-         * Blocking works by assigning a modifier during the active block window of the shield that reduces the amount of damage the player will take. For example: If a shield
-         * has a damage absorption property of 0.75 and we deal 10 damage, only 2.5 will actually end up getting removed from player stats after applying the modifier.
-         */
+        // Sistema de modificadores que permiten alterar el daño recibido antes de aplicarlo.
+        // Ejemplo: Un escudo puede reducir el daño recibido.
         public Modifiers<Modifier<DamageData>, DamageData> Modifiers { get; } = new();
 
         private Stats stats;
         private ParticleManager particleManager;
 
-
+        // Método que recibe daño, aplica modificadores, y afecta la salud.
         public void Damage(DamageData data)
         {
+            // Mostrar el daño antes de aplicar modificadores
             print($"Damage Amount Before Modifiers: {data.Amount}");
 
-            // We must apply the modifiers before we do anything else with data. If there are no modifiers currently active, data will remain the same
+            // Aplicar todos los modificadores activos al daño
             data = Modifiers.ApplyAllModifiers(data);
 
+            // Mostrar el daño después de modificadores
             print($"Damage Amount After Modifiers: {data.Amount}");
 
+            // Si después de modificar el daño es 0 o menor, no hacer nada
             if (data.Amount <= 0f)
-            {
                 return;
-            }
 
+            // Disminuir salud
             stats.Health.Decrease(data.Amount);
+
+            // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);
         }
 
+        // Inicialización del componente, buscando las dependencias necesarias.
         protected override void Awake()
         {
             base.Awake();
 
+            // Obtener referencias a otros componentes del Core
             stats = core.GetCoreComponent<Stats>();
             particleManager = core.GetCoreComponent<ParticleManager>();
         }

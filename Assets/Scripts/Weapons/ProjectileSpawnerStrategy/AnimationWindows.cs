@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿/*---------------------------------------------------------------------------------------------
+Este script define un enum llamado AnimationWindows que se utiliza para etiquetar distintas 
+ventanas de acción dentro de las animaciones de combate. Las animaciones pueden tener eventos 
+que abren o cierran estas "ventanas", permitiendo mecánicas como bloqueo (Block) o parry (desvío)
+durante momentos específicos del movimiento del personaje.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons
-{
-    /*
-     * AnimationWindows Enum is used to start and stop specific window types via animation events. A window refers to a period of time between two specific frames
-     * in the animation where something could occur.
-     */
+{  
     public enum AnimationWindows
     {
-        Block,
-        Parry
+        Block,  
+        Parry   
     }
 }

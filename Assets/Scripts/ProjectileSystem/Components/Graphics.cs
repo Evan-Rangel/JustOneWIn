@@ -1,46 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
-using Avocado.ProjectileSystem.DataPackages;
+﻿using Avocado.ProjectileSystem.DataPackages;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+El componente Graphics permite personalizar visualmente cada proyectil según la información 
+enviada por el arma. Cuando el arma lanza un proyectil, puede adjuntar un SpriteDataPackage que 
+contiene un sprite específico. Este sprite se guarda en el componente y se asigna al SpriteRenderer 
+en el método Init, asegurando que el proyectil tenga el aspecto adecuado cuando aparece en escena.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.ProjectileSystem.Components
 {
-    /*
-     * The Graphics projectile component is responsible for changing out the sprite on the sprite renderer on the Graphics child GameObject
-     * based on what is passed to it from the weapon
-     */
     public class Graphics : ProjectileComponent
     {
-        private Sprite sprite;
+        private Sprite sprite; // Sprite recibido desde el arma a través de un paquete de datos
 
-        private SpriteRenderer spriteRenderer;
+        private SpriteRenderer spriteRenderer; // Referencia al SpriteRenderer en el hijo "Graphics"
 
+        // Método llamado cuando se inicializa el proyectil
         protected override void Init()
         {
             base.Init();
 
+            // Asigna el sprite al renderer cuando el proyectil es inicializado
             spriteRenderer.sprite = sprite;
         }
 
+        // Maneja la recepción de paquetes de datos
         protected override void HandleReceiveDataPackage(ProjectileDataPackage dataPackage)
         {
             base.HandleReceiveDataPackage(dataPackage);
 
+            // Si el paquete no es del tipo esperado, se ignora
             if (dataPackage is not SpriteDataPackage spriteDataPackage)
                 return;
 
+            // Se guarda el sprite recibido para asignarlo más adelante en Init
             sprite = spriteDataPackage.Sprite;
         }
 
-        #region Plumbing
-
+        // Se ejecuta al iniciar el componente
         protected override void Awake()
         {
             base.Awake();
 
+            // Obtiene el SpriteRenderer del hijo (usualmente un GameObject llamado "Graphics")
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
-
-        #endregion
     }
 }

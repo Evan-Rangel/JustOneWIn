@@ -1,39 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Avocado.ProjectileSystem;
+﻿using Avocado.ProjectileSystem;
 using Avocado.ProjectileSystem.DataPackages;
+
+/*---------------------------------------------------------------------------------------------
+El componente DrawToProjectile transfiere el valor de carga (draw percentage) desde el sistema 
+de entrada (cuando el jugador suelta el botón) hacia los proyectiles generados. Funciona como 
+un puente entre los componentes Draw y ProjectileSpawner. Cuando se evalúa la curva de carga, 
+guarda el resultado, y cuando se genera un proyectil, le adjunta ese valor en un paquete de 
+datos (DrawModifierDataPackage), para que el proyectil pueda usarlo (por ejemplo, cambiar su 
+daño, velocidad o apariencia según la carga).
+Este componente conecta el sistema de "Draw" (carga del disparo) con el sistema de proyectiles.
+Escucha el evento del componente Draw cuando se evalúa la curva (al soltar el botón).
+Guarda ese valor.
+Luego, cuando se genera un proyectil, le pasa ese valor de carga como un paquete de datos.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons.Components
 {
-    /*
-     * This component works with both the Draw and ProjectileSpawner components. It listens for the evaluation event from Draw and the projectile spawned event from the projectile spawner.
-     * When draw is evaluated that value is stored, when a projectile is spawned, the drawPercentage is packaged up and sent through so any component there can use it.
-     */
     public class DrawToProjectile : WeaponComponent
     {
         private Draw draw;
         private ProjectileSpawner projectileSpawner;
 
+        // Paquete de datos que transportará el valor de carga (draw) al proyectil
         private readonly DrawModifierDataPackage drawModifierDataPackage = new DrawModifierDataPackage();
 
+        // Recibe el valor evaluado del componente Draw y lo almacena en el paquete.
         private void HandleEvaluateCurve(float value)
         {
             drawModifierDataPackage.DrawPercentage = value;
         }
 
+        // Cuando se genera un proyectil, se le envía el paquete de datos con el valor de carga.
         private void HandleSpawnProjectile(Projectile projectile)
         {
             projectile.SendDataPackage(drawModifierDataPackage);
         }
 
+        // Al iniciar un nuevo ataque, se reinicia el valor de carga.
         protected override void HandleEnter()
         {
             drawModifierDataPackage.DrawPercentage = 0f;
         }
 
-        #region Plumbing
-
+        // Se suscribe a los eventos de Draw y ProjectileSpawner.
         protected override void Start()
         {
             base.Start();
@@ -52,7 +61,5 @@ namespace Avocado.Weapons.Components
             draw.OnEvaluateCurve -= HandleEvaluateCurve;
             projectileSpawner.OnSpawnProjectile -= HandleSpawnProjectile;
         }
-
-        #endregion
     }
 }

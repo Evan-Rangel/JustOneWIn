@@ -3,28 +3,44 @@ using Avocado.CoreSystem;
 using UnityEngine;
 using Avocado.Utilities;
 
+/*---------------------------------------------------------------------------------------------
+El script Weapon es una clase base que representa un arma equipada por un personaje. Se encarga de:
+-Controlar el estado del ataque, incluyendo su inicio (Enter), su final (Exit) y el control del 
+input necesario para encadenar ataques.
+-Administrar un contador de ataques, útil para armas con combos de múltiples pasos.
+-Respetar un cooldown para resetear el contador si el jugador no ataca por un tiempo.
+-Sincronizar con la animación, gracias al AnimationEventHandler.
+-Comunicar eventos importantes hacia otros sistemas (como UI, lógica de combate, etc.) mediante 
+eventos públicos.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.Weapons
 {
     public class Weapon : MonoBehaviour
     {
+        // Eventos para comunicar cambios de estado del arma
         public event Action<bool> OnCurrentInputChange;
-
         public event Action OnEnter;
         public event Action OnExit;
         public event Action OnUseInput;
 
+        // Tiempo que debe pasar antes de reiniciar el contador de ataques
         [SerializeField] private float attackCounterResetCooldown;
 
+        // Indica si el arma puede iniciar un ataque
         public bool CanEnterAttack { get; private set; }
 
+        // Datos de configuración del arma (ScriptableObject)
         public WeaponDataSO Data { get; private set; }
 
+        // Contador del ataque actual, se reinicia si supera el número total de ataques definidos
         public int CurrentAttackCounter
         {
             get => currentAttackCounter;
             private set => currentAttackCounter = value >= Data.NumberOfAttacks ? 0 : value;
         }
 
+        // Control del input actual (presionado o no)
         public bool CurrentInput
         {
             get => currentInput;
@@ -33,24 +49,27 @@ namespace Avocado.Weapons
                 if (currentInput != value)
                 {
                     currentInput = value;
-                    OnCurrentInputChange?.Invoke(currentInput);
+                    OnCurrentInputChange?.Invoke(currentInput); // Notifica el cambio de input
                 }
             }
         }
 
+        // Tiempo en que inició el ataque actual
         public float AttackStartTime { get; private set; }
 
+        // Referencias a componentes importantes
         public Animator Anim { get; private set; }
         public GameObject BaseGameObject { get; private set; }
         public GameObject WeaponSpriteGameObject { get; private set; }
 
+        // Manejador de eventos desde la animación del arma
         public AnimationEventHandler EventHandler
         {
             get
             {
                 if (!initDone)
                 {
-                    GetDependencies();
+                    GetDependencies(); // Carga referencias si aún no se hizo
                 }
 
                 return eventHandler;
@@ -58,21 +77,22 @@ namespace Avocado.Weapons
             private set => eventHandler = value;
         }
 
+        // Referencia al sistema central de lógica del jugador
         public Core Core { get; private set; }
 
+        // Variables internas
         private int currentAttackCounter;
-
         private TimeNotifier attackCounterResetTimeNotifier;
-
         private bool currentInput;
-
         private bool initDone;
         private AnimationEventHandler eventHandler;
 
+        /// <summary>
+        /// Llamado al iniciar el ataque.
+        /// </summary>
         public void Enter()
         {
-            // Debug.Break();
-            print($"{transform.name} enter");
+            // print($"{transform.name} enter");
 
             AttackStartTime = Time.time;
 
@@ -84,11 +104,13 @@ namespace Avocado.Weapons
             OnEnter?.Invoke();
         }
 
+        // Asigna la referencia al Core del jugador
         public void SetCore(Core core)
         {
             Core = core;
         }
 
+        // Asigna los datos del arma y reinicia el contador de ataque
         public void SetData(WeaponDataSO data)
         {
             Data = data;
@@ -101,12 +123,15 @@ namespace Avocado.Weapons
 
         public void SetCanEnterAttack(bool value) => CanEnterAttack = value;
 
+        /// <summary>
+        /// Finaliza el ataque actual.
+        /// </summary>
         public void Exit()
         {
             Anim.SetBool("active", false);
 
             CurrentAttackCounter++;
-            attackCounterResetTimeNotifier.Init(attackCounterResetCooldown);
+            attackCounterResetTimeNotifier.Init(attackCounterResetCooldown); // Comienza el cooldown para reiniciar el contador
 
             OnExit?.Invoke();
         }
@@ -118,6 +143,7 @@ namespace Avocado.Weapons
             attackCounterResetTimeNotifier = new TimeNotifier();
         }
 
+        // Busca y guarda todas las referencias necesarias
         private void GetDependencies()
         {
             if (initDone)
@@ -127,17 +153,18 @@ namespace Avocado.Weapons
             WeaponSpriteGameObject = transform.Find("WeaponSprite").gameObject;
 
             Anim = BaseGameObject.GetComponent<Animator>();
-
             EventHandler = BaseGameObject.GetComponent<AnimationEventHandler>();
 
             initDone = true;
         }
 
+        // Actualiza el temporizador del reset del contador de ataques
         private void Update()
         {
             attackCounterResetTimeNotifier.Tick();
         }
 
+        // Reinicia el contador de ataques a 0
         private void ResetAttackCounter()
         {
             print("Reset Attack Counter");
@@ -156,11 +183,7 @@ namespace Avocado.Weapons
             attackCounterResetTimeNotifier.OnNotify -= ResetAttackCounter;
         }
 
-        /// <summary>
-        /// Invokes event to pass along information from the AnimationEventHandler to a non-weapon class.
-        /// </summary>
+        // Evento que indica cuándo se debe "usar" el input del jugador (proviene de la animación)
         private void HandleUseInput() => OnUseInput?.Invoke();
     }
 }
-
-

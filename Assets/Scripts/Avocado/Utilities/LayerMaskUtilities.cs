@@ -1,21 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Ofrece funciones para comprobar si un layer específico está dentro de un LayerMask usando 
+operaciones bitwise. También incluye una versión pensada para RaycastHit2D.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Utilities
 {
-    /// <summary>
-    /// This class holds some useful functions pertaining to LayerMasks
-    /// </summary>
     public static class LayerMaskUtilities
     {
-
-        /// <summary>
-        /// This function uses bit shifting to determine if a particular layer is contained within a LayerMask
-        /// </summary>
+        // Verifica si un layer está contenido dentro de un LayerMask usando bit shifting.
         public static bool IsLayerInMask(int layer, LayerMask mask) => ((1 << layer) & mask) > 0;
 
-        public static bool IsLayerInMask(RaycastHit2D hit, LayerMask mask) =>
-            IsLayerInMask(hit.collider.gameObject.layer, mask);
+        // Variante que permite verificar directamente desde un RaycastHit2D.
+        public static bool IsLayerInMask(RaycastHit2D hit, LayerMask mask) => IsLayerInMask(hit.collider.gameObject.layer, mask);
     }
 }

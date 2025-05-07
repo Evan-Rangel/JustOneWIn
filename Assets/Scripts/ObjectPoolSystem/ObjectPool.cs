@@ -1,43 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Avocado.Interfaces;
 using UnityEngine;
 
+/*---------------------------------------------------------------------------------------------
+Este script reutilizar objetos (Componentes, no GameObjects completos) para optimizar el 
+rendimiento evitando Instantiate y Destroy constantes.
+¿Cómo trabaja?
+-Guarda objetos inactivos en una Queue.
+-Al pedir un objeto (GetObject), toma uno disponible o crea uno nuevo.
+-Al devolver (ReturnObject), lo desactiva y lo mete de nuevo en la cola.
+-Implementa una interfaz IObjectPoolItem opcional para que el objeto sepa a qué pool pertenece 
+y pueda liberarse correctamente.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.ObjectPoolSystem
 {
-    /*
-     * Abstract definition of the generic object pool class. It allows us to call the Release function without having to know
-     * the specific type the object pool is responsible for storing. In the ObjectPools class we also use it in the dictionary of
-     * object pools.
-     */
+    // Permite liberar o devolver objetos sin conocer el tipo específico del objeto.
+    // Útil para almacenar todos los pools genéricos juntos en un solo contenedor (por ejemplo, en un diccionario).
     public abstract class ObjectPool
     {
         public abstract void Release();
-
         public abstract void ReturnObject(Component comp);
     }
 
-    /*
-     * Generic definition of ObjectPool. It is generic so that we can define the specific object we are interested in interacting with.
-     * For example, we will have many different projectile prefabs with different components attached to it, but the only component we are
-     * interested in working with when we spawn a projectile, is the Projectile component attached to it. So instead of returning the GameObject
-     * and having to call GetComponent every time we fire a projectile, we store it as Projectile.
-     */
+     // Nos permite crear un pool para un tipo específico de componente, en lugar de trabajar con GameObject directamente.
+     // Ejemplo: Podrías hacer un pool solo para proyectiles (Projectile), en lugar de manejar todo el GameObject.
     public class ObjectPool<T> : ObjectPool where T : Component
     {
-        /*
-         * When the pool is created we pass in the prefab that should be used to create new components. Remember that prefabs
-         * can be stored as any of the components attached to it and does not have to be stored in a GameObject variable
-         */
-        private readonly T prefab;
+        private readonly T prefab; // Prefab usado para instanciar nuevos objetos
+        private readonly Queue<T> pool = new Queue<T>(); // Objetos disponibles para usar
+        private readonly List<IObjectPoolItem> allItems = new List<IObjectPoolItem>(); // Todos los objetos creados (activos o inactivos)
 
-        // The inactive object we can return when one is requested
-        private readonly Queue<T> pool = new Queue<T>();
-
-        // All the objects that are part of this pool. Inactive and active, if they have a component that implements the IObjectPoolItem interface
-        private readonly List<IObjectPoolItem> allItems = new List<IObjectPoolItem>();
-
-        // Constructor. Defines the prefab and initializes some components.
+        // Constructor - Inicializa el pool con un número de objetos de inicio (por default, 1)
         public ObjectPool(T prefab, int startCount = 1)
         {
             this.prefab = prefab;
@@ -45,16 +39,15 @@ namespace Avocado.ObjectPoolSystem
             for (var i = 0; i < startCount; i++)
             {
                 var obj = InstantiateNewObject();
-
                 pool.Enqueue(obj);
             }
         }
 
-        // Instantiates a new component when needed
+        // Instancia un nuevo objeto y lo configura si implementa IObjectPoolItem
         private T InstantiateNewObject()
         {
             var obj = Object.Instantiate(prefab);
-            obj.name = prefab.name;
+            obj.name = prefab.name; // Opcional: Renombrar para reconocerlo fácilmente en jerarquía
 
             if (!obj.TryGetComponent<IObjectPoolItem>(out var objectPoolItem))
             {
@@ -62,29 +55,27 @@ namespace Avocado.ObjectPoolSystem
                 return obj;
             }
 
-            // If object has the IObjectPool interface, set this ObjectPool as it's pool and store in list
             objectPoolItem.SetObjectPool(this, obj);
             allItems.Add(objectPoolItem);
 
             return obj;
         }
 
+        // Solicita un objeto del pool
         public T GetObject()
         {
-            // Try to get item from the queue. TryDequeue returns true if object available and false if not
             if (!pool.TryDequeue(out var obj))
             {
-                // If not available, instantiate a new one and return
+                // Si no hay objetos disponibles, instancia uno nuevo
                 obj = InstantiateNewObject();
                 return obj;
             }
 
-            // If available, return
             obj.gameObject.SetActive(true);
             return obj;
         }
 
-        // Return object to the queue. Usually called from the component that implements the IObjectPoolItem interface
+        // Devuelve un objeto al pool
         public override void ReturnObject(Component comp)
         {
             if (comp is not T compObj)
@@ -94,10 +85,7 @@ namespace Avocado.ObjectPoolSystem
             pool.Enqueue(compObj);
         }
 
-        /*
-         * Call when ObjectPool is no longer needed. Destroys all inactive object and releases active ones. Releases active objects
-         * should destroy self when it attempts to return to pool
-         */
+        // Libera todo el pool (destruye objetos en memoria)
         public override void Release()
         {
             foreach (var item in pool)

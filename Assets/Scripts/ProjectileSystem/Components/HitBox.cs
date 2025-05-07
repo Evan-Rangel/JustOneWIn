@@ -1,74 +1,72 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using Avocado.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
+/*---------------------------------------------------------------------------------------------
+El componente HitBox define una zona de colisión personalizada para los proyectiles. Utiliza un 
+BoxCastAll para detectar colisiones en forma de rectángulo, considerando la dirección y velocidad 
+del proyectil para evitar que atraviese objetos a alta velocidad. Si detecta alguna colisión, 
+lanza un evento (OnRaycastHit2D) que otros componentes pueden escuchar, como el componente Damage. 
+Además, el OnDrawGizmosSelected permite visualizar el área del hitbox en el editor.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.ProjectileSystem.Components
 {
-    /// <summary>
-    /// This class is a generic HitBox used by projectiles. The HitBox shape itself is defined by a Rect and it uses BoxCastAll to
-    /// do the physics check. When things are detected, it fires off an event with all the RaycastHit2D information for other components to use
-    /// </summary>
     public class HitBox : ProjectileComponent
     {
-        // public event Action<RaycastHit2D[]> OnRaycastHit2D;
+        // Evento invocado cuando se detecta una colisión mediante el BoxCast
         public UnityEvent<RaycastHit2D[]> OnRaycastHit2D;
 
+        // Rectángulo que define la forma y posición local del HitBox
         [field: SerializeField] public Rect HitBoxRect { get; private set; }
+
+        // Define qué capas pueden ser detectadas por el HitBox
         [field: SerializeField] public LayerMask LayerMask { get; private set; }
 
-        private RaycastHit2D[] hits;
-        private float checkDistance;
+        private RaycastHit2D[] hits; // Resultados del BoxCast
+        private float checkDistance; // Distancia del BoxCast según la velocidad del proyectil
 
-        private Transform _transform;
+        private Transform _transform; // Referencia cacheada al transform del GameObject
 
+        // Realiza el BoxCast y emite el evento si hay colisiones
         private void CheckHitBox()
         {
-            hits = Physics2D.BoxCastAll(transform.TransformPoint(HitBoxRect.center), HitBoxRect.size,
-                _transform.rotation.eulerAngles.z, _transform.right, checkDistance, LayerMask);
+            hits = Physics2D.BoxCastAll(transform.TransformPoint(HitBoxRect.center), HitBoxRect.size, _transform.rotation.eulerAngles.z, _transform.right, checkDistance, LayerMask);
 
             if (hits.Length <= 0) return;
 
+            // Llama a los listeners si se detectan colisiones
             OnRaycastHit2D?.Invoke(hits);
         }
 
-        #region Plumbing
-
+        // Se ejecuta al iniciar el componente
         protected override void Awake()
         {
             base.Awake();
-
-            // Just caching the transform based on repeated use (Recommendation from Rider IDE)
-            _transform = transform;
+            _transform = transform; // Cachea el transform para mejorar rendimiento
         }
 
+        // Llamado cada frame de física. Calcula la distancia y revisa colisiones
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
 
-            // Used to compensate for projectile velocity to help stop clipping
-            checkDistance = rb.velocity.magnitude * Time.deltaTime;
+            checkDistance = rb.velocity.magnitude * Time.deltaTime; // Para evitar que se atraviesen objetos
 
             CheckHitBox();
         }
 
+        // Dibuja el hitbox en la escena cuando se selecciona el objeto en el editor
         private void OnDrawGizmosSelected()
         {
-            // The following is some code that ChatGPT Generated for me to visualize the HitBoxRect based on the rotation.
-            // Set up gizmo color
             Gizmos.color = Color.red;
 
-            // Create a new matrix that applies the projectile's rotation
-            Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position,
-                Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z), Vector3.one);
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position, Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z), Vector3.one);
+
             Gizmos.matrix = rotationMatrix;
 
-            // Draw the wireframe cube
             Gizmos.DrawWireCube(HitBoxRect.center, HitBoxRect.size);
         }
-
-        #endregion
     }
 }

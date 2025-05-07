@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a5a6cd738645369231540dd8f9631f, type: 3}
+  m_Name: Tome_1
+  m_EditorClassIdentifier: 
+  <Icon>k__BackingField: {fileID: -1353278420, guid: 6dab0a2e3c53f2c4394e969a0c1e6019,
+    type: 3}
+  <Name>k__BackingField: Magic Spell
+  <Description>k__BackingField: A spell that shoots of magic missiles. These missles
+    are able to track enemies, it can be charged
+  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 80caa8ced50a9af45801404d8bcc2e1c,
+    type: 2}
+  <NumberOfAttacks>k__BackingField: 1
+  <ComponentData>k__BackingField:
+  - rid: 3281099369942351968
+  - rid: 3281099369942351949
+  - rid: 3281099369942351954
+  - rid: 3281099369942351955
+  - rid: 3281099369942351956
+  - rid: 3281099369942351957
+  - rid: 3281099369942351958
+  - rid: 3281099369942351959
+  references:
+    version: 2
+    RefIds:
+    - rid: 3281099369942351949
+      type: {class: WeaponSpriteData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: WeaponSpriteData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <PhaseSprites>k__BackingField:
+          - <Phase>k__BackingField: 0
+            <Sprites>k__BackingField:
+            - {fileID: -1700650794, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -1142639634, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1010743359, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 913463924, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1823760338, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -2078053079, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 974187862, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 455034170, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1844644420, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -1883679785, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -135233364, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+          - <Phase>k__BackingField: 1
+            <Sprites>k__BackingField:
+            - {fileID: -1970070951, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1946445738, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 723113345, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -1822100812, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 193221238, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+          - <Phase>k__BackingField: 2
+            <Sprites>k__BackingField:
+            - {fileID: -1251823848, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -1724790949, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1469116725, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1615902762, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -607515285, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 318693087, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 1352048226, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+          - <Phase>k__BackingField: 3
+            <Sprites>k__BackingField:
+            - {fileID: 2024609928, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -881681721, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 35766802, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: 141290815, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+            - {fileID: -2076123430, guid: d3c7fda6b725dde45a04a32cc9374b2d, type: 3}
+    - rid: 3281099369942351954
+      type: {class: MovementData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: MovementData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <Direction>k__BackingField: {x: 1, y: 0}
+          <Velocity>k__BackingField: 1
+    - rid: 3281099369942351955
+      type: {class: TargeterData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: TargeterData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <Area>k__BackingField:
+            serializedVersion: 2
+            x: -15
+            y: -3.2
+            width: 30
+            height: 10
+          <DamageableLayer>k__BackingField:
+            serializedVersion: 2
+            m_Bits: 512
+    - rid: 3281099369942351956
+      type: {class: TargeterToProjectileData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: TargeterToProjectileData
+    - rid: 3281099369942351957
+      type: {class: ProjectileSpawnerData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: ProjectileSpawnerData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <SpawnInfos>k__BackingField:
+          - <Offset>k__BackingField: {x: 0.81, y: 0.42}
+            <Direction>k__BackingField: {x: 1, y: 0.25}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: 51229c82c454efa4e842828bfce59c73,
+              type: 3}
+            <DamageData>k__BackingField:
+              <Amount>k__BackingField: 0
+            <KnockBackData>k__BackingField:
+              Strength: 0
+              Angle: {x: 0, y: 0}
+            <PoiseDamageData>k__BackingField:
+              <Amount>k__BackingField: 0
+            <SpriteDataPackage>k__BackingField:
+              <Sprite>k__BackingField: {fileID: 878570530, guid: dd9c93c673e5e164686171e344bd447a,
+                type: 3}
+    - rid: 3281099369942351958
+      type: {class: ChargeData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: ChargeData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <ChargeTime>k__BackingField: 1
+          <InitialChargeAmount>k__BackingField: 1
+          <NumberOfCharges>k__BackingField: 3
+          <ChargeIncreaseIndicatorParticlePrefab>k__BackingField: {fileID: 6762676686280720063,
+            guid: 19758c9f67bb0264e8437296ed15d9ee, type: 3}
+          <FullyChargedIndicatorParticlePrefab>k__BackingField: {fileID: 6762676686280720063,
+            guid: 19758c9f67bb0264e8437296ed15d9ee, type: 3}
+          <ParticlesOffset>k__BackingField: {x: -0.6, y: 0.4}
+    - rid: 3281099369942351959
+      type: {class: ChargeToProjectileSpawnerData, ns: Avocado.Weapons.Components,
+        asm: Assembly-CSharp}
+      data:
+        name: ChargeToProjectileSpawnerData
+        repeatData: 0
+        attackData:
+        - name: Attack 1
+          <AngleVariation>k__BackingField: 15
+    - rid: 3281099369942351968
+      type: {class: InputHoldData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
+      data:
+        name: InputHoldData

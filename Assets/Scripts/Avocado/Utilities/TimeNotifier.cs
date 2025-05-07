@@ -1,63 +1,58 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Lanza un evento (OnNotify) una vez que ha pasado una duración específica. Espara los cooldowns
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Utilities
 {
-    /// <summary>
-    /// TimeNotifier fires off an event after some duration once the timer has started. The timer can also be configured
-    /// to automatically restart the timer once the duration has passed or to only trigger once.
-    /// </summary>
+    // Temporizador que dispara un evento después de cierto tiempo.
+    // Puede configurarse para repetir o ejecutarse solo una vez.
     public class TimeNotifier
     {
-        /// <summary>
-        /// Event will be invoked once duration has passed. If timer is set to restart, it will be invoked every time
-        /// the duration passes
-        /// </summary>
-
         public event Action OnNotify;
 
         private float duration;
         private float targetTime;
-
         private bool enabled;
 
+        // Inicializa el temporizador con una duración.
         public void Init(float dur, bool reset = false)
         {
             enabled = true;
-
             duration = dur;
             SetTargetTime();
 
             if (reset)
             {
-                // If reset is true, then when duration has passed automatically calculate new target time
+                // Reinicia automáticamente cada vez que se cumple el tiempo
                 OnNotify += SetTargetTime;
             }
             else
             {
-                // Otherwise, disable when duration has passed
+                // Se desactiva después de una sola ejecución
                 OnNotify += Disable;
             }
         }
 
+        // Establece el próximo tiempo objetivo.
         private void SetTargetTime()
         {
             targetTime = Time.time + duration;
         }
 
+        // Desactiva el temporizador.
         public void Disable()
         {
             enabled = false;
-
             OnNotify -= Disable;
         }
 
+        // Se debe llamar cada frame para verificar si el tiempo ha pasado.
         public void Tick()
         {
-            if (!enabled)
-                return;
+            if (!enabled) return;
 
             if (Time.time >= targetTime)
             {

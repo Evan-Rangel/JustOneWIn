@@ -1,68 +1,72 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using Avocado.Utilities;
 using UnityEngine;
 
+/*---------------------------------------------------------------------------------------------
+Este componente DelayedGravity desactiva temporalmente la gravedad de un proyectil al ser 
+instanciado y luego la activa automáticamente cuando el proyectil ha recorrido una cierta 
+distancia en línea recta. Esto permite simular proyectiles que primero se mueven de forma 
+recta (como una flecha) y luego comienzan a caer por efecto de la gravedad, ofreciendo un 
+comportamiento más natural o estilizado para ciertos tipos de armas. El distanceMultiplier 
+permite que otros componentes modifiquen dinámicamente la distancia requerida antes de activar 
+la gravedad.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.ProjectileSystem.Components
 {
-    /// <summary>
-    /// DelayedGravity sets the projectiles initial gravity to zero and then sets it to some value after some distance has been travelled.
-    /// This gives projectiles a similar effect to the arrows in DeadCells that travel straight for some distance and then starts to drop.
-    /// </summary>
     public class DelayedGravity : ProjectileComponent
     {
+        // Distancia que debe recorrer antes de que la gravedad empiece a actuar
         [field: SerializeField] public float Distance { get; private set; } = 10f;
 
-        private DistanceNotifier distanceNotifier = new DistanceNotifier();
+        private DistanceNotifier distanceNotifier = new DistanceNotifier(); // Objeto que rastrea cuánto ha viajado el proyectil
 
-        private float gravity;
+        private float gravity; // Valor original de gravedad que se restaurará
 
-        // Used so other projectile components, such as DrawModifyDelayedGravity, can modify how far the projectile travels before being affected by gravity
+        // Multiplicador usado por otros componentes para modificar dinámicamente la distancia requerida
         [HideInInspector]
         public float distanceMultiplier = 1;
 
-        // Once projectile has travelled Distance, set gravity to Gravity value
+        // Método que se llama cuando se ha recorrido la distancia definida
         private void HandleNotify()
         {
-            rb.gravityScale = gravity;
+            rb.gravityScale = gravity; // Restaura la gravedad al proyectil
         }
 
-        // On Init, enable the distance notifier to trigger once distance has been travelled.
+        // Inicializa el estado del proyectil al activarse
         protected override void Init()
         {
             base.Init();
 
-            rb.gravityScale = 0f;
-            distanceNotifier.Init(transform.position, Distance * distanceMultiplier);
-            distanceMultiplier = 1;
+            rb.gravityScale = 0f; // Desactiva la gravedad inicialmente
+            distanceNotifier.Init(transform.position, Distance * distanceMultiplier); // Comienza a rastrear distancia
+            distanceMultiplier = 1; // Reinicia el multiplicador
         }
 
-        #region Plumbing
-
+        // Inicialización general
         protected override void Awake()
         {
             base.Awake();
 
-            gravity = rb.gravityScale;
+            gravity = rb.gravityScale; // Guarda el valor original de gravedad
 
-            distanceNotifier.OnNotify += HandleNotify;
+            distanceNotifier.OnNotify += HandleNotify; // Se suscribe al evento de distancia recorrida
         }
 
+        // Se llama cada frame mientras el proyectil está activo
         protected override void Update()
         {
             base.Update();
 
-            distanceNotifier?.Tick(transform.position);
+            distanceNotifier?.Tick(transform.position); // Revisa si ya recorrió la distancia definida
         }
 
+        // Limpieza al destruirse el componente
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            distanceNotifier.OnNotify -= HandleNotify;
+            distanceNotifier.OnNotify -= HandleNotify; // Se desuscribe del evento
         }
-
-        #endregion
     }
 }

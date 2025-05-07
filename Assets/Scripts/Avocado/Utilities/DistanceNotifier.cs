@@ -1,76 +1,59 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script monitorea la distancia entre una posición fija (referencePos) y una posición 
+actual (que tú le vas pasando). Cuando la distancia supera (o queda por debajo de) cierto 
+valor, lanza un evento (OnNotify). Y lo mejor: puede configurarse para que notifique una sola 
+vez o continuamente mientras se cumpla la condición.
+
+Este DistanceNotifier es una clase útil cuando quieres ejecutar una acción automáticamente 
+cuando algo se aleja o se acerca a cierta distancia de un punto en el mundo. 
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Utilities
 {
-    /// <summary>
-    /// Distance notifier takes in a starting position and a desired distance from that position. When an object
-    /// reaches that distance from the target, it invokes an event.
-    /// </summary>
+    // DistanceNotifier detecta si un objeto alcanza cierta distancia desde un punto de referencia y lanza un evento cuando ocurre.
     public class DistanceNotifier
     {
-        /// <summary>
-        /// This event is broadcast whenever the distance condition is met. If checkInside is true then event will be broadcast if the current distance
-        /// is less than distance, otherwise it will broadcast if it is greater. It will also broadcast continuously while enabled is true
-        /// </summary>
-        public event Action OnNotify;
+        public event Action OnNotify; 
+        private Vector3 referencePos;    
+        private float sqrDistance;       
+        private bool enabled;           
+        private Action<float> notifierCondition; // Acción que guarda la lógica de chequeo (dentro o fuera de la distancia)
 
-        private Vector3 referencePos;
-        private float sqrDistance;
-
-        private bool enabled;
-
-        // Action to hold function that determines if we notify when we are inside or outside of the distance
-        private Action<float> notifierCondition;
-
-        // Initializes the notifier with a new reference position and distance
-        public void Init(Vector3 referencePos, float distance, bool checkInside = false,
-            bool triggerContinuously = false)
+        // Inicializa el sistema con una posición de referencia y distancia objetivo.
+        public void Init(Vector3 referencePos, float distance, bool checkInside = false, bool triggerContinuously = false)
         {
             this.referencePos = referencePos;
+            sqrDistance = distance * distance; // Guardamos distancia al cuadrado
 
-            sqrDistance = distance * distance;
-
-            // Store relevant function in Action.
-            if (checkInside)
-            {
-                notifierCondition = CheckInside;
-            }
-            else
-            {
-                notifierCondition = CheckOutside;
-            }
+            // Elegimos la función que usaremos al hacer el chequeo
+            notifierCondition = checkInside ? CheckInside : CheckOutside;
 
             enabled = true;
 
             if (!triggerContinuously)
             {
-                //OnNotify will only broadcast once before disabling enabled bool
+                // Si solo debe disparar una vez, agregamos un método para desactivar el sistema después de que se dispare
                 OnNotify += Disable;
             }
         }
 
-        // Sets enabled to false to stop more event broadcasts
+        // Desactiva las notificaciones
         public void Disable()
         {
             enabled = false;
-
             OnNotify -= Disable;
         }
 
-        // Tick current position to compare to reference position
+        // Llama a este método en Update o FixedUpdate con la posición actual para hacer el chequeo.
         public void Tick(Vector3 pos)
         {
-            if (!enabled)
-                return;
+            if (!enabled) return;
 
-            // We are using the square of distances as square root function is expensive
-            var currentSqrDistance = (referencePos - pos).sqrMagnitude;
-
-            // Pass current distance to function stored within the Action. Avoids having to do an if else check every tick and instead moves that check to constructor.
-            notifierCondition.Invoke(currentSqrDistance);
+            float currentSqrDistance = (referencePos - pos).sqrMagnitude;
+            notifierCondition.Invoke(currentSqrDistance); // Llama a la función elegida (CheckInside o CheckOutside)
         }
 
         private void CheckInside(float dist)

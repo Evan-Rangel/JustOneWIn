@@ -1,57 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este componente conecta el sistema de carga (Charge) con el sistema de disparo (ProjectileSpawner). 
+Funciona así:
+-Cuando comienza un ataque (HandleEnter), se reinicia el estado para permitir una nueva lectura 
+de carga.
+-Cuando el jugador suelta el botón de ataque (HandleCurrentInputChange con newInput == false), 
+el componente:
+--Lee cuántas cargas acumuló el jugador.
+--Configura una estrategia personalizada que ajusta el comportamiento de disparo (por ejemplo, 
+disparar más proyectiles o con mayor ángulo).
+--Le asigna esa estrategia al ProjectileSpawner.
+--Todo esto utiliza el patrón Strategy, que permite cambiar dinámicamente la lógica de disparo 
+sin modificar el código del lanzador de proyectiles.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons.Components
 {
-    /*
-     * This weapon component is responsible for increasing the number of projectiles that are spawned based on the attack charge.
-     * It interacts with the Charge and ProjectileSpawner weapon components. When we release input it reads the charge level from the Charge
-     * Component and then changes the ProjectileSpawnerStrategy on the ProjectileSpawner component to a custom strategy that increases the number
-     * of projectiles spawned.
-     *
-     * TIP: The Strategy Pattern - https://refactoring.guru/design-patterns/strategy
-     */
-    public class
-        ChargeToProjectileSpawner : WeaponComponent<ChargeToProjectileSpawnerData, AttackChargeToProjectileSpawner>
+    public class ChargeToProjectileSpawner : WeaponComponent<ChargeToProjectileSpawnerData, AttackChargeToProjectileSpawner>
     {
-        private ProjectileSpawner projectileSpawner;
-        private Charge charge;
+        private ProjectileSpawner projectileSpawner; 
+        private Charge charge; // Referencia al componente que acumula carga
 
-        private bool hasReadCharge;
+        private bool hasReadCharge; // Asegura que solo se lea una vez la carga durante el ataque
 
-        /*
-         * The custom strategy we use to spawn projectiles based on the number of charges we have. To broaden your mind a little, we could encapsulate the strategy
-         * in a scriptable object and allow us to spawn out the custom strategy that this component used. It's not needed here, but there are applications. E.G: I did that
-         * in my game jam project (https://bardent.itch.io/the-road-to-sanctuary) to assign reload strategies to weapons
-         */
+        // Estrategia que define cómo se lanzan los proyectiles dependiendo de la carga
         private ChargeProjectileSpawnerStrategy chargeProjectileSpawnerStrategy = new ChargeProjectileSpawnerStrategy();
 
+        // Cuando comienza el ataque, resetea el estado de lectura de carga.
         protected override void HandleEnter()
         {
             base.HandleEnter();
-
             hasReadCharge = false;
         }
 
-        // Handles input change. Performs action when input is false
+        // Se ejecuta cuando cambia el estado del input (cuando se suelta el botón de ataque).
         private void HandleCurrentInputChange(bool newInput)
         {
+            // Si el botón aún está presionado o ya se leyó la carga, no hacemos nada
             if (newInput || hasReadCharge)
                 return;
 
-            // Set the current information in the strategy
+            // Configura la estrategia con los datos actuales
             chargeProjectileSpawnerStrategy.AngleVariation = currentAttackData.AngleVariation;
             chargeProjectileSpawnerStrategy.ChargeAmount = charge.TakeFinalChargeReading();
 
-            // Set the strategy
+            // Aplica la nueva estrategia al lanzador de proyectiles
             projectileSpawner.SetProjectileSpawnerStrategy(chargeProjectileSpawnerStrategy);
 
-            // Turns off handle function till the next attack
+            // Marca que ya leímos la carga para no repetir
             hasReadCharge = true;
         }
-
-        #region Plumbing
 
         protected override void Start()
         {
@@ -69,7 +68,5 @@ namespace Avocado.Weapons.Components
 
             weapon.OnCurrentInputChange -= HandleCurrentInputChange;
         }
-
-        #endregion
     }
 }

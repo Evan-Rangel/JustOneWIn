@@ -1,6 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script contiene información que se transfiere durante una acción de parry.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Combat.Parry
 {

@@ -1,20 +1,21 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Avocado.Combat.Damage;
 using UnityEngine;
 
+/*---------------------------------------------------------------------------------------------
+Este script hace que la clase CombatDamageUtilities permite:
+-Aplicar daño a un solo objeto (GameObject) si tiene un componente que implemente IDamageable.
+-Aplicar daño a varios objetos (Collider2D[]), guardando los que fueron dañados exitosamente.
+---------------------------------------------------------------------------------------------*/
+
 namespace Avocado.Utilities
 {
-    /*
-     * This Utility class provides some static functions for logic we might perform in many different places. This way
-     * we can keep it all consolidated here and only have to change it in one place. That is the dream anyway.
-     *
-     * For example: The Damage functions are called by both DamageOnHitBoxAction and DamageOnBlock weapon components.
-     */
     public static class CombatDamageUtilities
     {
+        // Intenta aplicar daño a un solo GameObject.
         public static bool TryDamage(GameObject gameObject, DamageData damageData, out IDamageable damageable)
         {
-            // TryGetComponentInChildren is a custom GameObject extension method.
+            // Usa el método de extensión TryGetComponentInChildren para buscar un IDamageable
             if (gameObject.TryGetComponentInChildren(out damageable))
             {
                 damageable.Damage(damageData);
@@ -24,6 +25,7 @@ namespace Avocado.Utilities
             return false;
         }
 
+        // Intenta aplicar daño a varios colliders.
         public static bool TryDamage(Collider2D[] colliders, DamageData damageData, out List<IDamageable> damageables)
         {
             var hasDamaged = false;
@@ -31,6 +33,7 @@ namespace Avocado.Utilities
 
             foreach (var collider in colliders)
             {
+                // Intenta dañar cada GameObject asociado a los colliders
                 if (TryDamage(collider.gameObject, damageData, out IDamageable damageable))
                 {
                     damageables.Add(damageable);

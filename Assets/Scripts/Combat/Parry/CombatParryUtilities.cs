@@ -1,14 +1,17 @@
+﻿using System.Collections.Generic;
 using Avocado.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script de utilidades se usa para aplicar mecánicas de parry a GameObjects o Components.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Combat.Parry
 {
     public static class CombatParryUtilities
     {
-        public static bool TryParry(GameObject gameObject, ParryData data, out IParryable parryable,
-            out GameObject parriedGameObject)
+        // Intenta aplicar parry a un GameObject.
+        public static bool TryParry(GameObject gameObject, ParryData data, out IParryable parryable, out GameObject parriedGameObject)
         {
             parriedGameObject = null;
 
@@ -22,15 +25,15 @@ namespace Avocado.Combat.Parry
             return false;
         }
 
-        public static bool TryParry(Component component, ParryData data, out IParryable parryable,
-            out GameObject parriedGameObject)
+        // Intenta aplicar parry a un Component (por conveniencia, usa su GameObject).
+        public static bool TryParry(Component component, ParryData data, out IParryable parryable, out GameObject parriedGameObject)
         {
             return TryParry(component.gameObject, data, out parryable, out parriedGameObject);
         }
 
-        public static bool TryParry<T>(T[] components, ParryData data, out List<IParryable> parryables,
-            out List<GameObject> parriedGameObjects)
-            where T : Component
+        // Intenta aplicar parry a una colección de Components.
+        // Devuelve listas de los objetos a los que se aplicó correctamente.
+        public static bool TryParry<T>(T[] components, ParryData data, out List<IParryable> parryables, out List<GameObject> parriedGameObjects) where T : Component
         {
             var hasParried = false;
 

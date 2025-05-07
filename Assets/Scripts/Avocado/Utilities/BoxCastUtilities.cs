@@ -1,83 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script es una herramienta de visualización para BoxCast en 2D. Te permite:
+-Dibujar con líneas (Debug.DrawLine) la caja de colisión en la escena.
+-Usar BoxCastAll y al mismo tiempo ver la caja lanzada en el Scene View para debug.
+-Ideal para detectar colisiones con plataformas, paredes, enemigos, etc., y ver visualmente 
+el área que estás escaneando.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Utilities
 {
-    /// <summary>
-    /// A class that allows to visualize the Physics2D.BoxCast() method.
-    /// </summary>
-
-    /// <remarks>
-    ///     Use Draw() to visualize an already cast box,
-    ///     and BoxCastAndDraw() to cast a box AND visualize it at the same time.
-    /// </remarks>
-
-    public class BoxCastUtilities 
+    public class BoxCastUtilities
     {
-        /// <summary>
-        /// Visualizes BoxCast with help of debug lines.
-        /// </summary>
-        /// <param name="hitInfo"> The cast result. </param>
-        /// <param name="origin"> The point in 2D space where the box originates. </param>
-        /// <param name="size"> The size of the box. </param>
-        /// <param name="angle"> The angle of the box (in degrees). </param>
-        /// <param name="direction"> A vector representing the direction of the box. </param>
-        /// <param name="distance"> The maximum distance over which to cast the box. </param>
-        public static void Draw(
-            Vector2 origin,
-            Vector2 size,
-            float angle,
-            Vector2 direction,
-            float distance = Mathf.Infinity)
-        {
-            // Set up points to draw the cast.
-            Vector2[] originalBox = CreateOriginalBox(origin, size, angle);
+        // Dibuja una caja y su desplazamiento en el espacio, útil para visualizar BoxCasts.
+        public static void Draw(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance = Mathf.Infinity)
+        {          
+            Vector2[] originalBox = CreateOriginalBox(origin, size, angle); // Calcula la caja original           
+            Vector2 distanceVector = GetDistanceVector(distance, direction); // Calcula cuánto se moverá        
+            Vector2[] shiftedBox = CreateShiftedBox(originalBox, distanceVector); // Crea una copia desplazada de la caja original
 
-            Vector2 distanceVector = GetDistanceVector(distance, direction);
-            Vector2[] shiftedBox = CreateShiftedBox(originalBox, distanceVector);
-
-            // Draw the cast.
-            Color castColor = Color.red;
-            DrawBox(originalBox, castColor);
-            DrawBox(shiftedBox, castColor);
+            // Dibuja ambas cajas y las conecta visualmente
+            DrawBox(originalBox, Color.red);
+            DrawBox(shiftedBox, Color.red);
             ConnectBoxes(originalBox, shiftedBox, Color.gray);
         }
 
-        /// <summary>
-        /// Casts a box against colliders in the Scene, returning the first collider to contact with it, and visualizes it.
-        /// </summary>
-        /// <param name="origin"> The point in 2D space where the box originates. </param>
-        /// <param name="size"> The size of the box. </param>
-        /// <param name="angle"> The angle of the box (in degrees). </param>
-        /// <param name="direction"> A vector representing the direction of the box. </param>
-        /// <param name="distance"> The maximum distance over which to cast the box. </param>
-        /// <param name="layerMask"> Filter to detect Colliders only on certain layers. </param>
-        /// <param name="minDepth"> Only include objects with a Z coordinate (depth) greater than or equal to this value. </param>
-        /// <param name="maxDepth"> Only include objects with a Z coordinate (depth) less than or equal to this value. </param>
-        /// <returns>
-        ///     The cast result.
-        /// </returns>
-        public static RaycastHit2D[] BoxCastAndDraw(
-            Vector2 origin,
-            Vector2 size,
-            float angle,
-            Vector2 direction,
-            float distance = Mathf.Infinity,
-            int layerMask = Physics2D.AllLayers,
-            float minDepth = -Mathf.Infinity,
-            float maxDepth = Mathf.Infinity)
-        {
-            var hitInfo = Physics2D.BoxCastAll(origin, size, angle, direction, distance, layerMask, minDepth, maxDepth);
-            Draw(origin, size, angle, direction, distance);
+        // Realiza un BoxCast y lo dibuja en pantalla.
+        public static RaycastHit2D[] BoxCastAndDraw(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance = Mathf.Infinity, int layerMask = Physics2D.AllLayers, float minDepth = -Mathf.Infinity, float maxDepth = Mathf.Infinity)
+        {        
+            var hitInfo = Physics2D.BoxCastAll(origin, size, angle, direction, distance, layerMask, minDepth, maxDepth); // Lanza el BoxCast
+            Draw(origin, size, angle, direction, distance); // Visualiza el BoxCast
             return hitInfo;
         }
 
+        // Crea una caja rotada y posicionada para visualización
         private static Vector2[] CreateOriginalBox(Vector2 origin, Vector2 size, float angle)
         {
             float w = size.x * 0.5f;
             float h = size.y * 0.5f;
-            Quaternion q = Quaternion.AngleAxis(angle, new Vector3(0, 0, 1));
+            Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
 
             var box = new Vector2[4]
             {
@@ -87,6 +48,7 @@ namespace Avocado.Utilities
                 new Vector2(-w, -h),
             };
 
+            // Aplica la rotación y traslada los puntos al origen
             for (int i = 0; i < 4; i++)
             {
                 box[i] = (Vector2)(q * box[i]) + origin;
@@ -95,6 +57,7 @@ namespace Avocado.Utilities
             return box;
         }
 
+        // Desplaza la caja en la dirección del cast
         private static Vector2[] CreateShiftedBox(Vector2[] box, Vector2 distance)
         {
             var shiftedBox = new Vector2[4];
@@ -106,6 +69,7 @@ namespace Avocado.Utilities
             return shiftedBox;
         }
 
+        // Dibuja la caja con líneas conectando sus 4 esquinas
         private static void DrawBox(Vector2[] box, Color color)
         {
             Debug.DrawLine(box[0], box[1], color);
@@ -114,6 +78,7 @@ namespace Avocado.Utilities
             Debug.DrawLine(box[3], box[0], color);
         }
 
+        // Conecta la caja original con la desplazada para mostrar el "volumen" del cast
         private static void ConnectBoxes(Vector2[] firstBox, Vector2[] secondBox, Color color)
         {
             Debug.DrawLine(firstBox[0], secondBox[0], color);
@@ -122,13 +87,13 @@ namespace Avocado.Utilities
             Debug.DrawLine(firstBox[3], secondBox[3], color);
         }
 
+        // Calcula cuánto se debe mover la caja. Si es infinito, calcula una distancia basada en el tamaño de la cámara
         private static Vector2 GetDistanceVector(float distance, Vector2 direction)
         {
             if (distance == Mathf.Infinity)
             {
-                // Draw some large distance e.g. 5 scene widths long.
                 float sceneWidth = Camera.main.orthographicSize * Camera.main.aspect * 2f;
-                distance = sceneWidth * 5f;
+                distance = sceneWidth * 5f; // Escala grande para que se vea en el editor
             }
 
             return direction.normalized * distance;

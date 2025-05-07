@@ -1,14 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script contiene la información necesaria para aplicar un efecto de KnockBack.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Combat.KnockBack
 {
     public class KnockBackData
     {
         public Vector2 Angle;
+
         public float Strength;
+
         public int Direction;
+
         public GameObject Source { get; private set; }
 
         public KnockBackData(Vector2 angle, float strength, int direction, GameObject source)

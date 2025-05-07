@@ -1,17 +1,29 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Avocado.Weapons;
-using Avocado.FSM;
 using Avocado.CoreSystem;
+using Avocado.FSM;
+using Avocado.Weapons;
 using UnityEngine;
-using Mirror;
-public class Player : NetworkBehaviour
+using UnityEngine.Rendering;
+
+/*---------------------------------------------------------------------------------------------
+Este script define el comportamiento base del jugador y gestiona su lógica mediante una máquina 
+de estados finita (FSM). Cada estado representa una acción o condición diferente (como correr, 
+saltar, atacar, escalar paredes, etc.).
+El script también contiene referencias a múltiples componentes clave como físicas, animaciones, 
+manejo de inputs y estadísticas del jugador. A través de eventos y funciones auxiliares, 
+permite controlar la interacción, la adaptación del collider, y reaccionar a eventos como 
+quedarse sin poise.
+En resumen, este script es el centro de control del jugador, coordinando su lógica, estados, 
+físicas y animaciones en una estructura limpia y extensible.
+---------------------------------------------------------------------------------------------*/
+
+public class Player : MonoBehaviour
 {
-    //---Player Vars---//
-    #region Player States Variables
-    //StateMachine
+    #region State Variables
     public PlayerStateMachine StateMachine { get; private set; }
-    //Player States
+
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
@@ -25,56 +37,53 @@ public class Player : NetworkBehaviour
     public PlayerDashState DashState { get; private set; }
     public PlayerCrouchIdleState CrouchIdleState { get; private set; }
     public PlayerCrouchMoveState CrouchMoveState { get; private set; }
-
     public PlayerAttackState PrimaryAttackState { get; private set; }
     public PlayerAttackState SecondaryAttackState { get; private set; }
 
     public PlayerStunState PlayerStunState { get; private set; }
 
-    //Player Data
-    [Header("Player Base Data")]
     [SerializeField]
     private PlayerData playerData;
     #endregion
 
-    #region Player Components
+    #region Components
     public Core Core { get; private set; }
-    public Animator Animator { get; private set; }
+    public Animator Anim { get; private set; }
     public PlayerInputHandler InputHandler { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public Transform DashDirectionIndicator { get; private set; }
     public BoxCollider2D MovementCollider { get; private set; }
+
     public Stats Stats { get; private set; }
+    
     public InteractableDetector InteractableDetector { get; private set; }
     #endregion
 
-    #region Player Other Variables
-    //Vecotr WorkSpace
-    private Vector2 workSpace;//With this we stop using to much memory, avoiding to create a "new Vector2" evry time we need one.
+    #region Weapons Variables         
+
+    private Vector2 workspace;
 
     private Weapon primaryWeapon;
     private Weapon secondaryWeapon;
-    //public List<Weapon> weaponList;
+    
     #endregion
-    //-----------------//
 
-    //---Player Functions Basics---//
-    #region Unity CallBack Functions
+    #region Unity Callback Functions
     private void Awake()
     {
-        //Get Core
         Core = GetComponentInChildren<Core>();
 
         primaryWeapon = transform.Find("PrimaryWeapon").GetComponent<Weapon>();
         secondaryWeapon = transform.Find("SecondaryWeapon").GetComponent<Weapon>();
-
+        
         primaryWeapon.SetCore(Core);
         secondaryWeapon.SetCore(Core);
 
-        //Create a new StateMachine when awake
+        Stats = Core.GetCoreComponent<Stats>();
+        InteractableDetector = Core.GetCoreComponent<InteractableDetector>();
+        
         StateMachine = new PlayerStateMachine();
 
-        //Create States
         IdleState = new PlayerIdleState(this, StateMachine, playerData, "idle");
         MoveState = new PlayerMoveState(this, StateMachine, playerData, "move");
         JumpState = new PlayerJumpState(this, StateMachine, playerData, "inAir");
@@ -91,76 +100,74 @@ public class Player : NetworkBehaviour
         PrimaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", primaryWeapon, CombatInputs.primary);
         SecondaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", secondaryWeapon, CombatInputs.secondary);
         PlayerStunState = new PlayerStunState(this, StateMachine, playerData, "stun");
-
-
-        //ListaDeArmas
-        //weaponList = new List<Weapon>() { primaryWeapon, secondaryWeapon };
     }
+
     private void Start()
     {
-        Animator = GetComponent<Animator>();
+        // Más referencias necesarias
+        Anim = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
 
+        // Evento cuando se intenta interactuar con algo
         InputHandler.OnInteractInputChanged += InteractableDetector.TryInteract;
-
+        
         RB = GetComponent<Rigidbody2D>();
         DashDirectionIndicator = transform.Find("DashDirectionIndicator");
         MovementCollider = GetComponent<BoxCollider2D>();
 
+        // Evento que escucha cuando la estadística de poise llega a 0
         Stats.Poise.OnCurrentValueZero += HandlePoiseCurrentValueZero;
 
+        // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
     }
 
     private void HandlePoiseCurrentValueZero()
     {
+        // Cambia al estado de stun cuando poise llega a 0
         StateMachine.ChangeState(PlayerStunState);
     }
 
     private void Update()
     {
-        if (gameObject.name== "LocalGamePlayer")
-        { 
-            //Core Update
-            Core.LogicUpdate();
-            //Update Logics
-            StateMachine.CurrentState.LogicUpdate();
-        }
+        // Actualización lógica del sistema central y del estado actual
+        Core.LogicUpdate();
+        StateMachine.CurrentState.LogicUpdate();
     }
 
     private void FixedUpdate()
     {
-        //Fixed Update Physics
-        if (gameObject.name == "LocalGamePlayer")
-
-            StateMachine.CurrentState.PhysicsUpdate();
+        // Actualización física del estado actual
+        StateMachine.CurrentState.PhysicsUpdate();
     }
 
     private void OnDestroy()
     {
-        if (gameObject.name == "LocalGamePlayer")
-            Stats.Poise.OnCurrentValueZero -= HandlePoiseCurrentValueZero;
+        // Limpia el evento al destruir el jugador
+        Stats.Poise.OnCurrentValueZero -= HandlePoiseCurrentValueZero;
     }
+
     #endregion
 
-    //---Player Animation Functions---//
-    #region Player Animation Functions
-    private void AnimationTrigger() => StateMachine.CurrentState.AnimationTrigger();
+    #region Set Functions
 
-    private void AnimationFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
-    #endregion
-
-    //---Player Other Functions ---//
-    #region Other Player Functions
+    // Ajusta la altura del collider del jugador dinámicamente
     public void SetColliderHeight(float height)
     {
         Vector2 center = MovementCollider.offset;
-        workSpace.Set(MovementCollider.size.x, height);
+        workspace.Set(MovementCollider.size.x, height);
 
         center.y += (height - MovementCollider.size.y) / 2;
 
-        MovementCollider.size = workSpace;
+        MovementCollider.size = workspace;
         MovementCollider.offset = center;
     }
+
+    // Llamados desde eventos de animación para transiciones
+    private void AnimationTrigger() => StateMachine.CurrentState.AnimationTrigger();
+
+    private void AnimtionFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+
+   
     #endregion
 }

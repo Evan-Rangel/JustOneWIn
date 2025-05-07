@@ -1,63 +1,79 @@
-using System;
+﻿using System;
 using Avocado.CoreSystem;
 using Avocado.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este componente Charge se encarga de acumular cargas (como energía o poder) a lo largo del 
+tiempo mientras un ataque está activo. Usa un temporizador (TimeNotifier) para incrementar el 
+número de cargas en intervalos regulares.
+Cuando se alcanza el número máximo de cargas, el temporizador se desactiva y se generan 
+partículas que indican una carga completa. Mientras tanto, cada incremento también lanza 
+partículas para mostrar visualmente el progreso. Cuando el ataque termina o se interrumpe, 
+el sistema detiene el conteo de cargas.
+Este tipo de sistema es ideal para mecánicas como ataques que se cargan más fuerte mientras 
+más tiempo se mantenga presionado un botón.
+---------------------------------------------------------------------------------------------*/
 
 namespace Avocado.Weapons.Components
 {
-    /*
-     * The Charge Weapon Component ticks up a discrete amount of charges that can then be read by other components
-     */
     public class Charge : WeaponComponent<ChargeData, AttackCharge>
     {
-        private int currentCharge;
+        private int currentCharge; // Almacena la cantidad actual de cargas
 
-        // The timer object that reports every time the charge duration has passed.
+        // Temporizador que lanza un evento en intervalos definidos (según el tiempo de carga)
         private TimeNotifier timeNotifier;
 
+        // Maneja la reproducción de efectos de partículas
         private ParticleManager particleManager;
 
-        // Disables timer that ticks up the charge before reporting the current charge
+        // Detiene el temporizador y devuelve la cantidad final de cargas acumuladas.
         public int TakeFinalChargeReading()
         {
             timeNotifier.Disable();
             return currentCharge;
         }
 
-        // When the attack starts, reset current charges and start charge timer
+        // Cuando comienza el ataque, resetea las cargas y activa el temporizador.
         protected override void HandleEnter()
         {
             base.HandleEnter();
 
+            // Carga inicial configurada en los datos del ataque
             currentCharge = currentAttackData.InitialChargeAmount;
 
+            // Inicia el temporizador con el tiempo entre cargas
             timeNotifier.Init(currentAttackData.ChargeTime, true);
         }
 
-        // When timer fires off notify event, increase charges. If max charges reached, disable timer.
+        // Llamado cada vez que el temporizador se activa. Incrementa la carga.
         private void HandleNotify()
         {
             currentCharge++;
 
-            //If we have reached the max charge
+            // Si alcanzamos el máximo de cargas
             if (currentCharge >= currentAttackData.NumberOfCharges)
             {
                 currentCharge = currentAttackData.NumberOfCharges;
 
-                // Disable timer so that it does not keep calling this function
+                // Detiene el temporizador
                 timeNotifier.Disable();
 
-                // Spawn particles that indicate we have reached the max charge
-                particleManager.StartParticlesRelative(currentAttackData.FullyChargedIndicatorParticlePrefab,
-                    currentAttackData.ParticlesOffset, Quaternion.identity);
+                // Partículas indicando que se alcanzó la carga máxima
+                particleManager.StartParticlesRelative(
+                    currentAttackData.FullyChargedIndicatorParticlePrefab,
+                    currentAttackData.ParticlesOffset,
+                    Quaternion.identity
+                );
             }
             else
             {
-                // Spawn particles that indicate charge level has increased
-                particleManager.StartParticlesRelative(currentAttackData.ChargeIncreaseIndicatorParticlePrefab,
-                    currentAttackData.ParticlesOffset, Quaternion.identity);
+                // Partículas indicando incremento de carga
+                particleManager.StartParticlesRelative(
+                    currentAttackData.ChargeIncreaseIndicatorParticlePrefab,
+                    currentAttackData.ParticlesOffset,
+                    Quaternion.identity
+                );
             }
         }
 
@@ -68,17 +84,12 @@ namespace Avocado.Weapons.Components
             timeNotifier.Disable();
         }
 
-
-        #region Plumbing
-
+        // Se llama al inicializar. Crea el temporizador y se suscribe al evento de notificación.
         protected override void Awake()
         {
             base.Awake();
 
-            // Initialize timer
             timeNotifier = new TimeNotifier();
-
-            // Subscribe handler to timer's notify event
             timeNotifier.OnNotify += HandleNotify;
         }
 
@@ -91,8 +102,7 @@ namespace Avocado.Weapons.Components
 
         private void Update()
         {
-            // VIP: Don't forget to tick the timer else it won't notify.
-            timeNotifier.Tick();
+            timeNotifier.Tick(); // Muy importante: sin esto el temporizador no funcionará
         }
 
         protected override void OnDestroy()
@@ -101,7 +111,5 @@ namespace Avocado.Weapons.Components
 
             timeNotifier.OnNotify -= HandleNotify;
         }
-
-        #endregion
     }
 }

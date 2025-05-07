@@ -1,8 +1,19 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Avocado.CoreSystem;
 using TMPro;
 using UnityEngine;
+
+/*---------------------------------------------------------------------------------------------
+Este script define una clase base abstracta para representar los distintos estados del jugador 
+(como moverse, saltar, atacar, etc.) dentro de una Máquina de Estados Finita (FSM). Su propósito 
+es estandarizar cómo se comportan todos los estados, proporcionando métodos comunes como Enter,
+Exit, LogicUpdate, PhysicsUpdate, y DoChecks.
+Cada subestado como PlayerJumpState o PlayerIdleState hereda de esta clase y sobreescribe los
+métodos necesarios para definir su comportamiento único. Además, gestiona animaciones de 
+manera automática, activando y desactivando parámetros booleanos en el Animator, y permite 
+reaccionar a eventos de animación mediante AnimationTrigger y AnimationFinishTrigger.
+---------------------------------------------------------------------------------------------*/
 
 public class PlayerState
 {
@@ -12,11 +23,13 @@ public class PlayerState
     protected PlayerStateMachine stateMachine;
     protected PlayerData playerData;
 
+    // Flags que indican si la animación ha terminado o si se está saliendo del estado
     protected bool isAnimationFinished;
     protected bool isExitingState;
 
     protected float startTime;
 
+    // Nombre del parámetro booleano de animación (ej: "idle", "jump") que se activa en este estado
     private string animBoolName;
 
     public PlayerState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
@@ -25,40 +38,46 @@ public class PlayerState
         this.stateMachine = stateMachine;
         this.playerData = playerData;
         this.animBoolName = animBoolName;
+
+        // Se obtiene el componente Core desde el jugador
         core = player.Core;
     }
 
+    // Se llama al entrar al estado
     public virtual void Enter()
     {
-        DoChecks();
-        player.Animator.SetBool(animBoolName, true);
-        startTime = Time.time;
-        //Debug.Log(animBoolName);
-        isAnimationFinished = false;
-        isExitingState = false;
+        DoChecks(); // Se realizan verificaciones iniciales (sobrescribibles por estados hijos)
+        player.Anim.SetBool(animBoolName, true); // Se activa la animación correspondiente
+        startTime = Time.time; // Se guarda el tiempo de entrada al estado
+        isAnimationFinished = false; // Se resetea el flag de animación
+        isExitingState = false; // Se indica que aún no se está saliendo
     }
 
+    // Se llama al salir del estado
     public virtual void Exit()
     {
-        player.Animator.SetBool(animBoolName, false);
-        isExitingState = true;
+        player.Anim.SetBool(animBoolName, false); // Se desactiva la animación
+        isExitingState = true; // Se indica que se está saliendo del estado
     }
 
+    // Se llama en cada frame (Update), útil para lógica como leer inputs
     public virtual void LogicUpdate()
     {
 
     }
 
+    // Se llama en cada frame de física (FixedUpdate), útil para mover al jugador o detectar colisiones
     public virtual void PhysicsUpdate()
     {
-        DoChecks();
+        DoChecks(); // Verificaciones físicas o de entorno
     }
 
+    // Método que pueden sobrescribir los estados hijos para hacer sus propias validaciones (como si está tocando el suelo)
     public virtual void DoChecks() { }
 
+    // Se llama desde un evento de animación para indicar que se alcanzó cierto punto dentro de una animación (como el momento de golpear)
     public virtual void AnimationTrigger() { }
 
+    // Se llama desde un evento de animación para indicar que la animación ha terminado
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true;
-
-
 }
