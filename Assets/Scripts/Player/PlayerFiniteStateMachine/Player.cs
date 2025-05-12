@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
 
     public PlayerStunState PlayerStunState { get; private set; }
 
+    public GrappleHandler GrappleHandler { get; private set; }
+
+
     [SerializeField]
     private PlayerData playerData;
     #endregion
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
     public BoxCollider2D MovementCollider { get; private set; }
 
     public Stats Stats { get; private set; }
-    
+
     public InteractableDetector InteractableDetector { get; private set; }
     #endregion
 
@@ -65,7 +68,7 @@ public class Player : MonoBehaviour
 
     private Weapon primaryWeapon;
     private Weapon secondaryWeapon;
-    
+
     #endregion
 
     #region Unity Callback Functions
@@ -75,13 +78,15 @@ public class Player : MonoBehaviour
 
         primaryWeapon = transform.Find("PrimaryWeapon").GetComponent<Weapon>();
         secondaryWeapon = transform.Find("SecondaryWeapon").GetComponent<Weapon>();
-        
+
         primaryWeapon.SetCore(Core);
         secondaryWeapon.SetCore(Core);
 
         Stats = Core.GetCoreComponent<Stats>();
         InteractableDetector = Core.GetCoreComponent<InteractableDetector>();
-        
+
+        GrappleHandler = GetComponent<GrappleHandler>();
+
         StateMachine = new PlayerStateMachine();
 
         IdleState = new PlayerIdleState(this, StateMachine, playerData, "idle");
@@ -110,7 +115,7 @@ public class Player : MonoBehaviour
 
         // Evento cuando se intenta interactuar con algo
         InputHandler.OnInteractInputChanged += InteractableDetector.TryInteract;
-        
+
         RB = GetComponent<Rigidbody2D>();
         DashDirectionIndicator = transform.Find("DashDirectionIndicator");
         MovementCollider = GetComponent<BoxCollider2D>();
@@ -168,6 +173,11 @@ public class Player : MonoBehaviour
 
     private void AnimtionFinishTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
 
-   
+    public void CancelGrapple()
+    {
+        GrappleHandler?.ForceStopGrapple(); // Método que ahora crearemos
+    }
+
+
     #endregion
 }

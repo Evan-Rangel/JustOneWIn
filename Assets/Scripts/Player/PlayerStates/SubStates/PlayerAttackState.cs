@@ -91,6 +91,8 @@ public class PlayerAttackState : PlayerAbilityState
         checkFlip = true;
         canInterrupt = false;
 
+        player.CancelGrapple(); // Cancelar gancho al hacer dash
+
         weapon.Enter(); // Inicia el ataque del arma
     }
 

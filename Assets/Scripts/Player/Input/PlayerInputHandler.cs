@@ -17,6 +17,7 @@ ejecutarse si se mantiene dentro de una ventana de tiempo (inputHoldTime).
 public class PlayerInputHandler : MonoBehaviour
 {
     public event Action<bool> OnInteractInputChanged;
+    public event Action<bool> OnGrappleInputChanged;
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
@@ -35,6 +36,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool GrabInput { get; private set; }
     public bool DashInput { get; private set; }
     public bool DashInputStop { get; private set; }
+    public bool GrappleInput { get; private set; }
 
     public bool[] AttackInputs { get; private set; }
 
@@ -149,6 +151,21 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
+    }
+
+    public void OnGrappleInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GrappleInput = true;
+            OnGrappleInputChanged?.Invoke(true);
+        }
+
+        if (context.canceled)
+        {
+            GrappleInput = false;
+            OnGrappleInputChanged?.Invoke(false);
+        }
     }
 
     public void UseJumpInput() => JumpInput = false;

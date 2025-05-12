@@ -38,7 +38,9 @@ public class PlayerDashState : PlayerAbilityState {
 		Time.timeScale = playerData.holdTimeScale; // Dirección inicial: adelante
         startTime = Time.unscaledTime;
 
-		player.DashDirectionIndicator.gameObject.SetActive(true); // Muestra la flecha de dirección
+        player.DashDirectionIndicator.gameObject.SetActive(true); // Muestra la flecha de dirección
+
+        player.CancelGrapple(); // Cancelar gancho al hacer dash
 
     }
 

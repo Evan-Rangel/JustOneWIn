@@ -44,6 +44,8 @@ public class PlayerJumpState : PlayerAbilityState
 
         // Indica al estado "InAir" que el jugador está en pleno salto
         player.InAirState.SetIsJumping();
+
+        player.CancelGrapple(); // Cancelar gancho al hacer dash
     }
 
     // Retorna si el jugador aún puede saltar (si tiene saltos restantes)
