@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6779723142312916316}
-  - component: {fileID: 6779723142312916259}
+  - component: {fileID: 7365140910318928405}
   m_Layer: 0
   m_Name: PlayerAfterImagePool
   m_TagString: Untagged
@@ -30,9 +30,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6779723142312916259
+--- !u!114 &7365140910318928405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6779723142312916258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41c27e32976cc294c89e5059ff73117b, type: 3}
+  m_Script: {fileID: 11500000, guid: e0cf05fd5ff6988488f739c11f6c5af2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  afterImagePrefab: {fileID: 6097695502290493756, guid: e24087c093bdb6d4fbdbfbbceb052392, type: 3}
+  afterImagePrefab: {fileID: 6695374786508681154, guid: 6ae7a38b7c189e84c823eb44c9bb1ba6, type: 3}

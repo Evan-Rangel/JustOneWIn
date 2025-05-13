@@ -27,18 +27,25 @@ public class PlayerAfterImageSprite : MonoBehaviour
     // Se llama cuando el objeto se activa desde el pool
     private void OnEnable()
     {
-        SR = GetComponent<SpriteRenderer>();
+        try
+        {
 
-        // Buscar al jugador y obtener su renderer
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerSR = player.GetComponent<SpriteRenderer>();
 
-        // Inicializar valores
-        alpha = alphaSet;
-        SR.sprite = playerSR.sprite;            // Copiar sprite del jugador
-        transform.position = player.position;   // Copiar posición
-        transform.rotation = player.rotation;   // Copiar rotación
-        timeActivated = Time.time;              // Guardar momento de activación
+            SR = GetComponent<SpriteRenderer>();
+
+            // Buscar al jugador y obtener su renderer}
+            // player = GameObject.FindGameObjectWithTag("Player").transform;
+            player = GameObject.Find("LocalGamePlayer").transform;
+            playerSR = player.GetComponent<SpriteRenderer>();
+
+            // Inicializar valores
+            alpha = alphaSet;
+            SR.sprite = playerSR.sprite;            // Copiar sprite del jugador
+            transform.position = player.position;   // Copiar posición
+            transform.rotation = player.rotation;   // Copiar rotación
+            timeActivated = Time.time;              // Guardar momento de activación
+        }
+        catch { return; }
     }
 
     private void Update()

@@ -21,7 +21,7 @@ public class PlayerInputHandler : MonoBehaviour
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
-    private Camera cam;
+    [SerializeField]private Camera cam;
 
     // Propiedades para obtener el input en bruto y normalizado
     public Vector2 RawMovementInput { get; private set; }
@@ -54,7 +54,7 @@ public class PlayerInputHandler : MonoBehaviour
         int count = Enum.GetValues(typeof(CombatInputs)).Length;
         AttackInputs = new bool[count]; // Inicializa array para distintos ataques
 
-        cam = Camera.main; // Obtiene la cámara principal
+        //cam = Camera.main; // Obtiene la cámara principal
     }
 
     private void Update()

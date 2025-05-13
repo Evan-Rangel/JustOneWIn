@@ -25,6 +25,7 @@ namespace Avocado.CoreSystem
 
             // Busca el contenedor de partículas en la escena usando su tag
             particleContainer = GameObject.FindGameObjectWithTag("ParticleContainer").transform;
+            DontDestroyOnLoad(particleContainer.gameObject);
         }
 
         private void Start()

@@ -18,7 +18,7 @@ public class GrappleHandler : MonoBehaviour
     private Rigidbody2D rb;
     private LineRenderer lineRenderer;
     private SpringJoint2D springJoint;
-    private Camera mainCamera;
+    [SerializeField]private Camera mainCamera;
 
     private Vector2 grapplePoint;
     private bool isGrappling;
@@ -32,7 +32,7 @@ public class GrappleHandler : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody2D>();
         lineRenderer = GetComponent<LineRenderer>();
-        mainCamera = Camera.main;
+        //mainCamera = Camera.main;
 
         springJoint = gameObject.AddComponent<SpringJoint2D>();
         springJoint.enabled = false;

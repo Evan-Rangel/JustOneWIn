@@ -23,14 +23,23 @@ public class PlayerAfterImagePool : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(this);
+
         GrowPool();
     }
-
     // Crea una cantidad inicial de objetos y los agrega al pool
     private void GrowPool()
     {
+            Debug.Log("GrowPool");
+
+        if (afterImagePrefab!=null)
+        {
+            Debug.Log("NO NULL");
+            
+        }
         for (int i = 0; i < 10; i++)
         {
+            
             var instanceToAdd = Instantiate(afterImagePrefab);
             instanceToAdd.transform.SetParent(transform); // Los agrupa en jerarquía para mantener orden
             AddToPool(instanceToAdd);
