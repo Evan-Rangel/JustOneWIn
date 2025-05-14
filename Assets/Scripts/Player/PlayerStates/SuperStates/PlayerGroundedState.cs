@@ -68,7 +68,8 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        if (player == null || player.InputHandler == null) return;
+        if (player.InputHandler.AttackInputs == null) return;
         // Captura las entradas del jugador
         xInput = player.InputHandler.NormInputX;
         yInput = player.InputHandler.NormInputY;

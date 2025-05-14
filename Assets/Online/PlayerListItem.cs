@@ -19,7 +19,8 @@ public class PlayerListItem : MonoBehaviour
     public bool ready;
     public RawImage playerIcon;
     protected Callback<AvatarImageLoaded_t> imageLoaded;
-
+    [SerializeField] Texture2D defaultIconTexture;
+    public Texture2D currentIconTexture { get; private set; }
     public void ChangeReadyStatus()
     {
         if (ready)
@@ -50,6 +51,8 @@ public class PlayerListItem : MonoBehaviour
     public void SetPlayerValues()
     {
         playerNameText.text = playerName;
+
+
         if (characterIdx<=0)
         {
             characterIdx = characters.Length;
@@ -62,9 +65,18 @@ public class PlayerListItem : MonoBehaviour
         //charImage.material.SetColor("_Color", characters[characterIdx].color);
 
         ChangeReadyStatus();
-        if (!avatarReceived)
+       /* if (!avatarReceived)
         {
             GetPlayerIcon();
+        }*/
+        if (SteamChecker.IsSteamAvailable() && !avatarReceived)
+        {
+            GetPlayerIcon();
+        }
+        else if (!SteamChecker.IsSteamAvailable())
+        {
+            // Opcional: asignar un sprite o Texture2D por defecto
+            playerIcon.texture = defaultIconTexture;
         }
     }
     void GetPlayerIcon()
@@ -89,6 +101,7 @@ public class PlayerListItem : MonoBehaviour
             }
         }
         avatarReceived = true;
+        currentIconTexture = texture;
         return texture;
     }
     protected void OnImageLoaded(AvatarImageLoaded_t callback)

@@ -140,8 +140,18 @@ public class LobbyController : MonoBehaviour
     }
     public void UpdateLobbyName()
     {
-        currentLobbyID = Manager.GetComponent<SteamLobby>().currentLobbyID;
-        lobbyNameText.text = SteamMatchmaking.GetLobbyData(new CSteamID(currentLobbyID), "name");
+        //currentLobbyID = Manager.GetComponent<SteamLobby>().currentLobbyID;
+        //lobbyNameText.text = SteamMatchmaking.GetLobbyData(new CSteamID(currentLobbyID), "name");
+
+        if (SteamChecker.IsSteamAvailable())
+        {
+            currentLobbyID = Manager.GetComponent<SteamLobby>().currentLobbyID;
+            lobbyNameText.text = SteamMatchmaking.GetLobbyData(new CSteamID(currentLobbyID), "name");
+        }
+        else
+        {
+            lobbyNameText.text = "Local Lobby";
+        }
     }
     public void UpdatePlayerList()
     {
@@ -221,7 +231,10 @@ public class LobbyController : MonoBehaviour
                     {
                         playerListItemScript.IsInteractuable(true);
                         UpdateButton();
-                        player.ChangeIconTexture( (Texture2D)playerListItemScript.playerIcon.texture);
+                        var iconTex = playerListItemScript.currentIconTexture;
+                        if (iconTex != null)
+                            player.ChangeIconTexture(iconTex);
+                        //player.ChangeIconTexture( (Texture2D)playerListItemScript.playerIcon.texture);
                     }
                     else
                     {

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using Steamworks;
-using UnityEngine.UI;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class SteamLobby : MonoBehaviour
 {

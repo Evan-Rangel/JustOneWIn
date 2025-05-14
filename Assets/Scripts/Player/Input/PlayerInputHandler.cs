@@ -142,6 +142,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnDashDirectionInput(InputAction.CallbackContext context)
     {
+        if (playerInput == null) return;
+        if (gameObject.name != "LocalGamePlayer") { return; }
         RawDashDirectionInput = context.ReadValue<Vector2>();
 
         // Si el esquema es teclado, convierte el input a dirección relativa al mundo

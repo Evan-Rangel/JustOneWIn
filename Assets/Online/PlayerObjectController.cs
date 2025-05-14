@@ -58,7 +58,17 @@ public class PlayerObjectController : NetworkBehaviour
     }
     public override void OnStartAuthority()
     {
-        CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
+        // CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
+        if (SteamChecker.IsSteamAvailable())
+        {
+            CmdSetPlayerName(SteamFriends.GetPersonaName());
+        }
+        else
+        {
+            // nombre local de test
+            Debug.Log(playeridNumber);
+            CmdSetPlayerName("Player" + playeridNumber);
+        }
         gameObject.name = "LocalGamePlayer";
         if (SceneManager.GetActiveScene().name == "Lobby")
 
