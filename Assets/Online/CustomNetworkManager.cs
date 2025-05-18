@@ -8,11 +8,16 @@ public class CustomNetworkManager : NetworkManager
 {
     [SerializeField] private PlayerObjectController gamePlayerPrefab;
     public List<PlayerObjectController> gamePlayers { get; } = new List<PlayerObjectController>();
+    List<Transform> playerSpawns;
+    int spawnIndex = 0;
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
          if (SceneManager.GetActiveScene().name == "Lobby")
          {
-             PlayerObjectController GamePlayerInstance = Instantiate(gamePlayerPrefab);
+            playerSpawns = new List<Transform>(GameObject.Find("SpawnPoints").GetComponentsInChildren<Transform>());
+            Transform spawn= playerSpawns[spawnIndex];
+            spawnIndex++;
+            PlayerObjectController GamePlayerInstance = Instantiate(gamePlayerPrefab, spawn.position, spawn.rotation);
              GamePlayerInstance.connectionID = conn.connectionId;
              GamePlayerInstance.playeridNumber = gamePlayers.Count + 1;
             //GamePlayerInstance.playerSteamID = (ulong)SteamMatchmaking.GetLobbyMemberByIndex((CSteamID)SteamLobby.instance.currentLobbyID, gamePlayers.Count);

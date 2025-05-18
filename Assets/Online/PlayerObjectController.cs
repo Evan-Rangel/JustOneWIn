@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using Avocado.CoreSystem;
 using System.Collections;
+using Avocado.Weapons;
+using Avocado.Interaction.Interactables;
+using Avocado.Interaction;
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -132,6 +135,19 @@ public class PlayerObjectController : NetworkBehaviour
     {
         Manager.StartGame(sceneName);
     }
+
+    void OnEnable()
+    {
+        if (!isLocalPlayer) return;
+        detector.OnTryInteract += HandleTryPickup;
+    }
+
+    void OnDisable()
+    {
+        if (!isLocalPlayer) return;
+        detector.OnTryInteract -= HandleTryPickup;
+    }
+
     #endregion
     #region MapChoice
     [SyncVar(hook = nameof(SendMapChoiced))] public int mapChoice;
@@ -163,89 +179,71 @@ public class PlayerObjectController : NetworkBehaviour
     #endregion
 
     #region Weapons
+    [Header("Slots de arma")]
+    [SerializeField] WeaponGenerator primaryGenerator;   
+    [SerializeField] WeaponGenerator secondaryGenerator;  
 
-    /*[SyncVar(hook = nameof(OnWeaponChanged))]
-    private int currentWeaponIndex;
-    public Weapon CurrentWeapon { get; private set; }
-    public Player playerScript;
-    void OnWeaponChanged(int oldWeapon, int newWeapon)
+    [Header("Detección de interactuables")]
+    [SerializeField] InteractableDetector detector;     
+
+    [Header("Catálogo de armas")]
+    [SerializeField] List<WeaponDataSO> allWeapons;      
+
+    // SyncVars para los índices de arma
+    [SyncVar(hook = nameof(OnPrimaryWeaponChanged))]
+    int primaryWeaponIndex = -1;
+
+    [SyncVar(hook = nameof(OnSecondaryWeaponChanged))]
+    int secondaryWeaponIndex = -1;
+
+    void OnPrimaryWeaponChanged(int oldIdx, int newIdx)
     {
-        if (isClient)
+        if (newIdx >= 0)
+            primaryGenerator.GenerateWeapon(allWeapons[newIdx]);
+    }
+
+    void OnSecondaryWeaponChanged(int oldIdx, int newIdx)
+    {
+        if (newIdx >= 0)
+            secondaryGenerator.GenerateWeapon(allWeapons[newIdx]);
+    }
+
+    // Invocado por InteractableDetector cuando el jugador pulsa Interact
+    void HandleTryPickup(IInteractable interactable)
+    {
+        // Sólo nos importan pickups de arma
+        if (interactable is WeaponPickup pickup)
         {
-            EquipWeapon(newWeapon);
+            var nid = pickup.GetComponent<NetworkIdentity>().netId;
+            CmdPickupWeapon(nid);
         }
     }
     [Command]
-    public void CmdEquipWeapon(int weaponIndex)
+    void CmdPickupWeapon(uint pickupNetId)
     {
-        currentWeaponIndex = weaponIndex;
-        EquipWeapon(weaponIndex);
+        if (!NetworkServer.spawned.TryGetValue(pickupNetId, out var obj))
+            return;
+
+        var wp = obj.GetComponent<WeaponPickup>();
+        if (wp == null) return;
+
+        // Averigua el índice del WeaponDataSO en tu lista
+        int idx = allWeapons.IndexOf(wp.GetContext());
+        if (idx < 0) return;
+
+        // Asigna al primer slot libre
+        if (primaryWeaponIndex < 0)
+            primaryWeaponIndex = idx;
+        else if (secondaryWeaponIndex < 0)
+            secondaryWeaponIndex = idx;
+        else
+            return; // ya tienes dos armas
+
+        // Destruye el pickup en todos los clientes
+        //NetworkServer.Destroy(obj);
     }
-    private void EquipWeapon(int index)
-    {
-        // Asigna la nueva arma basada en el índice de los prefabs
-        CurrentWeapon = GetWeaponByIndex(index);
-    }
-    private Weapon GetWeaponByIndex(int index)
-    {
-        // Implementa lógica para obtener el arma correcta
-        return playerScript.weaponList[index];
-    }*/
-    /* [SyncVar(hook = nameof(SendWeaponIndex))] public int weaponIndex;
-     [Command]
-     public void CmdUpdateWeaponIndex(int newData)
-     {
-         SendWeaponIndex(this.weaponIndex, newData);
-     }
-     public void ChangeWeaponIndex(int weaponI)
-     {
-         CmdUpdateWeaponIndex(weaponI);
-     }
-     public void SendWeaponIndex(int oldValue, int newValue)
-     {
-         if (isServer)
-         {
-             this.weaponIndex = newValue;
-         }
-         if (isClient && oldValue != newValue)
-         {
-             UpdateWeaponIndex(newValue);
-         }
-     }
-     void UpdateWeaponIndex(int message)
-     {
-         weaponIndex = message;
-         GameManager.instance.UpdatePlayers();
-     }
 
 
-     [SyncVar(hook = nameof(SendAttackActive))] public bool attackActive;
-     [Command]
-     public void CmdUpdateAttackActive(bool newData)
-     {
-         SendAttackActive(this.attackActive, newData);
-     }
-     public void ChangeAttackActive(bool value)
-     {
-         CmdUpdateAttackActive(value);
-     }
-     public void SendAttackActive(bool oldValue, bool newValue)
-     {
-         if (isServer)
-         {
-             this.attackActive = newValue;
-         }
-         if (isClient && oldValue != newValue)
-         {
-             UpdateAttackActive(newValue);
-         }
-     }
-     void UpdateAttackActive(bool message)
-     {
-         attackActive = message;
-         GameManager.instance.UpdatePlayers();
-     }
-    */
     #endregion
     #region Lobby
 

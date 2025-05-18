@@ -41,7 +41,7 @@ namespace Avocado.Weapons
         // Referencia al inventario de armas del jugador
         private WeaponInventory weaponInventory;
 
-        private void GenerateWeapon(WeaponDataSO data)
+        public void GenerateWeapon(WeaponDataSO data)
         {
             OnWeaponGenerating?.Invoke();
 

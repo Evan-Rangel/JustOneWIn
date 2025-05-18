@@ -81,6 +81,9 @@ namespace Avocado.UI
         // Se llama cuando el objeto se activa
         private void OnEnable()
         {
+            if (weaponSwap==null)
+                weaponSwap = GameObject.Find("LocalGamePlayer").GetComponentInChildren<WeaponSwap>();
+
             // Se suscribe al evento de solicitud de elección de arma
             weaponSwap.OnChoiceRequested += HandleChoiceRequested;
 
