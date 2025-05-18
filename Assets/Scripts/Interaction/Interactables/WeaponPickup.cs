@@ -1,5 +1,6 @@
 ﻿using System;
 using Avocado.Weapons;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Serialization;
 

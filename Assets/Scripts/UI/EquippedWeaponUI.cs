@@ -1,6 +1,7 @@
 ﻿using System;
 using Avocado.CoreSystem;
 using Avocado.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ namespace Avocado.UI
 
         // Referencia al ScriptableObject que contiene los datos del arma actual
         private WeaponDataSO weaponData;
-
+        
         // Método para actualizar el icono del arma en la UI
         private void SetWeaponIcon()
         {
@@ -56,6 +57,9 @@ namespace Avocado.UI
         // Suscribe el evento cuando este objeto se activa
         private void OnEnable()
         {
+            if (weaponInventory==null)
+                weaponInventory = GameObject.Find("LocalGamePlayer").GetComponentInChildren<WeaponInventory>();
+
             weaponInventory.OnWeaponDataChanged += HandleWeaponDataChanged;
         }
 
