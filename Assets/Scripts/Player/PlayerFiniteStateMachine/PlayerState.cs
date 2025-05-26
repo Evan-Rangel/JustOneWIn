@@ -31,7 +31,7 @@ public class PlayerState
 
     // Nombre del parámetro booleano de animación (ej: "idle", "jump") que se activa en este estado
     private string animBoolName;
-
+    protected PlayerObjectController playerController;
     public PlayerState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName)
     {
         this.player = player;
@@ -41,6 +41,7 @@ public class PlayerState
 
         // Se obtiene el componente Core desde el jugador
         core = player.Core;
+        playerController= player.GetComponent<PlayerObjectController>();
     }
 
     // Se llama al entrar al estado
@@ -48,6 +49,7 @@ public class PlayerState
     {
         DoChecks(); // Se realizan verificaciones iniciales (sobrescribibles por estados hijos)
         player.Anim.SetBool(animBoolName, true); // Se activa la animación correspondiente
+        //playerController.NetworkSetBool(animBoolName, true); // Se sincroniza la animación en red
         startTime = Time.time; // Se guarda el tiempo de entrada al estado
         isAnimationFinished = false; // Se resetea el flag de animación
         isExitingState = false; // Se indica que aún no se está saliendo
@@ -57,6 +59,8 @@ public class PlayerState
     public virtual void Exit()
     {
         player.Anim.SetBool(animBoolName, false); // Se desactiva la animación
+       // playerController.NetworkSetBool(animBoolName, false); // Se sincroniza la animación en red
+
         isExitingState = true; // Se indica que se está saliendo del estado
     }
 

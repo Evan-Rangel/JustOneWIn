@@ -19,7 +19,7 @@ public class PlayerObjectController : NetworkBehaviour
     [SyncVar(hook = nameof(PlayerReadyUpdate))] public bool ready;
 
     private CustomNetworkManager manager;
-
+    
     private CustomNetworkManager Manager
     {
         get
@@ -61,6 +61,11 @@ public class PlayerObjectController : NetworkBehaviour
     }
     public override void OnStartAuthority()
     {
+
+        inputs = GetComponent<PlayerInputHandler>();
+        inputs.OnPrimaryAttack += HandlePrimaryAttack;
+        inputs.OnSecondaryAttack += HandleSecondaryAttack;
+
         // CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
         if (SteamChecker.IsSteamAvailable())
         {
@@ -69,7 +74,6 @@ public class PlayerObjectController : NetworkBehaviour
         else
         {
             // nombre local de test
-            Debug.Log(playeridNumber);
             CmdSetPlayerName("Player" + playeridNumber);
         }
         gameObject.name = "LocalGamePlayer";
@@ -99,6 +103,11 @@ public class PlayerObjectController : NetworkBehaviour
         if (SceneManager.GetActiveScene().name == "Lobby")
         {
             LobbyController.instance.UpdatePlayerList();
+        }
+        if (inputs != null && isOwned) // limpio suscripciones
+        {
+            inputs.OnPrimaryAttack -= HandlePrimaryAttack;
+            inputs.OnSecondaryAttack -= HandleSecondaryAttack;
         }
 
     }
@@ -138,13 +147,13 @@ public class PlayerObjectController : NetworkBehaviour
 
     void OnEnable()
     {
-        if (!isLocalPlayer) return;
+  
         detector.OnTryInteract += HandleTryPickup;
     }
 
     void OnDisable()
     {
-        if (!isLocalPlayer) return;
+        //if (!isLocalPlayer) return;
         detector.OnTryInteract -= HandleTryPickup;
     }
 
@@ -178,7 +187,74 @@ public class PlayerObjectController : NetworkBehaviour
     }
     #endregion
 
+
+
+    #region Animator
+    [Header("Animator Principal")]
+    [SerializeField] Animator anim;
+
+    // Este método lo llamamos desde la FSM
+    public void NetworkSetBool(string param, bool value)
+    {
+        if (isServer)
+        {
+            anim.SetBool(param, value);
+            RpcSetBool(param, value);
+        }
+        else if (authority)
+        {
+            CmdSetBool(param, value);
+        }
+    }
+
+    [Command]
+    void CmdSetBool(string param, bool value)
+    {
+        anim.SetBool(param, value);
+        RpcSetBool(param, value);
+    }
+
+    [ClientRpc]
+    void RpcSetBool(string param, bool value)
+    {
+        // Todos los clientes reciben el cambio
+        anim.SetBool(param, value);
+    }
+
+    // Haz lo mismo para triggers si los usas:
+    public void NetworkSetTrigger(string param)
+    {
+        if (isServer)
+        {
+            anim.SetTrigger(param);
+            RpcSetTrigger(param);
+        }
+        else if (authority)
+        {
+            CmdSetTrigger(param);
+        }
+    }
+
+    [Command]
+    void CmdSetTrigger(string param)
+    {
+        anim.SetTrigger(param);
+        RpcSetTrigger(param);
+    }
+
+    [ClientRpc]
+    void RpcSetTrigger(string param)
+    {
+        anim.SetTrigger(param);
+    }
+
+
+    #endregion
+
+
     #region Weapons
+
+    PlayerInputHandler inputs;
     [Header("Slots de arma")]
     [SerializeField] WeaponGenerator primaryGenerator;   
     [SerializeField] WeaponGenerator secondaryGenerator;  
@@ -187,8 +263,9 @@ public class PlayerObjectController : NetworkBehaviour
     [SerializeField] InteractableDetector detector;     
 
     [Header("Catálogo de armas")]
-    [SerializeField] List<WeaponDataSO> allWeapons;      
+    [SerializeField] List<WeaponDataSO> allWeapons;
 
+    
     // SyncVars para los índices de arma
     [SyncVar(hook = nameof(OnPrimaryWeaponChanged))]
     int primaryWeaponIndex = -1;
@@ -221,6 +298,7 @@ public class PlayerObjectController : NetworkBehaviour
     [Command]
     void CmdPickupWeapon(uint pickupNetId)
     {
+
         if (!NetworkServer.spawned.TryGetValue(pickupNetId, out var obj))
             return;
 
@@ -240,9 +318,48 @@ public class PlayerObjectController : NetworkBehaviour
             return; // ya tienes dos armas
 
         // Destruye el pickup en todos los clientes
-        //NetworkServer.Destroy(obj);
+        NetworkServer.Destroy(obj.gameObject);
+    }
+    void HandlePrimaryAttack()
+    {
+        // 1) Dispara la animación/efecto local
+       // PlayLocalAttackAnimation(); // tu método que usa NetworkAnimator o AnimationEvents
+
+        // 2) Notifica al servidor
+        CmdUsePrimaryWeapon();
     }
 
+    void HandleSecondaryAttack()
+    {
+       // PlayLocalSecondaryAnimation();
+        CmdUseSecondaryWeapon();
+    }
+
+    [Command]
+    void CmdUsePrimaryWeapon()
+    {
+        // servidor: spawnea proyectil, aplica lógica
+        RpcUsePrimaryWeapon();
+    }
+
+    [ClientRpc]
+    void RpcUsePrimaryWeapon()
+    {
+        // todos los clientes reproducen el ataque (vía NetworkAnimator o AnimationEventHandler)
+       // weaponGenerator.PrimaryWeapon.Enter();
+    }
+
+    [Command]
+    void CmdUseSecondaryWeapon()
+    {
+        RpcUseSecondaryWeapon();
+    }
+
+    [ClientRpc]
+    void RpcUseSecondaryWeapon()
+    {
+       // weaponGenerator.SecondaryWeapon.Enter();
+    }
 
     #endregion
     #region Lobby

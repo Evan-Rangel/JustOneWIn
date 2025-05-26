@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5571504009190527188}
   - component: {fileID: 3352953680395896778}
   - component: {fileID: 7004377421334843877}
+  - component: {fileID: 228316245755236960}
   m_Layer: 11
   m_Name: Base
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 756119877
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -89,7 +90,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &3352953680395896778
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -106,7 +107,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &7004377421334843877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +120,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ab2b8b541d4691be5f164a5b83e872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &228316245755236960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273212503044209485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  clientAuthority: 1
+  animator: {fileID: 3352953680395896778}
 --- !u!1 &3494571448844795595
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +209,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 756119877
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -287,7 +305,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 756119877
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -360,5 +378,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a36ab389ebb549159828401aa974ef3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   weapon: {fileID: 5037866840169384086}
   combatInput: 0
+  animatorControllers:
+  - {fileID: 9100000, guid: 1089e6ad3ab9c034382f2409dbcddd6c, type: 2}
+  - {fileID: 9100000, guid: 1baa3682ee132644cbd959c267628da5, type: 2}
+  - {fileID: 9100000, guid: 80caa8ced50a9af45801404d8bcc2e1c, type: 2}
+  - {fileID: 9100000, guid: 95b2394cafcd7ac4eb455b8d8735c661, type: 2}

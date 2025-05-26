@@ -28,6 +28,7 @@ public class PlayerAttackState : PlayerAbilityState
     // Constructor del estado de ataque
     public PlayerAttackState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName, Weapon weapon, CombatInputs input) : base(player, stateMachine, playerData, animBoolName)
     {
+ 
         this.weapon = weapon;
         weaponGenerator = weapon.GetComponent<WeaponGenerator>();
 
@@ -113,7 +114,11 @@ public class PlayerAttackState : PlayerAbilityState
     private void HandleEnableInterrupt() => canInterrupt = true;
 
     // Maneja la lógica cuando se usa el input de ataque
-    private void HandleUseInput() => player.InputHandler.UseAttackInput(inputIndex);
+    //private void HandleUseInput() => player.InputHandler.UseAttackInput(inputIndex);
+    private void HandleUseInput() {
+        if ((core.Root.name == "LocalGamePlayer"))
+        player.InputHandler.UseAttackInput(inputIndex); 
+    }
 
     // Finaliza la animación de ataque y el estado
     private void HandleFinish()

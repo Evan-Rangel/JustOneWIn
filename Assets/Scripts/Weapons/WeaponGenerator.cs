@@ -4,7 +4,7 @@ using System.Linq;
 using Avocado.CoreSystem;
 using Avocado.Weapons.Components;
 using UnityEngine;
-
+using Mirror;
 /*---------------------------------------------------------------------------------------------
 El script WeaponGenerator es el responsable de generar dinámicamente un arma en un GameObject 
 según los datos de un WeaponDataSO (un ScriptableObject que define el comportamiento del arma). 
@@ -17,7 +17,7 @@ Este sistema permite:
 
 namespace Avocado.Weapons
 {
-    public class WeaponGenerator : MonoBehaviour
+    public class WeaponGenerator : NetworkBehaviour
     {
         // Evento que se dispara cuando se comienza a generar un arma
         public event Action OnWeaponGenerating;
@@ -40,6 +40,9 @@ namespace Avocado.Weapons
 
         // Referencia al inventario de armas del jugador
         private WeaponInventory weaponInventory;
+        
+        public List<RuntimeAnimatorController> animatorControllers;
+
 
         public void GenerateWeapon(WeaponDataSO data)
         {
@@ -96,10 +99,22 @@ namespace Avocado.Weapons
             }
 
             // Asignar el AnimatorController correcto para esta arma
-            anim.runtimeAnimatorController = data.AnimatorController;
+            int animatorIndex = animatorControllers.IndexOf(data.AnimatorController);
+            CmdChangeWeaponAnimator(animatorIndex);
+            //anim.runtimeAnimatorController = data.AnimatorController;
 
             // Ahora el arma puede atacar
             weapon.SetCanEnterAttack(true);
+        }
+        [Command]
+        public void CmdChangeWeaponAnimator(int controllerIdx)
+        {
+            RcpChangeWeaponAnimator(controllerIdx);
+        }
+        [ClientRpc]
+        public void RcpChangeWeaponAnimator(int controllerIdx)
+        {
+            anim.runtimeAnimatorController = animatorControllers[controllerIdx];
         }
 
         // Manejador del evento que indica que los datos del arma han cambiado.

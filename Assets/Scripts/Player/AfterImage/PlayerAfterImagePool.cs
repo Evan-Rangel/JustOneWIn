@@ -30,13 +30,13 @@ public class PlayerAfterImagePool : MonoBehaviour
     // Crea una cantidad inicial de objetos y los agrega al pool
     private void GrowPool()
     {
-            Debug.Log("GrowPool");
+     /*       Debug.Log("GrowPool");
 
         if (afterImagePrefab!=null)
         {
             Debug.Log("NO NULL");
             
-        }
+        }*/
         for (int i = 0; i < 10; i++)
         {
             

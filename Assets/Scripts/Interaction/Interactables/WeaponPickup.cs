@@ -19,7 +19,7 @@ namespace Avocado.Interaction.Interactables
 {
     // Obliga a que este objeto tenga un Rigidbody2D
     [RequireComponent(typeof(Rigidbody2D))]
-    public class WeaponPickup : MonoBehaviour, IInteractable<WeaponDataSO>
+    public class WeaponPickup : NetworkBehaviour, IInteractable<WeaponDataSO>
     {
         [field: SerializeField] public Rigidbody2D Rigidbody2D { get; private set; }
 

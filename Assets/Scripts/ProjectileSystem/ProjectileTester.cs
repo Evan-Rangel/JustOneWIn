@@ -49,6 +49,7 @@ namespace Avocado.ProjectileSystem
         // Lógica para disparar un proyectil
         private void FireProjectile()
         {
+            Debug.Log("Fire");
             // Obtiene un proyectil del pool correspondiente
             var projectile = objectPools.GetPool(ProjectilePrefab).GetObject();
 

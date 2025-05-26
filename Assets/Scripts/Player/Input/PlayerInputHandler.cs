@@ -16,6 +16,13 @@ ejecutarse si se mantiene dentro de una ventana de tiempo (inputHoldTime).
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    //Online
+    public event Action OnPrimaryAttack;
+
+    public event Action OnSecondaryAttack;
+
+ 
+
     public event Action<bool> OnInteractInputChanged;
     public event Action<bool> OnGrappleInputChanged;
     // Evento que notifica si se ha iniciado o cancelado una interacción
@@ -80,7 +87,11 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)
     {
         if (context.started)
+        { 
             AttackInputs[(int)CombatInputs.primary] = true;
+            OnPrimaryAttack?.Invoke();//For Online
+
+        }
 
         if (context.canceled)
             AttackInputs[(int)CombatInputs.primary] = false;
@@ -89,7 +100,10 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
         if (context.started)
+        {
             AttackInputs[(int)CombatInputs.secondary] = true;
+            OnSecondaryAttack?.Invoke();//For Online
+        }
 
         if (context.canceled)
             AttackInputs[(int)CombatInputs.secondary] = false;

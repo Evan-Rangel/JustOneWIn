@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Avocado.Interfaces;
 using UnityEngine;
-
+using Mirror;
 /*---------------------------------------------------------------------------------------------
 Este script reutilizar objetos (Componentes, no GameObjects completos) para optimizar el 
 rendimiento evitando Instantiate y Destroy constantes.
@@ -48,7 +48,10 @@ namespace Avocado.ObjectPoolSystem
         {
             var obj = Object.Instantiate(prefab);
             obj.name = prefab.name; // Opcional: Renombrar para reconocerlo fácilmente en jerarquía
-
+            if (NetworkServer.active)
+            {
+                NetworkServer.Spawn(obj.gameObject);
+            }
             if (!obj.TryGetComponent<IObjectPoolItem>(out var objectPoolItem))
             {
                 Debug.LogWarning($"{obj.name} does not have a component that implements IObjectPoolItem");
@@ -80,7 +83,10 @@ namespace Avocado.ObjectPoolSystem
         {
             if (comp is not T compObj)
                 return;
-
+            if (NetworkServer.active)
+            {
+                NetworkServer.UnSpawn(compObj.gameObject);
+            }
             compObj.gameObject.SetActive(false);
             pool.Enqueue(compObj);
         }
