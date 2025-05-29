@@ -27,14 +27,21 @@ namespace Avocado.Interaction.Interactables
         [SerializeField] private Bobber bobber;             // Efecto visual de bobbing (flotar hacia arriba y abajo)
 
         [SerializeField] private WeaponDataSO weaponData;   // Datos del arma que este pickup contiene
-        [SyncVar(hook = nameof(OnWeaponIdChanged))]
-        private int weaponId;
-        private void OnWeaponIdChanged(int oldId, int newId)
+        [SyncVar(hook = nameof(OnWeaponNameChanged))]
+        private string weaponName;
+        private void OnWeaponNameChanged(string oldName, string newName)
         {
-            //weaponData = WeaponDatabase.Instance.GetWeaponData(newId);
+            weaponData = WeaponDatabase.Instance.GetWeaponData(newName);
             if (weaponData != null)
                 weaponIcon.sprite = weaponData.Icon;
         }
+        /*public override void OnStartClient()
+        {
+            base.OnStartClient();
+            weaponData = WeaponDatabase.Instance.GetWeaponData(weaponName);
+            if (weaponData != null)
+                weaponIcon.sprite = weaponData.Icon;
+        }*/
         // Implementación de IInteractable<WeaponDataSO>
 
         // Devuelve los datos del arma
@@ -43,7 +50,10 @@ namespace Avocado.Interaction.Interactables
         // Establece nuevos datos de arma, actualizando el icono también
         public void SetContext(WeaponDataSO context)
         {
+            /* weaponData = context;
+             weaponIcon.sprite = weaponData.Icon;*/
             weaponData = context;
+            weaponName = context.Name;
             weaponIcon.sprite = weaponData.Icon;
         }
 
