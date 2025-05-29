@@ -32,12 +32,21 @@ namespace Avocado.Weapons
 
         // Datos de configuración del arma (ScriptableObject)
         public WeaponDataSO Data { get; private set; }
+        public bool IsDataSet => Data != null;
 
         // Contador del ataque actual, se reinicia si supera el número total de ataques definidos
         public int CurrentAttackCounter
         {
             get => currentAttackCounter;
-            private set => currentAttackCounter = value >= Data.NumberOfAttacks ? 0 : value;
+            private set {
+                if (Data==null)
+                {
+                    //Debug.LogWarning("Weapon.Data es null al intentar incrementar CurrentAttackCounter.");
+                    currentAttackCounter = 0;
+                    return;
+                }
+                
+                currentAttackCounter = value >= Data.NumberOfAttacks ? 0 : value; }
         }
 
         // Control del input actual (presionado o no)
@@ -102,6 +111,7 @@ namespace Avocado.Weapons
             Anim.SetInteger("counter", currentAttackCounter);
 
             OnEnter?.Invoke();
+
         }
 
         // Asigna la referencia al Core del jugador
@@ -128,12 +138,14 @@ namespace Avocado.Weapons
         /// </summary>
         public void Exit()
         {
+
             Anim.SetBool("active", false);
 
             CurrentAttackCounter++;
             attackCounterResetTimeNotifier.Init(attackCounterResetCooldown); // Comienza el cooldown para reiniciar el contador
 
             OnExit?.Invoke();
+
         }
 
         private void Awake()
@@ -167,7 +179,6 @@ namespace Avocado.Weapons
         // Reinicia el contador de ataques a 0
         private void ResetAttackCounter()
         {
-            print("Reset Attack Counter");
             CurrentAttackCounter = 0;
         }
 

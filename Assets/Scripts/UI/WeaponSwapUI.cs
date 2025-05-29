@@ -38,8 +38,8 @@ namespace Avocado.UI
         private void HandleChoiceRequested(WeaponSwapChoiceRequest choiceRequest)
         {
             // Cambia el estado del juego para pausar la acción y mostrar la UI
-            gameManager.ChangeState(GameManager.GameState.UI);
-
+            //gameManager.ChangeState(GameManager.GameState.UI);
+            GameManager.instance.ChangeState(GameManager.GameState.UI);
             // Guarda el callback que se llamará cuando se haga una elección
             choiceSelectedCallback = choiceRequest.Callback;
 
@@ -61,7 +61,8 @@ namespace Avocado.UI
         private void HandleChoiceSelected(WeaponSwapChoice choice)
         {
             // Regresa el juego a su estado normal
-            gameManager.ChangeState(GameManager.GameState.Gameplay);
+            //gameManager.ChangeState(GameManager.GameState.Gameplay);
+            GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
 
             // Ejecuta el callback con la elección seleccionada
             choiceSelectedCallback?.Invoke(choice);

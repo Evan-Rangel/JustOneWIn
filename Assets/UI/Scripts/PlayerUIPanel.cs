@@ -15,6 +15,7 @@ public class PlayerUIPanel : MonoBehaviour
     [SerializeField] CharacterData[] characters;
     [SerializeField] RawImage playerIcon; 
     PlayerObjectController player;
+
     private void Awake()
     {
         if (transform.parent!=null)
@@ -24,6 +25,8 @@ public class PlayerUIPanel : MonoBehaviour
             powerUpImage.SetActive(false);
         }
     }
+    
+   
     public void SetPlayerObject()
     {
         playerObject = GameObject.Find("LocalGamePlayer");

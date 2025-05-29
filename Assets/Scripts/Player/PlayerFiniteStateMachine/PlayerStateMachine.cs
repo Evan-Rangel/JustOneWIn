@@ -26,6 +26,12 @@ public class PlayerStateMachine
     // Método para cambiar de un estado actual a un nuevo estado
     public void ChangeState(PlayerState newState)
     {
+        if (newState == CurrentState)
+        {
+           // Debug.LogWarning($"Intento de cambiar al mismo estado: {newState} mientras ya estaba en {CurrentState}");
+            return;
+        }
+        //Debug.Log($"Cambio de estado: {CurrentState} → {newState}");
         CurrentState.Exit();    // Se ejecuta la salida del estado actual
         CurrentState = newState; // Se asigna el nuevo estado
         CurrentState.Enter();   // Se ejecuta la entrada del nuevo estado

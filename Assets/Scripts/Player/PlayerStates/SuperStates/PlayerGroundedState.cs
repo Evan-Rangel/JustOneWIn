@@ -80,12 +80,18 @@ public class PlayerGroundedState : PlayerState
         // Ataque primario
         if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && !isTouchingCeiling && player.PrimaryAttackState.CanTransitionToAttackState())
         {
-            stateMachine.ChangeState(player.PrimaryAttackState);
+            if (player.TryGetComponent<PlayerObjectController>(out var poc) && poc.authority)
+                poc.NetworkStartAttack(0); // primario
+            else
+                stateMachine.ChangeState(player.PrimaryAttackState);
         }
         // Ataque secundario
         else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary] && !isTouchingCeiling && player.SecondaryAttackState.CanTransitionToAttackState())
         {
-            stateMachine.ChangeState(player.SecondaryAttackState);
+            if (player.TryGetComponent<PlayerObjectController>(out var poc) && poc.authority)
+                poc.NetworkStartAttack(1); // secundario
+            else
+                stateMachine.ChangeState(player.SecondaryAttackState);
         }
         // Salto
         else if (jumpInput && player.JumpState.CanJump() && !isTouchingCeiling)

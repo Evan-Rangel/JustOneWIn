@@ -16,12 +16,14 @@ ejecutarse si se mantiene dentro de una ventana de tiempo (inputHoldTime).
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    
+
     //Online
     public event Action OnPrimaryAttack;
 
     public event Action OnSecondaryAttack;
 
- 
+    
 
     public event Action<bool> OnInteractInputChanged;
     public event Action<bool> OnGrappleInputChanged;
@@ -86,27 +88,50 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)
     {
+        return;
         if (context.started)
-        { 
+        {
+
             AttackInputs[(int)CombatInputs.primary] = true;
-            OnPrimaryAttack?.Invoke();//For Online
+
+            var poc = GetComponent<PlayerObjectController>();
+            if (poc != null && poc.authority)
+                poc.NetworkStartAttack(0);
+
+            OnPrimaryAttack?.Invoke();
 
         }
 
         if (context.canceled)
+        {
             AttackInputs[(int)CombatInputs.primary] = false;
+            var poc = GetComponent<PlayerObjectController>();
+            if (poc != null && poc.authority)
+                poc.NetworkStopAttack(0);
+        }
     }
 
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
+        return;
+
         if (context.started)
         {
             AttackInputs[(int)CombatInputs.secondary] = true;
-            OnSecondaryAttack?.Invoke();//For Online
+            var poc = GetComponent<PlayerObjectController>();
+            if (poc != null && poc.authority)
+                poc.NetworkStartAttack(1); 
+
+            OnSecondaryAttack?.Invoke();
         }
 
         if (context.canceled)
+        {
             AttackInputs[(int)CombatInputs.secondary] = false;
+            var poc = GetComponent<PlayerObjectController>();
+            if (poc != null && poc.authority)
+                poc.NetworkStopAttack(1);
+        }
     }
 
     public void OnMoveInput(InputAction.CallbackContext context)

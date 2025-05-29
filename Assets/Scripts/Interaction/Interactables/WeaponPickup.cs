@@ -27,7 +27,14 @@ namespace Avocado.Interaction.Interactables
         [SerializeField] private Bobber bobber;             // Efecto visual de bobbing (flotar hacia arriba y abajo)
 
         [SerializeField] private WeaponDataSO weaponData;   // Datos del arma que este pickup contiene
-
+        [SyncVar(hook = nameof(OnWeaponIdChanged))]
+        private int weaponId;
+        private void OnWeaponIdChanged(int oldId, int newId)
+        {
+            //weaponData = WeaponDatabase.Instance.GetWeaponData(newId);
+            if (weaponData != null)
+                weaponIcon.sprite = weaponData.Icon;
+        }
         // Implementación de IInteractable<WeaponDataSO>
 
         // Devuelve los datos del arma
@@ -40,12 +47,21 @@ namespace Avocado.Interaction.Interactables
             weaponIcon.sprite = weaponData.Icon;
         }
 
+
         // Lógica cuando el jugador interactúa con el objeto (lo recoge)
         public void Interact()
         {
-            Destroy(gameObject);
+            // Ahora llamamos al Command desde el cliente, se ejecutará en el server
+            if (authority)
+                CmdDestroyPickup();
         }
 
+        // El servidor destruye el objeto y se replica a todos los clientes.
+        [Command]
+        private void CmdDestroyPickup()
+        {
+            NetworkServer.Destroy(gameObject);
+        }
         // Habilita interacción visual (empieza el efecto de bobbing)
         public void EnableInteraction()
         {

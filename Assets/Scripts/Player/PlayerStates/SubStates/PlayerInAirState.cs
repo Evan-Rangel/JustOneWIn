@@ -111,15 +111,20 @@ public class PlayerInAirState : PlayerState
 
         // Aplicar multiplicador de salto variable si se suelta el botón de salto
         CheckJumpMultiplier();
-
         // Transiciones de estado por prioridad
         if (player.InputHandler.AttackInputs[(int)CombatInputs.primary] && player.PrimaryAttackState.CanTransitionToAttackState())
         {
-            stateMachine.ChangeState(player.PrimaryAttackState);
+            if (player.TryGetComponent<PlayerObjectController>(out var poc) && poc.authority)
+                poc.NetworkStartAttack(0);
+            else
+                stateMachine.ChangeState(player.PrimaryAttackState);
         }
         else if (player.InputHandler.AttackInputs[(int)CombatInputs.secondary] && player.SecondaryAttackState.CanTransitionToAttackState())
         {
-            stateMachine.ChangeState(player.SecondaryAttackState);
+            if (player.TryGetComponent<PlayerObjectController>(out var poc) && poc.authority)
+                poc.NetworkStartAttack(1);
+            else
+                stateMachine.ChangeState(player.SecondaryAttackState);
         }
         else if (isGrounded && Movement?.CurrentVelocity.y < 0.01f)
         {

@@ -51,7 +51,9 @@ namespace Avocado.CoreSystem
             if (weaponInventory.TryGetEmptyIndex(out var index))
             {
                 weaponInventory.TrySetWeapon(newWeaponData, index, out _);
-                interactable.Interact();
+                var pickupNetId = weaponPickup.netId;
+                transform.root.GetComponent<PlayerObjectController>().CmdPickupWeapon(pickupNetId);
+                //interactable.Interact();
                 newWeaponData = null;
                 return;
             }
@@ -80,7 +82,9 @@ namespace Avocado.CoreSystem
                 return;
 
             // Interactuar con el pickup para recoger el arma
-            weaponPickup.Interact();
+            var pickupNetId = weaponPickup.netId;
+            transform.root.GetComponent<PlayerObjectController>().CmdPickupWeapon(pickupNetId);
+           // weaponPickup.Interact();
         }
 
         // Inicializar referencias

@@ -8,7 +8,7 @@ using Avocado.CoreSystem;
 using System.Collections;
 using Avocado.Weapons;
 using Avocado.Interaction.Interactables;
-using Avocado.Interaction;
+
 public class PlayerObjectController : NetworkBehaviour
 {
     //Player Data
@@ -18,8 +18,10 @@ public class PlayerObjectController : NetworkBehaviour
     [SyncVar(hook = nameof(PlayerNameUpdate))] public string playerName;
     [SyncVar(hook = nameof(PlayerReadyUpdate))] public bool ready;
 
+    [SerializeField] List<string> levelScenesNames;
+  
     private CustomNetworkManager manager;
-    
+    Player player;
     private CustomNetworkManager Manager
     {
         get
@@ -35,7 +37,7 @@ public class PlayerObjectController : NetworkBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         propertyBlock = new MaterialPropertyBlock();
-
+        player = GetComponent<Player>();
         //playerScript = GetComponent<Player>();
     }
     #region Initialization
@@ -62,9 +64,8 @@ public class PlayerObjectController : NetworkBehaviour
     public override void OnStartAuthority()
     {
 
-        inputs = GetComponent<PlayerInputHandler>();
-        inputs.OnPrimaryAttack += HandlePrimaryAttack;
-        inputs.OnSecondaryAttack += HandleSecondaryAttack;
+       // inputs = GetComponent<PlayerInputHandler>();
+     
 
         // CmdSetPlayerName(SteamFriends.GetPersonaName().ToString());
         if (SteamChecker.IsSteamAvailable())
@@ -104,11 +105,7 @@ public class PlayerObjectController : NetworkBehaviour
         {
             LobbyController.instance.UpdatePlayerList();
         }
-        if (inputs != null && isOwned) // limpio suscripciones
-        {
-            inputs.OnPrimaryAttack -= HandlePrimaryAttack;
-            inputs.OnSecondaryAttack -= HandleSecondaryAttack;
-        }
+      
 
     }
     [Command]
@@ -143,18 +140,6 @@ public class PlayerObjectController : NetworkBehaviour
     public void CmdCanStartGame(string sceneName)
     {
         Manager.StartGame(sceneName);
-    }
-
-    void OnEnable()
-    {
-  
-        detector.OnTryInteract += HandleTryPickup;
-    }
-
-    void OnDisable()
-    {
-        //if (!isLocalPlayer) return;
-        detector.OnTryInteract -= HandleTryPickup;
     }
 
     #endregion
@@ -254,113 +239,136 @@ public class PlayerObjectController : NetworkBehaviour
 
     #region Weapons
 
-    PlayerInputHandler inputs;
-    [Header("Slots de arma")]
-    [SerializeField] WeaponGenerator primaryGenerator;   
-    [SerializeField] WeaponGenerator secondaryGenerator;  
+     [SerializeField] List<WeaponDataSO> allWeapons;
+    /* PlayerInputHandler inputs;
+     [Header("Slots de arma")]
+     [SerializeField] WeaponGenerator primaryGenerator;   
+     [SerializeField] WeaponGenerator secondaryGenerator;  
 
-    [Header("Detección de interactuables")]
-    [SerializeField] InteractableDetector detector;     
+     [Header("Detección de interactuables")]
+     [SerializeField] InteractableDetector detector;     
 
-    [Header("Catálogo de armas")]
-    [SerializeField] List<WeaponDataSO> allWeapons;
+     [Header("Catálogo de armas")]
 
-    
-    // SyncVars para los índices de arma
-    [SyncVar(hook = nameof(OnPrimaryWeaponChanged))]
-    int primaryWeaponIndex = -1;
 
-    [SyncVar(hook = nameof(OnSecondaryWeaponChanged))]
-    int secondaryWeaponIndex = -1;
+     // SyncVars para los índices de arma
+     [SyncVar(hook = nameof(OnPrimaryWeaponChanged))]
+     int primaryWeaponIndex = -1;
 
-    void OnPrimaryWeaponChanged(int oldIdx, int newIdx)
+     [SyncVar(hook = nameof(OnSecondaryWeaponChanged))]
+     int secondaryWeaponIndex = -1;
+
+     void OnPrimaryWeaponChanged(int oldIdx, int newIdx)
+     {
+         if (newIdx >= 0)
+             primaryGenerator.GenerateWeapon(allWeapons[newIdx]);
+     }
+
+     void OnSecondaryWeaponChanged(int oldIdx, int newIdx)
+     {
+         if (newIdx >= 0)
+             secondaryGenerator.GenerateWeapon(allWeapons[newIdx]);
+     }*/
+    [SerializeField] private WeaponPickup weaponPickupPrefab;
+
+    public void SpawnDiscardedWeapon(WeaponDataSO weaponDataSO, Vector2 spawnPoint, Vector2 direction)
+    { 
+        int index= allWeapons.IndexOf(weaponDataSO);
+        CmdSpawnDiscardedWeapon(index, spawnPoint, direction);
+    }
+    [Command]
+    public void CmdSpawnDiscardedWeapon(int weaponDataId, Vector2 spawnPoint, Vector2 direction)
     {
-        if (newIdx >= 0)
-            primaryGenerator.GenerateWeapon(allWeapons[newIdx]);
+        // Resuelve el SO por ID (asume que tienes algún WeaponDatabase)
+        var data = allWeapons[weaponDataId];
+
+        // Instancia y configura
+        var wp = Instantiate(
+            weaponPickupPrefab,
+            spawnPoint,
+            Quaternion.identity
+        );
+        wp.SetContext(data);
+        wp.Rigidbody2D.velocity = direction;
+
+        NetworkServer.Spawn(wp.gameObject);
     }
 
-    void OnSecondaryWeaponChanged(int oldIdx, int newIdx)
-    {
-        if (newIdx >= 0)
-            secondaryGenerator.GenerateWeapon(allWeapons[newIdx]);
-    }
 
-    // Invocado por InteractableDetector cuando el jugador pulsa Interact
-    void HandleTryPickup(IInteractable interactable)
+    [Command]
+    public void CmdPickupWeapon(uint pickupNetId)
     {
-        // Sólo nos importan pickups de arma
-        if (interactable is WeaponPickup pickup)
+        if (NetworkServer.spawned.TryGetValue(pickupNetId, out var obj))
         {
-            var nid = pickup.GetComponent<NetworkIdentity>().netId;
-            CmdPickupWeapon(nid);
+            NetworkServer.Destroy(obj.gameObject);
         }
     }
-    [Command]
-    void CmdPickupWeapon(uint pickupNetId)
-    {
 
-        if (!NetworkServer.spawned.TryGetValue(pickupNetId, out var obj))
+
+    // Llama este método cuando quieras iniciar un ataque
+    public void NetworkStartAttack(int attackType) // 0 = primario, 1 = secundario
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (!levelScenesNames.Contains(sceneName) ||
+          (attackType == 0 && !player.primaryWeaponHasData) ||
+          attackType == 1 && !player.secondaryWeaponHasData)
             return;
+        if (isServer)
+        {
+            RpcStartAttack(attackType);
+        }
+        else if (authority)
+        {
+            CmdStartAttack(attackType);
+        }
+    }
 
-        var wp = obj.GetComponent<WeaponPickup>();
-        if (wp == null) return;
+    [Command]
+    void CmdStartAttack(int attackType)
+    {
+        RpcStartAttack(attackType);
+    }
 
-        // Averigua el índice del WeaponDataSO en tu lista
-        int idx = allWeapons.IndexOf(wp.GetContext());
-        if (idx < 0) return;
-
-        // Asigna al primer slot libre
-        if (primaryWeaponIndex < 0)
-            primaryWeaponIndex = idx;
-        else if (secondaryWeaponIndex < 0)
-            secondaryWeaponIndex = idx;
+    [ClientRpc]
+    void RpcStartAttack(int attackType)
+    {
+        // Aquí, activa la animación y estado de ataque en todos los clientes.
+        if (attackType == 0)
+            player.PrimaryAttackState.Enter();
         else
-            return; // ya tienes dos armas
-
-        // Destruye el pickup en todos los clientes
-        NetworkServer.Destroy(obj.gameObject);
+            player.SecondaryAttackState.Enter();
     }
-    void HandlePrimaryAttack()
+    public void NetworkStopAttack(int attackType)
     {
-        // 1) Dispara la animación/efecto local
-       // PlayLocalAttackAnimation(); // tu método que usa NetworkAnimator o AnimationEvents
-
-        // 2) Notifica al servidor
-        CmdUsePrimaryWeapon();
-    }
-
-    void HandleSecondaryAttack()
-    {
-       // PlayLocalSecondaryAnimation();
-        CmdUseSecondaryWeapon();
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (!levelScenesNames.Contains(sceneName) || 
+            (attackType==0 &&!player.primaryWeaponHasData)||
+            attackType==1 && !player.secondaryWeaponHasData)
+            return;
+        if (isServer)
+        {
+            RpcStopAttack(attackType);
+        }
+        else if (authority)
+        {
+            CmdStopAttack(attackType);
+        }
     }
 
     [Command]
-    void CmdUsePrimaryWeapon()
+    void CmdStopAttack(int attackType)
     {
-        // servidor: spawnea proyectil, aplica lógica
-        RpcUsePrimaryWeapon();
+        RpcStopAttack(attackType);
     }
 
     [ClientRpc]
-    void RpcUsePrimaryWeapon()
+    void RpcStopAttack(int attackType)
     {
-        // todos los clientes reproducen el ataque (vía NetworkAnimator o AnimationEventHandler)
-       // weaponGenerator.PrimaryWeapon.Enter();
+        if (attackType == 0)
+            player.PrimaryAttackState.Exit();
+        else
+            player.SecondaryAttackState.Exit();
     }
-
-    [Command]
-    void CmdUseSecondaryWeapon()
-    {
-        RpcUseSecondaryWeapon();
-    }
-
-    [ClientRpc]
-    void RpcUseSecondaryWeapon()
-    {
-       // weaponGenerator.SecondaryWeapon.Enter();
-    }
-
     #endregion
     #region Lobby
 

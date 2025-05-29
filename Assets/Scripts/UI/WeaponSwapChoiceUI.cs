@@ -62,10 +62,11 @@ namespace Avocado.UI
             // Dispara el evento para notificar que esta opción fue seleccionada
             OnChoiceSelected?.Invoke(weaponSwapChoice);
         }
-
+      
         // Se suscribe al evento del botón cuando el objeto se habilita
         private void OnEnable()
         {
+           // Debug.Log("Enable");
             button.onClick.AddListener(HandleClick);
         }
 

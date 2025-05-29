@@ -34,6 +34,7 @@ namespace Avocado.Utilities
                 // Se desactiva después de una sola ejecución
                 OnNotify += Disable;
             }
+
         }
 
         // Establece el próximo tiempo objetivo.

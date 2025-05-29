@@ -68,6 +68,8 @@ public class Player : MonoBehaviour
 
     private Weapon primaryWeapon;
     private Weapon secondaryWeapon;
+    public bool primaryWeaponHasData =>primaryWeapon.IsDataSet;
+    public bool secondaryWeaponHasData => secondaryWeapon.IsDataSet;
 
     #endregion
 

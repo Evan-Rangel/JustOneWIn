@@ -43,7 +43,22 @@ namespace Avocado.Weapons
         
         public List<RuntimeAnimatorController> animatorControllers;
 
+        public List<WeaponDataSO> weaponDatabase;
 
+        [SyncVar(hook = nameof(OnWeaponIndexChanged))]
+        public int weaponIndex = -1;
+
+        void OnWeaponIndexChanged(int oldIndex, int newIndex)
+        {
+            GenerateWeapon(weaponDatabase[newIndex]);
+        }
+
+        [Command]
+        public void CmdPickWeapon(int index)
+        {
+
+            weaponIndex = index;
+        }
         public void GenerateWeapon(WeaponDataSO data)
         {
             OnWeaponGenerating?.Invoke();
@@ -99,9 +114,10 @@ namespace Avocado.Weapons
             }
 
             // Asignar el AnimatorController correcto para esta arma
-            int animatorIndex = animatorControllers.IndexOf(data.AnimatorController);
-            CmdChangeWeaponAnimator(animatorIndex);
-            //anim.runtimeAnimatorController = data.AnimatorController;
+
+            //int animatorIndex = animatorControllers.IndexOf(data.AnimatorController);
+            //CmdChangeWeaponAnimator(animatorIndex);
+            anim.runtimeAnimatorController = data.AnimatorController;
 
             // Ahora el arma puede atacar
             weapon.SetCanEnterAttack(true);
@@ -124,7 +140,10 @@ namespace Avocado.Weapons
             if (inputIndex != (int)combatInput)
                 return;
 
-            GenerateWeapon(data); // Genera el arma con los nuevos datos
+            int idx = weaponDatabase.IndexOf(data);
+
+            CmdPickWeapon(idx);
+           // GenerateWeapon(data); // Genera el arma con los nuevos datos
         }
 
         private void Start()

@@ -86,7 +86,6 @@ public class PlayerAttackState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-
         weaponGenerator.OnWeaponGenerating += HandleWeaponGenerating;
 
         checkFlip = true;
@@ -101,7 +100,6 @@ public class PlayerAttackState : PlayerAbilityState
     public override void Exit()
     {
         base.Exit();
-
         weaponGenerator.OnWeaponGenerating -= HandleWeaponGenerating;
 
         weapon.Exit(); // Finaliza el ataque del arma

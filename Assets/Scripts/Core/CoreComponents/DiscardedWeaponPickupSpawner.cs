@@ -29,18 +29,32 @@ namespace Avocado.CoreSystem
         // Se llama cuando un arma es descartada. Instancia el arma en el mundo con una velocidad inicial.
         private void HandleWeaponDiscarded(WeaponDataSO discardedWeaponData)
         {
-            // Calcula el punto de aparición relativo basado en el movimiento
+            var poc = transform.root.GetComponent<PlayerObjectController>();
+            //if (!poc.authority ||poc==null) return;
+            
+            Debug.Log("Has Authority");
+            // Calculas punto y dirección igual que antes
             var spawnPoint = movement.FindRelativePoint(spawnOffset);
-            var weaponPickup = Instantiate(weaponPickupPrefab, spawnPoint, Quaternion.identity);
+            var adjustedSpawnDirection = new Vector2(spawnDirection.x * movement.FacingDirection, spawnDirection.y);
+            var vel = adjustedSpawnDirection.normalized * spawnVelocity;
+            poc.SpawnDiscardedWeapon(discardedWeaponData, spawnPoint, vel);
+
+
+
+
+            // Calcula el punto de aparición relativo basado en el movimiento
+           // var spawnPoint = movement.FindRelativePoint(spawnOffset);
+
+            //var weaponPickup = Instantiate(weaponPickupPrefab, spawnPoint, Quaternion.identity);
 
             // Configura el objeto de pickup con los datos del arma descartada
-            weaponPickup.SetContext(discardedWeaponData);
+            //weaponPickup.SetContext(discardedWeaponData);
 
             // Ajusta la dirección del spawn considerando la dirección a la que mira el personaje
-            var adjustedSpawnDirection = new Vector2(spawnDirection.x * movement.FacingDirection, spawnDirection.y);
+            //var adjustedSpawnDirection = new Vector2(spawnDirection.x * movement.FacingDirection, spawnDirection.y);
 
             // Aplica la velocidad inicial al objeto
-            weaponPickup.Rigidbody2D.velocity = adjustedSpawnDirection.normalized * spawnVelocity;
+           // weaponPickup.Rigidbody2D.velocity = adjustedSpawnDirection.normalized * spawnVelocity;
         }
 
         protected override void Awake()
