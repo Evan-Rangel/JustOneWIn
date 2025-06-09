@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Avocado.ObjectPoolSystem;
 using Avocado.ProjectileSystem;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -40,6 +41,7 @@ namespace Avocado.Weapons.Components
         // Manejador que se llama durante el ataque para generar los proyectiles.
         private void HandleAttackAction()
         {
+            //if (!NetworkServer.active) return; // Solo en server
             foreach (var projectileSpawnInfo in currentAttackData.SpawnInfos)
             {
                 // Ejecuta la estrategia actual con los datos de spawn

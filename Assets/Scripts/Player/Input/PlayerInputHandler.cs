@@ -88,7 +88,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)
     {
-        return;
         if (context.started)
         {
 
@@ -113,7 +112,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnSecondaryAttackInput(InputAction.CallbackContext context)
     {
-        return;
 
         if (context.started)
         {

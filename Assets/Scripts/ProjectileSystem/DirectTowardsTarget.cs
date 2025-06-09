@@ -66,7 +66,6 @@ namespace Avocado.ProjectileSystem
         {
             if (currentTarget)
                 return true;
-
             // Elimina objetivos nulos
             targets.RemoveAll(item => item == null);
 

@@ -27,7 +27,7 @@ public class CustomNetworkManager : NetworkManager
             }
             else
             {
-                // fallback local: usar connectionId como ID
+                // fallback     local: usar connectionId como ID
                 GamePlayerInstance.playerSteamID = (ulong)conn.connectionId;
             }
             NetworkServer.AddPlayerForConnection(conn, GamePlayerInstance.gameObject);
