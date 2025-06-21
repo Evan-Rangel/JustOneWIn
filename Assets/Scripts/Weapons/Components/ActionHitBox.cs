@@ -1,5 +1,6 @@
 ﻿using System;
 using Avocado.CoreSystem;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -36,6 +37,10 @@ namespace Avocado.Weapons.Components
         // Calcula la posición del hitbox y detecta colisiones.
         private void HandleAttackAction()
         {
+            //if (!NetworkServer.active || currentAttackData == null) return; // Solo en server
+            if ( currentAttackData == null) return; // Solo en server
+
+
             // Calcula el offset del hitbox tomando en cuenta la dirección hacia donde se enfrenta el personaje
             offset.Set(
                 transform.position.x + (currentAttackData.HitBox.center.x * movement.Comp.FacingDirection),
@@ -59,7 +64,6 @@ namespace Avocado.Weapons.Components
 
             // Inicializa la referencia al componente de movimiento del núcleo
             movement = new CoreComp<CoreSystem.Movement>(Core);
-
             // Se suscribe al evento de ataque definido en AnimationEventHandler
             AnimationEventHandler.OnAttackAction += HandleAttackAction;
         }
