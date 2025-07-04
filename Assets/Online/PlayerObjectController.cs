@@ -8,6 +8,8 @@ using Avocado.CoreSystem;
 using System.Collections;
 using Avocado.Weapons;
 using Avocado.Interaction.Interactables;
+using Avocado.ProjectileSystem.Components;
+using Avocado.Projectiles;
 
 public class PlayerObjectController : NetworkBehaviour
 {
@@ -38,6 +40,9 @@ public class PlayerObjectController : NetworkBehaviour
         DontDestroyOnLoad(this.gameObject);
         propertyBlock = new MaterialPropertyBlock();
         player = GetComponent<Player>();
+        primaryWeapon.EventHandler.OnRequestAttackAction += TryPrimaryWeaponAttackAction;
+        secondaryWeapon.EventHandler.OnRequestAttackAction += TrySecondaryWeaponAttackAction;
+        
         //playerScript = GetComponent<Player>();
     }
     #region Initialization
@@ -238,37 +243,8 @@ public class PlayerObjectController : NetworkBehaviour
 
 
     #region Weapons
-
-     [SerializeField] List<WeaponDataSO> allWeapons;
-    /* PlayerInputHandler inputs;
-     [Header("Slots de arma")]
-     [SerializeField] WeaponGenerator primaryGenerator;   
-     [SerializeField] WeaponGenerator secondaryGenerator;  
-
-     [Header("Detección de interactuables")]
-     [SerializeField] InteractableDetector detector;     
-
-     [Header("Catálogo de armas")]
-
-
-     // SyncVars para los índices de arma
-     [SyncVar(hook = nameof(OnPrimaryWeaponChanged))]
-     int primaryWeaponIndex = -1;
-
-     [SyncVar(hook = nameof(OnSecondaryWeaponChanged))]
-     int secondaryWeaponIndex = -1;
-
-     void OnPrimaryWeaponChanged(int oldIdx, int newIdx)
-     {
-         if (newIdx >= 0)
-             primaryGenerator.GenerateWeapon(allWeapons[newIdx]);
-     }
-
-     void OnSecondaryWeaponChanged(int oldIdx, int newIdx)
-     {
-         if (newIdx >= 0)
-             secondaryGenerator.GenerateWeapon(allWeapons[newIdx]);
-     }*/
+    #region Selection
+    [SerializeField] List<WeaponDataSO> allWeapons;
     [SerializeField] private WeaponPickup weaponPickupPrefab;
 
     public void SpawnDiscardedWeapon(WeaponDataSO weaponDataSO, Vector2 spawnPoint, Vector2 direction)
@@ -279,7 +255,6 @@ public class PlayerObjectController : NetworkBehaviour
     [Command]
     public void CmdSpawnDiscardedWeapon(int weaponDataId, Vector2 spawnPoint, Vector2 direction)
     {
-        // Resuelve el SO por ID (asume que tienes algún WeaponDatabase)
         var data = allWeapons[weaponDataId];
 
         // Instancia y configura
@@ -369,6 +344,71 @@ public class PlayerObjectController : NetworkBehaviour
         else
             player.SecondaryAttackState.Exit();
     }
+    #endregion
+
+
+    [SerializeField]Weapon primaryWeapon;
+    [SerializeField] Weapon secondaryWeapon; 
+   
+
+    private void OnDestroy()
+    {
+        primaryWeapon.EventHandler.OnRequestAttackAction -= TryPrimaryWeaponAttackAction;
+        secondaryWeapon.EventHandler.OnRequestAttackAction -= TrySecondaryWeaponAttackAction;
+    }
+
+    private void TryPrimaryWeaponAttackAction()
+    {
+       // Debug.Log("TryPrimaryWeaponAttackAction");
+       // if (authority) // este componente SÍ tiene autoridad
+            CmdPrimaryWeaponAttackAction();
+    }
+
+    [Command]
+    private void CmdPrimaryWeaponAttackAction()
+    {
+       // Debug.Log("COMMAND");
+
+        // Aquí ya puedes ejecutar la lógica real del ataque en el servidor
+        primaryWeapon.Enter();
+        primaryWeapon.EventHandler.AttackAction();
+    }  
+    private void TrySecondaryWeaponAttackAction()
+    {
+        //Debug.Log("COMMANDSECONDARY");
+
+         //if (authority) // este componente SÍ tiene autoridad
+        CmdSecondaryWeaponAttackAction();
+    }
+
+    [Command]
+    private void CmdSecondaryWeaponAttackAction()
+    {
+        // Aquí ya puedes ejecutar la lógica real del ataque en el servidor
+        secondaryWeapon.Enter();
+        secondaryWeapon.EventHandler.AttackAction();
+    }
+    #region Shoots
+
+
+    /* [Command]
+     public void CmdDispararProjectile(Vector3 posicion, Vector2 direccion)
+     {
+         // 1. Instanciar el proyectil (solo en servidor)
+         GameObject projGO = Instantiate(projectilePrefab);
+         projGO.transform.position = posicion;
+         projGO.transform.rotation = Quaternion.LookRotation(Vector3.forward, direccion);
+
+         // 2. Opcional: inicializar datos del proyectil (daño, velocidad, etc.)
+         Projectile projectileComp = projGO.GetComponent<Projectile>();
+         projectileComp.InicializarDatos(damage, otherStats, ...);
+
+         // 3. Spawn en la red para que aparezca en todos los clientes
+         NetworkServer.Spawn(projGO);
+     }
+    */
+
+    #endregion
     #endregion
     #region Lobby
 

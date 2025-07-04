@@ -8,7 +8,7 @@ public static class SteamChecker
     {
         return false;
 #if UNITY_EDITOR
-        return false;    // nunca usar Steam dentro del Editor
+       // return false;    // nunca usar Steam dentro del Editor
 #else
         return SteamManager.Initialized;
 #endif

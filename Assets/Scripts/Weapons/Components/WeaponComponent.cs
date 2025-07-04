@@ -1,5 +1,6 @@
 ﻿using System;
 using Avocado.CoreSystem;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -47,6 +48,8 @@ namespace Avocado.Weapons.Components
         }
 
         // Se llama cuando comienza un ataque.
+        //[Server]
+
         protected virtual void HandleEnter()
         {
             isAttackActive = true;
@@ -80,6 +83,7 @@ namespace Avocado.Weapons.Components
         protected T2 currentAttackData;
 
         // Al iniciar un ataque, se seleccionan los datos correspondientes al ataque actual.
+        //[Server]
         protected override void HandleEnter()
         {
             base.HandleEnter();

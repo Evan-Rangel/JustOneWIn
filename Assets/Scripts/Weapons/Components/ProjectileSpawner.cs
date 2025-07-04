@@ -33,18 +33,20 @@ namespace Avocado.Weapons.Components
         private IProjectileSpawnerStrategy projectileSpawnerStrategy;
 
         // Permite establecer una estrategia personalizada para disparar proyectiles.
+        //[Server]
         public void SetProjectileSpawnerStrategy(IProjectileSpawnerStrategy newStrategy)
         {
             projectileSpawnerStrategy = newStrategy;
         }
 
         // Manejador que se llama durante el ataque para generar los proyectiles.
+        [Server]
         private void HandleAttackAction()
         {
-            // if (!NetworkServer.active|| currentAttackData == null) return; // Solo en server
-            if (currentAttackData == null) return; // Solo en server
+            Debug.Log("HandleAttackAction");
+            //if (!NetworkServer.active) return; // Solo en server
+            if (currentAttackData == null) return; 
 
-            Debug.Log((currentAttackData==null));
             foreach (var projectileSpawnInfo in currentAttackData.SpawnInfos)
             {
                 // Ejecuta la estrategia actual con los datos de spawn

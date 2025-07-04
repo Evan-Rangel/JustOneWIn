@@ -19,7 +19,7 @@ namespace Avocado.Weapons.Components
     public class DrawToProjectile : WeaponComponent
     {
         private Draw draw;
-        private ProjectileSpawner projectileSpawner;
+        private ProjectileSpawner projectileSpawner;    
 
         // Paquete de datos que transportará el valor de carga (draw) al proyectil
         private readonly DrawModifierDataPackage drawModifierDataPackage = new DrawModifierDataPackage();

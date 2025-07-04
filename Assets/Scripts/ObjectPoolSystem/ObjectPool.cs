@@ -75,6 +75,10 @@ namespace Avocado.ObjectPoolSystem
             }
 
             obj.gameObject.SetActive(true);
+            if (NetworkServer.active)
+            {
+                NetworkServer.Spawn(obj.gameObject);
+            }
             return obj;
         }
 

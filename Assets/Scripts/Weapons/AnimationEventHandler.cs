@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ flexible para sistemas de combate complejos.
 namespace Avocado.Weapons
 {
     // Esta clase permite conectar eventos de animación con lógica del juego (como movimiento, ataque, etc.)
-    public class AnimationEventHandler : MonoBehaviour
+    public class AnimationEventHandler : NetworkBehaviour
     {
         // Eventos que otros scripts pueden escuchar y usar cuando ocurren ciertos eventos animados (en la animaciones como tal)
         public event Action OnFinish;
@@ -37,12 +38,15 @@ namespace Avocado.Weapons
         public event Action<AnimationWindows> OnStartAnimationWindow;
         public event Action<AnimationWindows> OnStopAnimationWindow;
 
+        public event Action OnRequestAttackAction;
+        private void AttackActionTrigger()=> OnRequestAttackAction?.Invoke(); // Evento local, sin [Command]
+
         // Métodos llamados desde eventos en la animación (Animation Events)
 
         private void AnimationFinishedTrigger() => OnFinish?.Invoke();
         private void StartMovementTrigger() => OnStartMovement?.Invoke();
         private void StopMovementTrigger() => OnStopMovement?.Invoke();
-        private void AttackActionTrigger() => OnAttackAction?.Invoke();
+        public void AttackAction() { Debug.Log("ACTION"); OnAttackAction?.Invoke(); }
         private void MinHoldPassedTrigger() => OnMinHoldPassed?.Invoke();
         private void UseInputTrigger() => OnUseInput?.Invoke();
 

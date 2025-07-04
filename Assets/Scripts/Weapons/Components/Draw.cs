@@ -45,7 +45,6 @@ namespace Avocado.Weapons.Components
         private void EvaluateDrawPercentage()
         {
             hasEvaluatedDraw = true;
-
             // Evalúa la curva usando el tiempo de carga normalizado (entre 0 y 1)
             drawPercentage = currentAttackData.DrawCurve.Evaluate(
                 Mathf.Clamp(

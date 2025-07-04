@@ -34,6 +34,7 @@ namespace Avocado.ProjectileSystem.Components
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            //Debug.Log(transform.root.name + " : " + rb.velocity);
 
             if (!ApplyContinuously)
                 return;

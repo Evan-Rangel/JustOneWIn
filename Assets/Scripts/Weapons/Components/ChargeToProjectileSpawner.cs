@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
 Este componente conecta el sistema de carga (Charge) con el sistema de disparo (ProjectileSpawner). 
@@ -33,7 +34,6 @@ namespace Avocado.Weapons.Components
             base.HandleEnter();
             hasReadCharge = false;
         }
-
         // Se ejecuta cuando cambia el estado del input (cuando se suelta el botón de ataque).
         private void HandleCurrentInputChange(bool newInput)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Avocado.ProjectileSystem.DataPackages;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------

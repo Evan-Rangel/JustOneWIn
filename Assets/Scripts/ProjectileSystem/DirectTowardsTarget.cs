@@ -4,6 +4,7 @@ using System.Linq;
 using Avocado.ProjectileSystem.Components;
 using Avocado.ProjectileSystem.DataPackages;
 using Avocado.Utilities;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -44,9 +45,12 @@ namespace Avocado.ProjectileSystem
         }
 
         // Se llama en cada FixedUpdate del proyectil
+        [Server]
+        //protected override void FixedUpdate()
         protected override void FixedUpdate()
         {
-            base.FixedUpdate();
+            //base.FixedUpdate();
+           
 
             if (!HasTarget())
                 return;
@@ -64,19 +68,18 @@ namespace Avocado.ProjectileSystem
         // Determina si hay un objetivo válido, y si no hay, lo busca
         private bool HasTarget()
         {
-            if (currentTarget)
+                if (currentTarget)
                 return true;
-            // Elimina objetivos nulos
-            targets.RemoveAll(item => item == null);
-
-            if (targets.Count <= 0)
+                // Elimina objetivos nulo
+                targets.RemoveAll(item => item == null);
+                if (targets.Count <= 0)
                 return false;
 
-            // Ordena objetivos por cercanía y elige el más cercano
-            targets = targets.OrderBy(target => (target.position - transform.position).sqrMagnitude).ToList();
-            currentTarget = targets[0];
-
-            return true;
+                // Ordena objetivos por cercanía y elige el más cercano
+                targets = targets.OrderBy(target => (target.position - transform.position).sqrMagnitude).ToList();
+                currentTarget = targets[0];
+            
+                return true;
         }
 
         // Rota el proyectil hacia la dirección indicada
@@ -90,7 +93,7 @@ namespace Avocado.ProjectileSystem
             // Rota progresivamente hacia la nueva rotación
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, step * Time.deltaTime);
         }
-
+        [Server]
         // Recibe un paquete de datos que contiene objetivos
         protected override void HandleReceiveDataPackage(ProjectileDataPackage dataPackage)
         {

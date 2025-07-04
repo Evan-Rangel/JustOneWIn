@@ -2,6 +2,7 @@
 using Avocado.ObjectPoolSystem;
 using Avocado.ProjectileSystem;
 using Avocado.Weapons.Components;
+using Mirror;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -22,11 +23,13 @@ namespace Avocado.Weapons
     {
         private Vector2 spawnPos;    
         private Vector2 spawnDir;     
-        private Projectile currentProjectile;  
+        private Projectile currentProjectile;
+        [ClientRpc]
 
         public virtual void ExecuteSpawnStrategy
         (ProjectileSpawnInfo projectileSpawnInfo, Vector3 spawnerPos, int facingDirection, ObjectPools objectPools, Action<Projectile> OnSpawnProjectile)
         {
+            Debug.Log("ExecuteSpawnStrategy");
             SpawnProjectile(projectileSpawnInfo, projectileSpawnInfo.Direction, spawnerPos, facingDirection, objectPools, OnSpawnProjectile);
         }
 
@@ -39,6 +42,7 @@ namespace Avocado.Weapons
 
             // Obtiene un proyectil del pool y lo posiciona
             GetProjectileAndSetPositionAndRotation(objectPools, projectileSpawnInfo.ProjectilePrefab);
+            //Debug.Log("SPAWN");
 
             // Inicializa los datos y comportamientos del proyectil
             InitializeProjectile(projectileSpawnInfo, OnSpawnProjectile);
@@ -51,7 +55,7 @@ namespace Avocado.Weapons
 
             // Asigna posición
             currentProjectile.transform.position = spawnPos;
-
+            //Debug.Log("POSITION: "+spawnPos);
             // Calcula el ángulo a partir de la dirección y lo aplica como rotación
             var angle = Mathf.Atan2(spawnDir.y, spawnDir.x) * Mathf.Rad2Deg;
             currentProjectile.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
