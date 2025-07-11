@@ -21,17 +21,10 @@ namespace Avocado.Weapons
         public int ChargeAmount;     
 
         private Vector2 currentDirection;
-        [Server]
-        private void DebugInServer()
-        { 
-            Debug.Log("ExecuteSpawnStrattegy Change");
-
-        }
-        // [Server]
+    
         // Método principal que ejecuta la estrategia de spawn
         public override void ExecuteSpawnStrategy(ProjectileSpawnInfo projectileSpawnInfo, Vector3 spawnerPos, int facingDirection, ObjectPools objectPools, Action<Projectile> OnSpawnProjectile     )
         {
-            DebugInServer();
             // No hay cargas, no se lanza nada
             if (ChargeAmount <= 0)
                 return;

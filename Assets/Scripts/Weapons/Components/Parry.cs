@@ -109,7 +109,10 @@ namespace Avocado.Weapons.Components
                 ? currentAttackData.ParryWindowEnd.TryGetTriggerTime(phase, out nextWindowTriggerTime)
                 : currentAttackData.ParryWindowStart.TryGetTriggerTime(phase, out nextWindowTriggerTime);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Obtiene referencias a los componentes Core y crea los modificadores.
         protected override void Start()
         {

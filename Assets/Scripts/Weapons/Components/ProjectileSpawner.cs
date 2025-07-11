@@ -72,7 +72,10 @@ namespace Avocado.Weapons.Components
             base.HandleExit();
             SetDefaultProjectileSpawnStrategy();
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Awake()
         {
             base.Awake();

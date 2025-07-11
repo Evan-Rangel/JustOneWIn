@@ -51,7 +51,10 @@ namespace Avocado.Weapons.Components
             // Marca que ya leímos la carga para no repetir
             hasReadCharge = true;
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();

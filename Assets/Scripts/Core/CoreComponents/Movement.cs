@@ -16,6 +16,7 @@ namespace Avocado.CoreSystem
     {
         public Rigidbody2D RB { get; private set; }
         public int FacingDirection { get; private set; } = 1;
+        public int GetFacingDirection() => FacingDirection;
         public bool CanSetVelocity { get; set; } = true;
         public Vector2 CurrentVelocity { get; private set; }
 
@@ -84,6 +85,8 @@ namespace Avocado.CoreSystem
             if (xInput != 0 && xInput != FacingDirection)
             {
                 Flip();
+                transform.root.GetComponent<PlayerObjectController>().CmdSetFacingDirection(xInput);
+
             }
         }
 
@@ -91,9 +94,13 @@ namespace Avocado.CoreSystem
         public void Flip()
         {
             FacingDirection *= -1;
-            RB.transform.Rotate(0.0f, 180.0f, 0.0f);
+             RB.transform.Rotate(0.0f, 180.0f, 0.0f);
         }
 
+        public void SetFacingDirection(int direction)
+        {
+            FacingDirection = direction;
+        }
         // Encuentra un punto relativo al objeto, respetando la dirección hacia la que está mirando.
         public Vector2 FindRelativePoint(Vector2 offset)
         {

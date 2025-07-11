@@ -73,7 +73,10 @@ namespace Avocado.Weapons.Components
             base.OnDestroy();
             AnimationEventHandler.OnAttackAction -= HandleAttackAction;
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Dibuja el hitbox en el editor cuando el objeto está seleccionado. Solo se activa si la opción "Debug" está marcada en los datos.
         private void OnDrawGizmosSelected()
         {

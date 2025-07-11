@@ -32,21 +32,29 @@ namespace Avocado.Weapons.Components
         protected override void HandleEnter()
         {
             base.HandleEnter();
-            currentWeaponSpriteIndex = 0;
-        }
 
+           currentWeaponSpriteIndex = 0;
+
+        }
+    
         // Se llama cuando comienza una nueva fase de ataque.
         private void HandleEnterAttackPhase(AttackPhases phase)
         {
-            currentWeaponSpriteIndex = 0;
 
+            currentWeaponSpriteIndex = 0;
+            //Debug.Log("HandleEnterAttackPhase: "+ currentAttackData.PhaseSprites);
             // Obtiene los sprites correspondientes a la fase actual
+            // Debug.Log("AttackPhase"currentAttackData.PhaseSprites);//.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites);
             currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
+
+           
         }
 
         // Se llama cuando cambia el sprite base. Se sincroniza el sprite del arma con el correspondiente en la fase.
         private void HandleBaseSpriteChange(SpriteRenderer sr)
         {
+           
+
             // Si no está en ataque, limpia el sprite del arma
             if (!isAttackActive)
             {
@@ -54,6 +62,7 @@ namespace Avocado.Weapons.Components
                 return;
             }
 
+            //Debug.Log("HandleBaseSpriteChange: " + currentPhaseSprites);
             // Si el índice sobrepasa la cantidad de sprites disponibles
             if (currentWeaponSpriteIndex >= currentPhaseSprites.Length)
             {
@@ -64,8 +73,12 @@ namespace Avocado.Weapons.Components
             // Asigna el siguiente sprite del arma y avanza el índice
             weaponSpriteRenderer.sprite = currentPhaseSprites[currentWeaponSpriteIndex];
             currentWeaponSpriteIndex++;
+           
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Inicialización: obtiene componentes y registra callbacks.
         protected override void Start()
         {
@@ -77,12 +90,12 @@ namespace Avocado.Weapons.Components
 
             // Obtiene los datos del arma relacionados al sprite
             data = weapon.Data.GetData<WeaponSpriteData>();
-
+            // Registra el método que se llama cuando entra a una fase de ataque
+            AnimationEventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
             // Registra el método que se llama cuando cambia el sprite base
             baseSpriteRenderer.RegisterSpriteChangeCallback(HandleBaseSpriteChange);
 
-            // Registra el método que se llama cuando entra a una fase de ataque
-            AnimationEventHandler.OnEnterAttackPhase += HandleEnterAttackPhase;
+           
         }
 
         // Limpieza: desuscribe eventos al destruirse el componente.

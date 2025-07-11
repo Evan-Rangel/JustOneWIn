@@ -39,28 +39,91 @@ namespace Avocado.Weapons
         public event Action<AnimationWindows> OnStopAnimationWindow;
 
         public event Action OnRequestAttackAction;
-        private void AttackActionTrigger()=> OnRequestAttackAction?.Invoke(); // Evento local, sin [Command]
+        private void AttackActionTrigger()=> OnRequestAttackAction?.Invoke();
+        [ClientRpc]
+        public void AttackAction() => OnAttackAction?.Invoke(); 
+
 
         // Métodos llamados desde eventos en la animación (Animation Events)
+        public event Action OnRequesFinishtAttackAction;
+        private void FinishAttackActionTrigger() => OnRequesFinishtAttackAction?.Invoke();
+        [ClientRpc]
+        public void AnimationFinishedTrigger() => OnFinish?.Invoke();
 
-        private void AnimationFinishedTrigger() => OnFinish?.Invoke();
+
+        public event Action OnRequestStartMovement;
+        //private void StartMovementTrigger() => OnRequestStartMovement?.Invoke();
         private void StartMovementTrigger() => OnStartMovement?.Invoke();
+        [ClientRpc]
+        public void StartMovement() => OnStartMovement?.Invoke();
+
+
+        public event Action OnRequestStopMovement;
+       // private void StopMovementTrigger() => OnRequestStopMovement?.Invoke();
         private void StopMovementTrigger() => OnStopMovement?.Invoke();
-        public void AttackAction() { Debug.Log("ACTION"); OnAttackAction?.Invoke(); }
-        private void MinHoldPassedTrigger() => OnMinHoldPassed?.Invoke();
-        private void UseInputTrigger() => OnUseInput?.Invoke();
+        [ClientRpc]
+        public void StopMovement() => OnStopMovement?.Invoke();
 
-        private void SetOptionalSpriteEnabled() => OnSetOptionalSpriteActive?.Invoke(true);
-        private void SetOptionalSpriteDisabled() => OnSetOptionalSpriteActive?.Invoke(false);
 
-        private void SetFlipActive() => OnFlipSetActive?.Invoke(true);
-        private void SetFlipInactive() => OnFlipSetActive?.Invoke(false);
+        public event Action OnRequestMinHoldPassed;
+        private void MinHoldPassedTrigger() => OnRequestMinHoldPassed?.Invoke();
+        [ClientRpc]
+        public void HoldPassedTrigger()=>OnMinHoldPassed?.Invoke(); 
 
-        private void EnterAttackPhase(AttackPhases phase) => OnEnterAttackPhase?.Invoke(phase);
 
-        private void StartAnimationWindow(AnimationWindows window) => OnStartAnimationWindow?.Invoke(window);
-        private void StopAnimationWindow(AnimationWindows window) => OnStopAnimationWindow?.Invoke(window);
+        public event Action OnRequestUseInput;
+        private void UseInputTrigger() => OnRequestUseInput?.Invoke();
+        [ClientRpc]
+        public void UseInput() => OnUseInput?.Invoke();
 
-        private void EnableInterrupt() => OnEnableInterrupt?.Invoke();
+
+        public event Action OnRequestSetOptionalSpriteEnabled;
+        private void SetOptionalSpriteEnabled() => OnRequestSetOptionalSpriteEnabled?.Invoke();
+        [ClientRpc]
+        public void OptionalSpriteEnabled() => OnSetOptionalSpriteActive?.Invoke(true);
+
+            
+        public event Action OnRequestSetOptionalSpriteDisabled;
+        private void SetOptionalSpriteDisabled() => OnRequestSetOptionalSpriteDisabled?.Invoke();
+        [ClientRpc]
+        public void OptionalSpriteDisabled() => OnSetOptionalSpriteActive?.Invoke(false);
+
+
+        public event Action OnRequestFlipSetActive;
+        private void SetFlipActive() => OnRequestFlipSetActive?.Invoke();
+        [ClientRpc]
+        public void FlipSetActive() => OnFlipSetActive?.Invoke(true);
+
+
+        public event Action OnRequestFlipSetInactive;
+        private void SetFlipInactive() => OnRequestFlipSetInactive?.Invoke();
+        [ClientRpc]
+        public void FlipSetInactive() => OnFlipSetActive?.Invoke(false);
+
+
+        public event Action<int> OnRequestEnterAttackPhase;
+        //private void EnterAttackPhase(AttackPhases phase) => OnRequestEnterAttackPhase?.Invoke((int) phase);
+          //private void EnterAttackPhase(AttackPhases phase) => OnRequestEnterAttackPhase?.Invoke((int) phase);
+          private void EnterAttackPhase(AttackPhases phase) => OnEnterAttackPhase?.Invoke(phase);
+        [ClientRpc]
+        public void EnterAttack(int phase) => OnEnterAttackPhase?.Invoke((AttackPhases)phase);
+
+
+        public event Action<int> OnRequestStartAnimationWindow;
+        private void StartAnimationWindow(AnimationWindows window) => OnRequestStartAnimationWindow?.Invoke((int)window);
+        [ClientRpc]
+        public void StartAnimationWindow(int window) => OnStartAnimationWindow?.Invoke((AnimationWindows)window);
+
+
+        public event Action<int> OnRequestStopAnimationWindow;
+        private void StopAnimationWindow(AnimationWindows window) => OnRequestStopAnimationWindow?.Invoke((int)window);
+        [ClientRpc]
+        public void StopAnimationWindow(int window) => OnStopAnimationWindow?.Invoke((AnimationWindows)window);
+
+
+        public event Action OnRequestEnableInterrupt;
+        private void EnableInterrupt() => OnRequestEnableInterrupt?.Invoke();
+        [ClientRpc]
+        public void EnableInterruptTrigger() => OnEnableInterrupt?.Invoke(); 
     }
 }

@@ -83,7 +83,10 @@ namespace Avocado.Weapons.Components
 
             timeNotifier.Disable();
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Se llama al inicializar. Crea el temporizador y se suscribe al evento de notificación.
         protected override void Awake()
         {

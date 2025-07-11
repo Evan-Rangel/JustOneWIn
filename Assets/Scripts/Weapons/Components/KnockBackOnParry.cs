@@ -21,7 +21,10 @@ namespace Avocado.Weapons.Components
         {
             TryKnockBack(parriedGameObject, new Combat.KnockBack.KnockBackData(currentAttackData.Angle, currentAttackData.Strength, movement.FacingDirection, Core.Root), out _);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();

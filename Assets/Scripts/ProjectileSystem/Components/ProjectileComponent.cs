@@ -15,7 +15,7 @@ etc.) trabajen de forma modular y reactiva según los eventos del proyectil.
 
 namespace Avocado.ProjectileSystem.Components
 {
-    public class ProjectileComponent : MonoBehaviour
+    public class ProjectileComponent : NetworkBehaviour//MonoBehaviour
     {
         // Referencia al objeto principal del proyectil
         protected Projectile projectile;

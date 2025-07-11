@@ -21,7 +21,10 @@ namespace Avocado.Weapons.Components
             // Aplica daño usando la utilidad TryDamage
             TryDamage(parriedGameObject, new DamageData(currentAttackData.Amount, Core.Root), out _);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Inicializa el componente, obtiene el Parry y se suscribe al evento.
         protected override void Start()
         {

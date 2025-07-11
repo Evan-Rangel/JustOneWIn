@@ -10,6 +10,7 @@ using Avocado.Weapons;
 using Avocado.Interaction.Interactables;
 using Avocado.ProjectileSystem.Components;
 using Avocado.Projectiles;
+using Unity.VisualScripting;
 
 public class PlayerObjectController : NetworkBehaviour
 {
@@ -40,11 +41,56 @@ public class PlayerObjectController : NetworkBehaviour
         DontDestroyOnLoad(this.gameObject);
         propertyBlock = new MaterialPropertyBlock();
         player = GetComponent<Player>();
+
         primaryWeapon.EventHandler.OnRequestAttackAction += TryPrimaryWeaponAttackAction;
         secondaryWeapon.EventHandler.OnRequestAttackAction += TrySecondaryWeaponAttackAction;
-        
-        //playerScript = GetComponent<Player>();
+
+        primaryWeapon.EventHandler.OnRequesFinishtAttackAction += TryPrimaryWeaponFinishAtackAction;
+        secondaryWeapon.EventHandler.OnRequesFinishtAttackAction += TrySecondaryWeaponFinishAtackAction;
+
+        primaryWeapon.EventHandler.OnRequestStartMovement += TryPrimaryOnStartWeaponMovementTrigger;
+        secondaryWeapon.EventHandler.OnRequestStartMovement += TrySecondaryOnStartWeaponMovementTrigger;
+
+        primaryWeapon.EventHandler.OnRequestStopMovement += TryPrimaryOnStopWeaponMovementTrigger;
+        secondaryWeapon.EventHandler.OnRequestStopMovement += TrySecondaryOnStopWeaponMovementTrigger;
+
+        primaryWeapon.EventHandler.OnRequestUseInput += TryPrimaryWeaponUseInput;
+        secondaryWeapon.EventHandler.OnRequestUseInput += TrySecondaryWeaponUseInput;
+
+        primaryWeapon.EventHandler.OnRequestMinHoldPassed += TryPrimaryWeaponMinHoldTrigger;
+        secondaryWeapon.EventHandler.OnRequestMinHoldPassed += TrySecondaryWeaponMinHoldTrigger;
+
+        primaryWeapon.EventHandler.OnRequestSetOptionalSpriteEnabled += TryPrimaryWeaponOptionalSpriteEnabled;
+        secondaryWeapon.EventHandler.OnRequestSetOptionalSpriteEnabled += TrySecondaryWeaponOptionalSpriteEnabled;
+
+        primaryWeapon.EventHandler.OnRequestSetOptionalSpriteDisabled += TryPrimaryWeaponOptionalSpriteDisabled;
+        secondaryWeapon.EventHandler.OnRequestSetOptionalSpriteDisabled += TrySecondaryWeaponOptionalSpriteDisabled;
+
+        primaryWeapon.EventHandler.OnRequestFlipSetActive += TryPrimaryWeaponFlipSetActive;
+        secondaryWeapon.EventHandler.OnRequestFlipSetActive += TrySecondaryWeaponFlipSetActive;
+
+        primaryWeapon.EventHandler.OnRequestFlipSetInactive += TryPrimaryWeaponFlipSetInactive;
+        secondaryWeapon.EventHandler.OnRequestFlipSetInactive += TrySecondaryWeaponFlipSetInactive;
+
+        primaryWeapon.EventHandler.OnRequestEnterAttackPhase += TryPrimaryAttackSetPhase;
+        secondaryWeapon.EventHandler.OnRequestEnterAttackPhase += TrySecondaryAttackSetPhase;
+
+        primaryWeapon.EventHandler.OnRequestStartAnimationWindow += TryPrimaryWeaponStartAnimationWindow;
+        secondaryWeapon.EventHandler.OnRequestStartAnimationWindow += TrySecondaryWeaponStartAnimationWindow;
+
+        primaryWeapon.EventHandler.OnRequestStopAnimationWindow += TryPrimaryWeaponStopAnimationWindow;
+        secondaryWeapon.EventHandler.OnRequestStopAnimationWindow += TrySecondaryWeaponStopAnimationWindow;
+
+        primaryWeapon.EventHandler.OnRequestEnableInterrupt += TryPrimaryWeaponEnableInterrupt;
+        secondaryWeapon.EventHandler.OnRequestEnableInterrupt += TrySecondaryWeaponEnableInterrupt;
+
     }
+    [Command]
+    public void CmdSetFacingDirection(int direction)
+    {
+        GetComponent<Player>().Core.GetCoreComponent<Avocado.CoreSystem.Movement>().SetFacingDirection(direction);
+    }
+
     #region Initialization
     private void PlayerReadyUpdate(bool oldValue, bool newValue)
     {
@@ -355,39 +401,465 @@ public class PlayerObjectController : NetworkBehaviour
     {
         primaryWeapon.EventHandler.OnRequestAttackAction -= TryPrimaryWeaponAttackAction;
         secondaryWeapon.EventHandler.OnRequestAttackAction -= TrySecondaryWeaponAttackAction;
+     
+        primaryWeapon.EventHandler.OnRequesFinishtAttackAction -= TryPrimaryWeaponFinishAtackAction;
+        secondaryWeapon.EventHandler.OnRequesFinishtAttackAction -= TrySecondaryWeaponFinishAtackAction;
+        
+        primaryWeapon.EventHandler.OnRequestStartMovement -= TryPrimaryOnStartWeaponMovementTrigger;
+        secondaryWeapon.EventHandler.OnRequestStartMovement -= TrySecondaryOnStartWeaponMovementTrigger;
+
+        primaryWeapon.EventHandler.OnRequestStopMovement -= TryPrimaryOnStopWeaponMovementTrigger;
+        secondaryWeapon.EventHandler.OnRequestStopMovement -= TrySecondaryOnStopWeaponMovementTrigger;
+
+        primaryWeapon.EventHandler.OnRequestUseInput -= TryPrimaryWeaponUseInput;
+        secondaryWeapon.EventHandler.OnRequestUseInput -= TrySecondaryWeaponUseInput;
+
+        primaryWeapon.EventHandler.OnRequestMinHoldPassed -= TryPrimaryWeaponMinHoldTrigger;
+        secondaryWeapon.EventHandler.OnRequestMinHoldPassed -= TrySecondaryWeaponMinHoldTrigger;
+
+        primaryWeapon.EventHandler.OnRequestSetOptionalSpriteEnabled -= TryPrimaryWeaponOptionalSpriteEnabled;
+        secondaryWeapon.EventHandler.OnRequestSetOptionalSpriteEnabled -= TrySecondaryWeaponOptionalSpriteEnabled;
+
+        primaryWeapon.EventHandler.OnRequestSetOptionalSpriteDisabled -= TryPrimaryWeaponOptionalSpriteDisabled;
+        secondaryWeapon.EventHandler.OnRequestSetOptionalSpriteDisabled -= TrySecondaryWeaponOptionalSpriteDisabled;
+
+        primaryWeapon.EventHandler.OnRequestFlipSetActive -= TryPrimaryWeaponFlipSetActive;
+        secondaryWeapon.EventHandler.OnRequestFlipSetActive -= TrySecondaryWeaponFlipSetActive;
+
+        primaryWeapon.EventHandler.OnRequestFlipSetInactive -= TryPrimaryWeaponFlipSetInactive;
+        secondaryWeapon.EventHandler.OnRequestFlipSetInactive -= TrySecondaryWeaponFlipSetInactive;
+
+        primaryWeapon.EventHandler.OnRequestEnterAttackPhase -= TryPrimaryAttackSetPhase;
+        secondaryWeapon.EventHandler.OnRequestEnterAttackPhase -= TrySecondaryAttackSetPhase;
+
+        primaryWeapon.EventHandler.OnRequestStartAnimationWindow -= TryPrimaryWeaponStartAnimationWindow;
+        secondaryWeapon.EventHandler.OnRequestStartAnimationWindow -= TrySecondaryWeaponStartAnimationWindow;
+
+        primaryWeapon.EventHandler.OnRequestStopAnimationWindow -= TryPrimaryWeaponStopAnimationWindow;
+        secondaryWeapon.EventHandler.OnRequestStopAnimationWindow -= TrySecondaryWeaponStopAnimationWindow;
+
+        primaryWeapon.EventHandler.OnRequestEnableInterrupt -= TryPrimaryWeaponEnableInterrupt;
+        secondaryWeapon.EventHandler.OnRequestEnableInterrupt -= TrySecondaryWeaponEnableInterrupt;
+
     }
 
+    void TryPrimaryAttackSetPhase(int phase)
+    {
+        if (isClient)
+            CmdPrimaryWeaponSetPhase( phase);
+    }
+    void TrySecondaryAttackSetPhase(int phase)
+    {
+        if (isClient)
+            CmdSecondaryWeaponSetPhase(phase);
+    }
+    [Command]
+    public void CmdPrimaryWeaponSetPhase(int phase)
+    {
+        primaryWeapon.currentPhaseIndex = phase;
+        primaryWeapon.EventHandler.EnterAttack(phase); // O usa un ClientRpc si prefieres
+    }
+    [Command]
+    public void CmdSecondaryWeaponSetPhase(int phase)
+    {
+        secondaryWeapon.currentPhaseIndex = phase;
+        secondaryWeapon.EventHandler.EnterAttack(phase); // O usa un ClientRpc si prefieres
+    }
+
+
+
+    public void WeaponEnter(int weaponIdx)
+    {
+        if (weaponIdx==0)
+            CmdPrimaryWeaponEnter();
+        else if (weaponIdx == 1)
+            CmdSecondaryWeaponEnter();
+    }
+    [Command]
+    private void CmdPrimaryWeaponEnter()
+    {
+        if (!isClient) return;
+        primaryWeapon.syncedAttackCounter = primaryWeapon.CurrentAttackCounter;
+        primaryWeapon.Enter();
+       // CmdSyncAttackCounter(primaryWeapon.CurrentAttackCounter);
+        //RpcPrimaryWeaponEnter();
+    }
+   /* [Command]
+    void CmdSyncAttackCounter(int attackCounter)
+    {
+        primaryWeapon.syncedAttackCounter = attackCounter;
+    }*/
+    [ClientRpc]
+    private void RpcPrimaryWeaponEnter()
+    {
+        primaryWeapon.Enter();
+    }
+    [Command]
+    private void CmdSecondaryWeaponEnter()
+    {
+        if (!isClient) return;
+        secondaryWeapon.syncedAttackCounter = secondaryWeapon.CurrentAttackCounter;
+        secondaryWeapon.Enter();
+
+        //RpcSecondaryWeaponEnter();
+    }
+    [ClientRpc]
+    private void RpcSecondaryWeaponEnter()
+    {
+        secondaryWeapon.Enter();
+    }
+    public void WeaponExit(int weaponIdx)
+    {
+        if (weaponIdx == 0)
+            CmdPrimaryWeaponExit();
+        else if (weaponIdx == 1)
+            CmdSecondaryWeaponExit();
+    }
+    [Command]
+    private void CmdPrimaryWeaponExit()
+    {
+        if (isClient)
+            primaryWeapon.Exit();
+        //RpcPrimaryWeaponExit();
+    }
+    [ClientRpc]
+    private void RpcPrimaryWeaponExit()
+    {
+        primaryWeapon.Exit();
+    }
+    [Command]
+    private void CmdSecondaryWeaponExit()
+    {
+        if (isClient)
+            secondaryWeapon.Exit();
+        //RpcSecondaryWeaponExit();
+    }
+    [ClientRpc]
+    private void RpcSecondaryWeaponExit()
+    {
+        secondaryWeapon.Exit();
+    }
+
+    #region Replication in web
+    #region Attack Action
     private void TryPrimaryWeaponAttackAction()
     {
-       // Debug.Log("TryPrimaryWeaponAttackAction");
-       // if (authority) // este componente SÍ tiene autoridad
+        if (isLocalPlayer) 
+        {
+
             CmdPrimaryWeaponAttackAction();
+        }
     }
 
     [Command]
     private void CmdPrimaryWeaponAttackAction()
     {
-       // Debug.Log("COMMAND");
-
-        // Aquí ya puedes ejecutar la lógica real del ataque en el servidor
         primaryWeapon.Enter();
         primaryWeapon.EventHandler.AttackAction();
     }  
     private void TrySecondaryWeaponAttackAction()
     {
-        //Debug.Log("COMMANDSECONDARY");
 
-         //if (authority) // este componente SÍ tiene autoridad
+        if (isLocalPlayer) 
         CmdSecondaryWeaponAttackAction();
     }
 
     [Command]
     private void CmdSecondaryWeaponAttackAction()
     {
-        // Aquí ya puedes ejecutar la lógica real del ataque en el servidor
         secondaryWeapon.Enter();
         secondaryWeapon.EventHandler.AttackAction();
     }
+    #endregion
+    #region Finish Attack Action
+    private void TryPrimaryWeaponFinishAtackAction()
+    {
+
+        if (isLocalPlayer) 
+            CmdPrimaryWeaponFinishAtackAction();
+    }
+    [Command]
+    private void CmdPrimaryWeaponFinishAtackAction()
+    {
+        primaryWeapon.Exit();
+        primaryWeapon.EventHandler.AnimationFinishedTrigger();
+    } 
+    private void TrySecondaryWeaponFinishAtackAction()
+    {
+
+        if (isLocalPlayer)
+            CmdSecondaryWeaponFinishAtackAction();
+    }
+    [Command]
+    private void CmdSecondaryWeaponFinishAtackAction()
+    { 
+        secondaryWeapon.Exit();
+        secondaryWeapon.EventHandler.AnimationFinishedTrigger();
+    }
+    #endregion
+    #region Min Hold Trigger
+
+    private void TryPrimaryWeaponMinHoldTrigger()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponMinHoldTrigger();
+    }
+    [Command]
+    private void CmdPrimaryWeaponMinHoldTrigger()
+    {
+        primaryWeapon.EventHandler.HoldPassedTrigger();
+    }
+    private void TrySecondaryWeaponMinHoldTrigger()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponMinHoldTrigger();
+    }
+    [Command]
+    private void CmdSecondaryWeaponMinHoldTrigger()
+    {
+        secondaryWeapon.EventHandler.HoldPassedTrigger();
+    }
+
+    #endregion
+    #region MovementTrigger
+    private void TryPrimaryOnStartWeaponMovementTrigger()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryOnStartWeaponMovementTrigger();
+    }
+    [Command]
+    private void CmdPrimaryOnStartWeaponMovementTrigger()
+    {
+        primaryWeapon.EventHandler.StartMovement();
+    }
+    private void TrySecondaryOnStartWeaponMovementTrigger()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryOnStartWeaponMovementTrigger();
+    }
+    [Command]
+    private void CmdSecondaryOnStartWeaponMovementTrigger()
+    {
+        primaryWeapon.EventHandler.StartMovement();
+    }
+    private void TryPrimaryOnStopWeaponMovementTrigger()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryOnStopWeaponMovementTrigger();
+    }
+    [Command]
+    private void CmdPrimaryOnStopWeaponMovementTrigger()
+    {
+        primaryWeapon.EventHandler.StopMovement();
+    }
+    private void TrySecondaryOnStopWeaponMovementTrigger()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryOnStopWeaponMovementTrigger();
+    }
+    [Command]
+    private void CmdSecondaryOnStopWeaponMovementTrigger()
+    {
+        secondaryWeapon.EventHandler.StopMovement();
+    }
+
+    #endregion
+    #region UseInput
+    private void TryPrimaryWeaponUseInput()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponUseInput();
+    }
+    [Command]
+    private void CmdPrimaryWeaponUseInput()
+    {
+        primaryWeapon.EventHandler.UseInput();
+    }
+    private void TrySecondaryWeaponUseInput()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponUseInput();
+    }
+    [Command]
+    private void CmdSecondaryWeaponUseInput()
+    {
+        secondaryWeapon.EventHandler.UseInput();
+    }
+    #endregion
+    #region OptionalSprite
+
+    private void TryPrimaryWeaponOptionalSpriteEnabled()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponOptionalSpriteEnabled();
+    }
+    [Command]
+    private void CmdPrimaryWeaponOptionalSpriteEnabled()
+    {
+        primaryWeapon.EventHandler.OptionalSpriteEnabled();
+    }
+    private void TrySecondaryWeaponOptionalSpriteEnabled()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponOptionalSpriteEnabled();
+    }
+    [Command]
+    private void CmdSecondaryWeaponOptionalSpriteEnabled()
+    {
+        secondaryWeapon.EventHandler.OptionalSpriteEnabled();
+    }
+
+    private void TryPrimaryWeaponOptionalSpriteDisabled()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponOptionalSpriteDisabled();
+    }
+    [Command]
+    private void CmdPrimaryWeaponOptionalSpriteDisabled()
+    {
+        primaryWeapon.EventHandler.OptionalSpriteDisabled();
+    }
+    private void TrySecondaryWeaponOptionalSpriteDisabled()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponOptionalSpriteDisabled();
+    }
+    [Command]
+    private void CmdSecondaryWeaponOptionalSpriteDisabled()
+    {
+        secondaryWeapon.EventHandler.OptionalSpriteDisabled();
+    }
+
+
+    #endregion
+    #region Flip
+    private void TryPrimaryWeaponFlipSetActive()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponFlipSetActive();
+    }
+    [Command]
+    private void CmdPrimaryWeaponFlipSetActive()
+    {
+        primaryWeapon.EventHandler.FlipSetActive();
+    }
+    private void TrySecondaryWeaponFlipSetActive()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponFlipSetActive();
+    }
+    [Command]
+    private void CmdSecondaryWeaponFlipSetActive()
+    {
+        secondaryWeapon.EventHandler.FlipSetActive();
+    }
+    private void TryPrimaryWeaponFlipSetInactive()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponFlipSetInactive();
+    }
+    [Command]
+    private void CmdPrimaryWeaponFlipSetInactive()
+    {
+        primaryWeapon.EventHandler.FlipSetInactive();
+    }
+    private void TrySecondaryWeaponFlipSetInactive()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponFlipSetInactive();
+    }
+    [Command]
+    private void CmdSecondaryWeaponFlipSetInactive()
+    {
+        secondaryWeapon.EventHandler.FlipSetInactive();
+    }
+    #endregion
+    #region AttackPhase
+    private void TryPrimaryWeaponEnterAttackPhase(int phase)
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponEnterAttackPhase(phase);
+    }
+    [Command]
+    private void CmdPrimaryWeaponEnterAttackPhase(int phase)
+    {
+        primaryWeapon.EventHandler.EnterAttack(phase);
+    }
+    private void TrySecondaryWeaponEnterAttackPhase(int phase)
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponEnterAttackPhase(phase);
+    }
+    [Command]
+    private void CmdSecondaryWeaponEnterAttackPhase(int phase)
+    {
+        secondaryWeapon.EventHandler.EnterAttack(phase);
+    }
+    #endregion
+    #region AnimationWindow
+    private void TryPrimaryWeaponStartAnimationWindow(int window)
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponStartAnimationWindow(window);
+    }
+    [Command]
+    private void CmdPrimaryWeaponStartAnimationWindow(int window)
+    {
+        primaryWeapon.EventHandler.StartAnimationWindow(window);
+    }
+    private void TrySecondaryWeaponStartAnimationWindow(int window)
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponStartAnimationWindow(window);
+    }
+    [Command]
+    private void CmdSecondaryWeaponStartAnimationWindow(int window)
+    {
+        secondaryWeapon.EventHandler.StartAnimationWindow(window);
+    }
+    private void TryPrimaryWeaponStopAnimationWindow(int window)
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponStopAnimationWindow(window);
+    }
+    [Command]
+    private void CmdPrimaryWeaponStopAnimationWindow(int window)
+    {
+        primaryWeapon.EventHandler.StopAnimationWindow(window);
+    }
+    private void TrySecondaryWeaponStopAnimationWindow(int window)
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponStopAnimationWindow(window);
+    }
+    [Command]
+    private void CmdSecondaryWeaponStopAnimationWindow(int window)
+    {
+        secondaryWeapon.EventHandler.StopAnimationWindow(window);
+    }
+    #endregion
+    #region EnableInterrupt
+    private void TryPrimaryWeaponEnableInterrupt()
+    {
+        if (isLocalPlayer)
+            CmdPrimaryWeaponEnableInterrupt();
+    }
+    [Command]
+    private void CmdPrimaryWeaponEnableInterrupt()
+    {
+        primaryWeapon.EventHandler.EnableInterruptTrigger();
+    }
+    private void TrySecondaryWeaponEnableInterrupt()
+    {
+        if (isLocalPlayer)
+            CmdSecondaryWeaponEnableInterrupt();
+    }
+    [Command]
+    private void CmdSecondaryWeaponEnableInterrupt()
+    {
+        secondaryWeapon.EventHandler.EnableInterruptTrigger();
+    }
+
     #region Shoots
 
 
@@ -409,6 +881,9 @@ public class PlayerObjectController : NetworkBehaviour
     */
 
     #endregion
+    #endregion
+    #endregion
+
     #endregion
     #region Lobby
 

@@ -2,6 +2,8 @@ using System;
 using Avocado.CoreSystem;
 using UnityEngine;
 using Avocado.Utilities;
+using Mirror;
+using Avocado.Weapons.Components;
 
 /*---------------------------------------------------------------------------------------------
 El script Weapon es una clase base que representa un arma equipada por un personaje. Se encarga de:
@@ -16,8 +18,16 @@ eventos públicos.
 
 namespace Avocado.Weapons
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
+        [SyncVar(hook = nameof(OnPhaseChanged))]
+        public int currentPhaseIndex;
+
+        private void OnPhaseChanged(int oldVal, int newVal)
+        {
+            EventHandler.EnterAttack(newVal);
+        }
+
         // Eventos para comunicar cambios de estado del arma
         public event Action<bool> OnCurrentInputChange;
         public event Action OnEnter;
@@ -34,6 +44,19 @@ namespace Avocado.Weapons
         public WeaponDataSO Data { get; private set; }
         public bool IsDataSet => Data != null;
 
+        [SyncVar(hook = nameof(OnAttackCounterChanged))]
+        public int syncedAttackCounter;
+
+        private void OnAttackCounterChanged(int oldVal, int newVal)
+        {
+            CurrentAttackCounter = newVal;
+
+            // Reasigna currentAttackData manualmente en todos los WeaponComponent
+            foreach (var comp in GetComponents<WeaponComponent>())
+            {
+                comp.ForceSetAttackData(newVal);
+            }
+        }
         // Contador del ataque actual, se reinicia si supera el número total de ataques definidos
         public int CurrentAttackCounter
         {

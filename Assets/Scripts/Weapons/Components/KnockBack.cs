@@ -27,7 +27,10 @@ namespace Avocado.Weapons.Components
                 }
             }
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();

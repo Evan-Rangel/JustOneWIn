@@ -16,7 +16,7 @@ WeaponComponent<T1, T2> (base genérica):
 
 namespace Avocado.Weapons.Components
 {
-    public abstract class WeaponComponent : MonoBehaviour
+    public abstract class WeaponComponent : NetworkBehaviour
     {
         // Referencia al arma que contiene este componente
         protected Weapon weapon;
@@ -33,6 +33,8 @@ namespace Avocado.Weapons.Components
         public virtual void Init()
         {
         }
+        public virtual void ForceSetAttackData(int attackCounter)
+        { }
 
         // En Awake se obtiene la referencia al arma asociada.
         protected virtual void Awake()
@@ -48,7 +50,7 @@ namespace Avocado.Weapons.Components
         }
 
         // Se llama cuando comienza un ataque.
-        //[Server]
+  
 
         protected virtual void HandleEnter()
         {
@@ -67,6 +69,8 @@ namespace Avocado.Weapons.Components
             weapon.OnEnter -= HandleEnter;
             weapon.OnExit -= HandleExit;
         }
+
+     
     }
 
     /*---------------------------------------------------------------------------------------------
@@ -83,12 +87,11 @@ namespace Avocado.Weapons.Components
         protected T2 currentAttackData;
 
         // Al iniciar un ataque, se seleccionan los datos correspondientes al ataque actual.
-        //[Server]
         protected override void HandleEnter()
         {
             base.HandleEnter();
-
             currentAttackData = data.GetAttackData(weapon.CurrentAttackCounter);
+
         }
 
         // Se inicializa el componente recuperando su configuración de datos.
@@ -97,6 +100,11 @@ namespace Avocado.Weapons.Components
             base.Init();
 
             data = weapon.Data.GetData<T1>();
+        }
+        public new virtual void ForceSetAttackData(int attackCounter)
+        {
+            if (data != null && data.GetAttackData(attackCounter) != null)
+                currentAttackData = data.GetAttackData(attackCounter);
         }
     }
 }

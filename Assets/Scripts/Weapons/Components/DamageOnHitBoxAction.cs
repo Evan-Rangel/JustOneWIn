@@ -25,7 +25,10 @@ namespace Avocado.Weapons.Components
         {
             TryDamage(colliders, new DamageData(currentAttackData.Amount, Core.Root), out _);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Se ejecuta al iniciar. Obtiene el HitBox y se suscribe al evento de detección de colisiones.
         protected override void Start()
         {

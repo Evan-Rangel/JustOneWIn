@@ -54,7 +54,10 @@ namespace Avocado.Weapons.Components
             // Dispara el evento con el resultado
             OnEvaluateCurve?.Invoke(drawPercentage);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Se suscribe al evento del input cuando se instancia el componente
         protected override void Awake()
         {

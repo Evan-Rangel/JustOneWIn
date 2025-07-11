@@ -61,7 +61,10 @@ namespace Avocado.Weapons.Components
             // Almacena las transformaciones de los colliders detectados
             targets = targetColliders.Select(item => item.transform).ToList();
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();

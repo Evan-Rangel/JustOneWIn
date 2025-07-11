@@ -22,7 +22,10 @@ namespace Avocado.Weapons.Components
             // Intenta aplicar daño al GameObject bloqueado.
             TryDamage(blockedGameObject, new DamageData(currentAttackData.Amount, Core.Root), out _);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Suscribe el método de bloqueo al evento del componente Block.
         protected override void Start()
         {

@@ -33,7 +33,10 @@ namespace Avocado.Weapons.Components
                 }
             }
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Al iniciar, se conecta al evento del hitbox para recibir notificaciones de colisiones.
         protected override void Start()
         {

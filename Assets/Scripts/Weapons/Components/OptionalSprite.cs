@@ -32,7 +32,10 @@ namespace Avocado.Weapons.Components
 
             spriteRenderer.sprite = currentAttackData.Sprite;
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         // Obtiene la referencia al SpriteRenderer desde un hijo marcado con OptionalSpriteMarker.
         protected override void Awake()
         {

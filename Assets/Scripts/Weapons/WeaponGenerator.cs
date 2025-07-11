@@ -101,7 +101,6 @@ namespace Avocado.Weapons
 
                 // Inicializamos el componente
                 weaponComponent.Init();
-
                 // Lo añadimos a la lista de componentes activos
                 componentsAddedToWeapon.Add(weaponComponent);
             }

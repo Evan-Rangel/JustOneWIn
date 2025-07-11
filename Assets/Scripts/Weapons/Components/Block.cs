@@ -91,7 +91,10 @@ namespace Avocado.Weapons.Components
         {
             shouldUpdate = isBlockWindowActive ? currentAttackData.BlockWindowEnd.TryGetTriggerTime(phase, out nextWindowTriggerTime) : currentAttackData.BlockWindowStart.TryGetTriggerTime(phase, out nextWindowTriggerTime);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();

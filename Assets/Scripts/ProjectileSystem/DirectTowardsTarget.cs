@@ -45,11 +45,13 @@ namespace Avocado.ProjectileSystem
         }
 
         // Se llama en cada FixedUpdate del proyectil
-        [Server]
+       // [Server]
         //protected override void FixedUpdate()
         protected override void FixedUpdate()
         {
-            //base.FixedUpdate();
+            if (!isServer)
+                return;
+            base.FixedUpdate();
            
 
             if (!HasTarget())
@@ -63,7 +65,7 @@ namespace Avocado.ProjectileSystem
 
             // Aplica rotación hacia la dirección deseada
             Rotate(direction);
-        }
+        }   
 
         // Determina si hay un objetivo válido, y si no hay, lo busca
         private bool HasTarget()

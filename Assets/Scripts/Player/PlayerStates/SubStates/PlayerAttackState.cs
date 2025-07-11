@@ -87,12 +87,12 @@ public class PlayerAttackState : PlayerAbilityState
     {
         base.Enter();
         weaponGenerator.OnWeaponGenerating += HandleWeaponGenerating;
-
+        
         checkFlip = true;
         canInterrupt = false;
-
         player.CancelGrapple(); // Cancelar gancho al hacer dash
-
+                                // weapon.EventHandler.AttackActionTrigger();
+       // weapon.transform.root.GetComponent<PlayerObjectController>().WeaponEnter(inputIndex);
         weapon.Enter(); // Inicia el ataque del arma
     }
 
@@ -101,8 +101,9 @@ public class PlayerAttackState : PlayerAbilityState
     {
         base.Exit();
         weaponGenerator.OnWeaponGenerating -= HandleWeaponGenerating;
-
+        //weapon.transform.root.GetComponent<PlayerObjectController>().WeaponExit(inputIndex);
         weapon.Exit(); // Finaliza el ataque del arma
+       // weapon.EventHandler.FinishAttackActionTrigger();
     }
 
     // Método para verificar si el jugador puede entrar en este estado de ataque

@@ -69,7 +69,10 @@ namespace Avocado.Weapons.Components
         {
             coreMovement.SetVelocityX((direction * velocity).x * coreMovement.FacingDirection);
         }
-
+        public override void ForceSetAttackData(int attackCounter)
+        {
+            base.ForceSetAttackData(attackCounter);
+        }
         protected override void Start()
         {
             base.Start();
