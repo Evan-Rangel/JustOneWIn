@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Avocado.CoreSystem;
+using Mirror;
 using UnityEngine;
 
-public class Entity : MonoBehaviour {
+public class Entity : NetworkBehaviour {
 	private Movement Movement { get => movement ?? Core.GetCoreComponent(ref movement); }
 
 	private Movement movement;
@@ -13,7 +14,7 @@ public class Entity : MonoBehaviour {
 	public D_Entity entityData;
 
 	public Animator anim { get; private set; }
-	public AnimationToStatemachine atsm { get; private set; }
+	public AnimationToStateMachine atsm { get; private set; }
 	public int lastDamageDirection { get; private set; }
 	public Core Core { get; private set; }
 
@@ -39,7 +40,8 @@ public class Entity : MonoBehaviour {
 	protected ParryReceiver parryReceiver;
 
 	public virtual void Awake() {
-		Core = GetComponentInChildren<Core>();
+       
+        Core = GetComponentInChildren<Core>();
 
 		stats = Core.GetCoreComponent<Stats>();
 		parryReceiver = Core.GetCoreComponent<ParryReceiver>();
@@ -50,12 +52,14 @@ public class Entity : MonoBehaviour {
 		currentStunResistance = entityData.stunResistance;
 
 		anim = GetComponent<Animator>();
-		atsm = GetComponent<AnimationToStatemachine>();
+		atsm = GetComponent<AnimationToStateMachine>();
 
 		stateMachine = new FiniteStateMachine();
 	}
 
 	public virtual void Update() {
+		if (!isServer)
+			return;
 		Core.LogicUpdate();
 		stateMachine.currentState.LogicUpdate();
 
@@ -68,14 +72,18 @@ public class Entity : MonoBehaviour {
 
 	protected virtual void HandleParry()
 	{
-		
-	}
+        if (!isServer)
+            return;
+    }
 
 	public virtual void FixedUpdate() {
-		stateMachine.currentState.PhysicsUpdate();
+        if (!isServer)
+            return;
+        stateMachine.currentState.PhysicsUpdate();
 	}
 
 	public virtual bool CheckPlayerInMinAgroRange() {
+
 		return Physics2D.Raycast(playerCheck.position, transform.right, entityData.minAgroDistance, entityData.whatIsPlayer);
 	}
 
@@ -88,12 +96,16 @@ public class Entity : MonoBehaviour {
 	}
 
 	public virtual void DamageHop(float velocity) {
-		velocityWorkspace.Set(Movement.RB.velocity.x, velocity);
+        if (!isServer)
+            return;
+        velocityWorkspace.Set(Movement.RB.velocity.x, velocity);
 		Movement.RB.velocity = velocityWorkspace;
 	}
 
 	public virtual void ResetStunResistance() {
-		isStunned = false;
+        if (!isServer)
+            return;
+        isStunned = false;
 		currentStunResistance = entityData.stunResistance;
 	}
 

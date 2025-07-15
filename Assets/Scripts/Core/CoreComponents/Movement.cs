@@ -85,7 +85,9 @@ namespace Avocado.CoreSystem
             if (xInput != 0 && xInput != FacingDirection)
             {
                 Flip();
-                transform.root.GetComponent<PlayerObjectController>().CmdSetFacingDirection(xInput);
+                if (transform.root.GetComponent<PlayerObjectController>()!=null)
+                    transform.root.GetComponent<PlayerObjectController>().CmdSetFacingDirection(xInput);
+                
 
             }
         }

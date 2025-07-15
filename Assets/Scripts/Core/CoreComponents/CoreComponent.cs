@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
 Este script Base para todos los componentes del Core. Se asegura de registrarse 
@@ -7,7 +8,7 @@ automáticamente al Core principal.
 
 namespace Avocado.CoreSystem
 {
-    public class CoreComponent : MonoBehaviour, ILogicUpdate
+    public class CoreComponent : NetworkBehaviour, ILogicUpdate
     {
         protected Core core;
 

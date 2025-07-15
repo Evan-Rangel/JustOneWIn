@@ -58,11 +58,13 @@ public class Enemy2 : Entity
 
     private void HandlePoiseZero()
     {
+        if (!isServer) return;
         stateMachine.ChangeState(stunState);
     }
 
     protected override void HandleParry()
     {
+        if (!isServer) return;
         base.HandleParry();
         
         stateMachine.ChangeState(stunState);
@@ -70,6 +72,7 @@ public class Enemy2 : Entity
 
     private void OnDestroy()
     {
+        if (!isServer) return;
         stats.Poise.OnCurrentValueZero -= HandlePoiseZero;
     }
 

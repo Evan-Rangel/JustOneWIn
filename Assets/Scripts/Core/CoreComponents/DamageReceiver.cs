@@ -1,5 +1,6 @@
 ﻿using Avocado.Combat.Damage;
 using Avocado.ModifierSystem;
+using Steamworks;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -22,6 +23,8 @@ namespace Avocado.CoreSystem
         // Método que recibe daño, aplica modificadores, y afecta la salud.
         public void Damage(DamageData data)
         {
+            if (!isServer)
+                return;
             // Mostrar el daño antes de aplicar modificadores
             print($"Damage Amount Before Modifiers: {data.Amount}");
 
