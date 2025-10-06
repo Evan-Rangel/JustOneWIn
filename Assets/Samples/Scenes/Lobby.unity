@@ -22270,6 +22270,10 @@ MonoBehaviour:
   cursor: {fileID: 0}
   localPlayerController: {fileID: 0}
   localPlayerObject: {fileID: 0}
+  enemy1Prefab: {fileID: 0}
+  enemy2Prefab: {fileID: 0}
+  weaponPrefab: {fileID: 0}
+  weaponsData: []
 --- !u!114 &1077996275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163452,7 +163456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4248857278616536430, guid: 12835bc345cd5924da583277ba613997, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5611872147690017121, guid: 12835bc345cd5924da583277ba613997, type: 3}
       propertyPath: m_Enabled

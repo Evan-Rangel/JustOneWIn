@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using Avocado.Weapons.Components;
 using Unity.VisualScripting;
 using System;
+using Avocado.Weapons;
 
 public class GameManager : MonoBehaviour
 {
@@ -84,6 +85,17 @@ public class GameManager : MonoBehaviour
     public PlayerObjectController localPlayerController;
     public GameObject localPlayerObject;
     private CustomNetworkManager manager;
+
+    [Header("Entities Prefabs")]
+    public GameObject enemy1Prefab;
+    public GameObject enemy2Prefab;
+    public GameObject weaponPrefab;
+    public WeaponDataSO[] weaponsData; 
+    public WeaponDataSO GetRandomWeaponData()
+    {
+        if (weaponsData.Length == 0) return null;
+        return weaponsData[UnityEngine.Random.Range(0, weaponsData.Length)];
+    }
     private CustomNetworkManager Manager
     {
         get
