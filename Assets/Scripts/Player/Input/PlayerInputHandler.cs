@@ -53,8 +53,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         int count = Enum.GetValues(typeof(CombatInputs)).Length;
         AttackInputs = new bool[count]; // Inicializa array para distintos ataques
-
-        //cam = Camera.main; // Obtiene la cámara principal
+        if (cam != null)
+            return;
+        cam = Camera.main; // Obtiene la cámara principal
     }
 
     private void Update()

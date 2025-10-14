@@ -32,6 +32,7 @@ public class GrappleHandler : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody2D>();
         lineRenderer = GetComponent<LineRenderer>();
+        mainCamera = (mainCamera != null) ? mainCamera : Camera.main;
         //mainCamera = Camera.main;
 
         springJoint = gameObject.AddComponent<SpringJoint2D>();
