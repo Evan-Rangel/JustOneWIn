@@ -1,79 +1,71 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
+
 
 namespace Avocado
 {
+    [Serializable]
+    public class PlatformData { public int speed; public bool stopInPoints; public float stopTime; public float movementTime; public PlatformPoint point; }
     public class PlatformMovement : MonoBehaviour
     {
-        public GameObject currentPoint;
+        public UnityEvent platformEvent;
         bool isMoving = false;
-        bool stopInPoints;
-        public void SetStopInPoint(bool value) => stopInPoints = value;
-        float speed;
-        public void SetSpeed(float value) => speed = value;
 
-        float stopTime;
-        public void SetStopTime(float value)=> stopTime = value;
+        public PlatformData data;
 
-        float movementTime;
-        public void SetMovementTime(float value)=> movementTime = value;
-
-        bool reverse;
-        public void SetReverse(bool value)=> reverse=value;
-        private void Start()
+        IEnumerator delayAction;
+        private void OnEnable()
         {
-            stopInPoints = GridManager.instance.stopInPoints;
-            
-            speed = GridManager.instance.platformSpeed;
-            stopTime= GridManager.instance.platformStopTime;
-            movementTime = GridManager.instance.platformMovementTime;
-             isMoving = true;
-
-
-             StartCoroutine(Stops());
+            delayAction = DelayAction();
+            isMoving = true;
+            StartCoroutine(Stops());
+        }
+        private void OnDisable()
+        {
+            isMoving = false;
         }
         void Update()
         {
+            if (!isMoving) return;
+ 
             MoveToPoint();
         }
         void MoveToPoint()
         {
-            if (currentPoint == null || !isMoving) { return; }
-            PlatformPoint point;
-            transform.position = Vector2.MoveTowards(transform.position, currentPoint.transform.position, Time.deltaTime * speed);
-            if (Vector2.Distance(transform.position, currentPoint.transform.position) < 0.01f)
+            if (data.point == null) return; 
+
+            transform.position = Vector2.MoveTowards(transform.position, data.point.nextPoint.transform.position, Time.deltaTime * data.speed);
+
+            if (Vector2.Distance(transform.position, data.point.nextPoint.transform.position) < 0.01f)
             {
-                 
-                point = currentPoint.GetComponent<PlatformPoint>();
-                point.pointEvent.Invoke(gameObject);
+                data = data.point.nextPoint.platformData;
 
-                currentPoint =(reverse)?point.prevPosition: point.nextPosition;
 
-                if(stopInPoints)
-                StartCoroutine(DelayAction());
+                if(data.stopInPoints)
+                StartCoroutine(delayAction);
             }
           
         }
         IEnumerator DelayAction()
         {
             isMoving = false;
-            yield return Helpers.GetWait(stopTime);
+            yield return Helpers.GetWait(data.stopTime);
             isMoving = true;
+            StopCoroutine(delayAction);
         }
         IEnumerator Stops()
         {
             while (true)
             {
-                if (stopInPoints) { isMoving = true; yield return new WaitUntil(() => !stopInPoints); }
-                Debug.Log("Stops");
+                if (data.stopInPoints) { isMoving = true; yield return new WaitUntil(() => !data.stopInPoints); }
                 isMoving = false;
-                yield return Helpers.GetWait(stopTime);
+
+                yield return Helpers.GetWait(data.stopTime);
                 isMoving = true;
 
-                yield return Helpers.GetWait(movementTime);
+                yield return Helpers.GetWait(data.movementTime);
                 isMoving = false;
             }
         }

@@ -20,7 +20,7 @@ como 0 o 1).
 -La animación manda señales, pero el control de la lógica lo sigue llevando AttackState.
 ---------------------------------------------------------------------------------------------*/
 
-public class AnimationToStatemachine : MonoBehaviour
+public class AnimationToStateMachine : MonoBehaviour
 {
     // Referencia al estado de ataque
     public AttackState attackState;

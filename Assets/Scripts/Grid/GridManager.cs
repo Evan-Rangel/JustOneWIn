@@ -32,7 +32,7 @@ namespace Avocado
       
         void FillPool()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 3; i++)
             { 
                ExpandPool();
             }
@@ -42,19 +42,20 @@ namespace Avocado
             platform.SetActive(false);
             platformsPool.Enqueue(platform);
         }
-        public GameObject GetPlatform(Vector2 position, Quaternion rotation)
+        public PlatformMovement GetPlatform(Vector2 position, Quaternion rotation)
         {
             if (platformsPool.Count==0)
             {
                 ExpandPool ();
             }
 
-             GameObject platform= platformsPool.Dequeue();   
+            GameObject platform= platformsPool.Dequeue();   
             platform.transform.position = position;
             platform.transform.rotation = rotation; 
             
             platform.SetActive(true);
-            return platform;
+
+            return platform.GetComponent<PlatformMovement>();
           
         }
         void ExpandPool()

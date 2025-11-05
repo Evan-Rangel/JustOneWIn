@@ -13,7 +13,7 @@ public class Entity : MonoBehaviour {
 	public D_Entity entityData;
 
 	public Animator anim { get; private set; }
-	public AnimationToStatemachine atsm { get; private set; }
+	public AnimationToStateMachine atsm { get; private set; }
 	public int lastDamageDirection { get; private set; }
 	public Core Core { get; private set; }
 
@@ -50,7 +50,7 @@ public class Entity : MonoBehaviour {
 		currentStunResistance = entityData.stunResistance;
 
 		anim = GetComponent<Animator>();
-		atsm = GetComponent<AnimationToStatemachine>();
+		atsm = GetComponent<AnimationToStateMachine>();
 
 		stateMachine = new FiniteStateMachine();
 	}
