@@ -8,34 +8,42 @@ namespace Avocado
 {
     public class PlatformPointsManager : MonoBehaviour
     {
+        [SerializeField] bool activatePlat = false;
+
+        bool inMovement = false;
+
         [Header("Prefabs")]
         [SerializeField] GameObject pointPrefab;
         [SerializeField] GameObject movingPlatformPrefab;
-
+        [Header("Platform Movement Timers")]
+        [SerializeField] float stopTime;
         [Header("Points and Platforms")]
         [SerializeField, Range(1, 25)] float platformSpeed = 5f;    
-        public List<GameObject> platformsPool;
-        public List<PlatformMovement> activePlatforms;
-        public List<GameObject> points =new List<GameObject>();
+        [SerializeField, Range(0.1f, 10)] float platformAcceleration = 2f;    
+         List<GameObject> platformsPool;
+         List<PlatformMovement> activePlatforms;
         [field:SerializeField, Range(1, 100)] public int numPoints = 1;
+        public List<GameObject> points =new List<GameObject>();
 
-        [Header("Platform Movement Timers")]
-        [SerializeField] float ReturnToPoolTime;
-        [SerializeField] float stopTime;
-        [SerializeField] float spawnPlatformTime;
-        bool inMovement = false;
+       
 
-        [SerializeField]bool activatePlat=false;
+        IEnumerator spawnPlatform, platformsStop;
         private void Awake()
         {
             activatePlat = false;
             activePlatforms = new List<PlatformMovement>();
             platformsPool = new List<GameObject>();
+            spawnPlatform = SpawnPlatform();
+            platformsStop = PlatformsStop();
             FillPool();
+        }
+        public void DisablePlatforms()
+        {
         }
         public void ActivatePlatforms()
         {
-            StartCoroutine(SpawnPlatform());
+            spawnPlatform = SpawnPlatform();
+            StartCoroutine(spawnPlatform);
         }
         private void Update()
         {
@@ -45,17 +53,31 @@ namespace Avocado
                 activatePlat = false;
             }
 
+            PlatformsMovement();
+        }
+        void PlatformsMovement()
+        {
             if (!inMovement) return;
             for (int i = 0; i < activePlatforms.Count; i++)
             {
-                if (activePlatforms[i].MoveToPoint())
+                
+                if (activePlatforms[i].DistanceToPoint()<0.01f)
                 {
+                    activePlatforms[i].transform.position = activePlatforms[i].targetPoint.position;
+
+                    if (activePlatforms[i].targetPoint.GetComponent<PlatformPoint>().spawnPlatformOnPoint)
+                    {
+                        spawnPlatform = SpawnPlatform();
+                        StartCoroutine(spawnPlatform);
+                    }
+
                     int nextIndex = points.FindIndex(x => x.Equals(activePlatforms[i].targetPoint.gameObject)) + 1;
-                    if (nextIndex >= points.Count )
+                    if (nextIndex >= points.Count)
                     {
                         ReturnToPool(activePlatforms[i].gameObject);
                         continue;
                     }
+
                     Transform nextTarget = points[nextIndex].transform;
                     activePlatforms[i].targetPoint = nextTarget;
                 }
@@ -63,20 +85,19 @@ namespace Avocado
         }
         IEnumerator SpawnPlatform()
         {
-            while(true)
-            { 
-                StartCoroutine(StopDelay());
-                yield return new WaitUntil(()=>inMovement);
-                PlatformMovement platform = GetPlatform(points[0].transform.position, Quaternion.identity);
-                platform.targetPoint = points[1].transform;
-                platform.speed = platformSpeed;
-                activePlatforms.Add(platform);
+            
+            platformsStop = PlatformsStop();
+            StartCoroutine(platformsStop);
 
-                yield return Helpers.GetWait(spawnPlatformTime);
-            }
-
+            yield return new WaitUntil(()=>inMovement);
+                
+            PlatformMovement platform = GetPlatform(points[0].transform.position, Quaternion.identity);
+            platform.InitMovement(points[1].transform, platformSpeed,platformAcceleration);
+                
+            activePlatforms.Add(platform);
+            //yield return Helpers.GetWait(spawnPlatformTime);
         }
-        IEnumerator StopDelay()
+        IEnumerator PlatformsStop()
         {
             inMovement = false;
             yield return Helpers.GetWait(stopTime);
@@ -92,9 +113,9 @@ namespace Avocado
         }
         public void ReturnToPool(GameObject platform)
         {
-            platform.SetActive(false);
             platformsPool.Add(platform);
             activePlatforms.Remove(platform.GetComponent<PlatformMovement>());
+            platform.SetActive(false);
         }
         public PlatformMovement GetPlatform(Vector2 position, Quaternion rotation)
         {
@@ -127,9 +148,7 @@ namespace Avocado
                 DestroyImmediate(child.gameObject);
             }
             points.Clear();
-
         }
-
         public void GeneratePoints()
         {
             ClearPoints();
@@ -144,10 +163,8 @@ namespace Avocado
                 {
                     points[i - 1].GetComponent<PlatformPoint>().nextPoint = newPoint.transform ;
                 }
-             
             }
         }
-
         private GameObject InstantiatePoint()
         {
             if (pointPrefab == null) return null;

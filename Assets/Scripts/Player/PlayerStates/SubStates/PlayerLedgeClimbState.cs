@@ -24,8 +24,8 @@ public class PlayerLedgeClimbState : PlayerState
 
     private Vector2 detectedPos; // Posición detectada al colgarse
     private Vector2 cornerPos;   // Posición de la esquina de la cornisa
-    private Vector2 startPos;    // Posición donde empieza la animación de trepar
-    private Vector2 stopPos;     // Posición donde termina la animación de trepar
+    public Vector2 startPos;    // Posición donde empieza la animación de trepar
+    public Vector2 stopPos;     // Posición donde termina la animación de trepar
     private Vector2 workspace;   // Variable auxiliar para cálculos de posición
 
     private bool isHanging;

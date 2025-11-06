@@ -20,7 +20,7 @@ namespace Avocado.CoreSystem
         public Vector2 CurrentVelocity { get; private set; }
 
         private Vector2 workspace;
-
+        public Vector2 platformVelocity;
         protected override void Awake()
         {
             base.Awake();
@@ -50,6 +50,7 @@ namespace Avocado.CoreSystem
         // Establece la velocidad usando un vector de dirección normalizado.
         public void SetVelocity(float velocity, Vector2 direction)
         {
+
             workspace = direction.normalized * velocity;
             SetFinalVelocity();
         }
