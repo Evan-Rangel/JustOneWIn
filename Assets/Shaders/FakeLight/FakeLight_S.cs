@@ -6,7 +6,7 @@ public class FakeLight_S : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField, Range(0, 5)] float fadeTime;
     MaterialPropertyBlock propertyBlock;
-    GameObject player;
+[SerializeField]    GameObject player;
     public static FakeLight_S instance;
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class FakeLight_S : MonoBehaviour
     private void Update()
     {
 
-        if (player == null) player = GameObject.Find("LocalGamePlayer");
+        if (player == null) player = GameObject.Find("LocalGamePlayer") ;
 
         if (player != null) transform.position = player.transform.position;
 
@@ -38,20 +38,21 @@ public class FakeLight_S : MonoBehaviour
     {
         float cTime = 0;
         float t=0;
-        while (cTime<1)
+        while (cTime<fadeTime*2)
         {
-            yield return Helpers.GetWait(Time.deltaTime );
+            yield return Helpers.GetWait(Time.deltaTime);
+        
             t = Mathf.PingPong(cTime/ fadeTime, 1.0f);
             cTime += Time.deltaTime;
+
+            if (t > 0.99f)  t = 1; 
+
             propertyBlock.SetFloat("_RespawnEffect", t); 
             spr.SetPropertyBlock(propertyBlock);
-            if (t>0.96f)
-            {
-                propertyBlock.SetFloat("_RespawnEffect", 1); 
-                spr.SetPropertyBlock(propertyBlock);
-                yield return Helpers.GetWait(0.15f);
-            }
+            
+            if(t==1) yield return Helpers.GetWait(.3f);
         }
+
         propertyBlock.SetFloat("_RespawnEffect", 0);
         spr.SetPropertyBlock(propertyBlock);
     }

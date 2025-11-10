@@ -5,6 +5,7 @@ using Avocado;
 using Avocado.CoreSystem;
 using Avocado.FSM;
 using Avocado.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -152,6 +153,7 @@ public class Player : MonoBehaviour
         // Limpia el evento al destruir el jugador
         Stats.Poise.OnCurrentValueZero -= HandlePoiseCurrentValueZero;
     }
+ 
     #endregion
 
     #region Set Functions
@@ -180,4 +182,5 @@ public class Player : MonoBehaviour
 
 
     #endregion
+   
 }

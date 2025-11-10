@@ -1,4 +1,5 @@
 using Steamworks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,12 +7,13 @@ using UnityEngine;
 
 namespace Avocado
 {
+ 
     public class PlatformPointsManager : MonoBehaviour
     {
         [SerializeField] bool activatePlat = false;
+        [SerializeField] float distanceToDeath;
 
         bool inMovement = false;
-
         [Header("Prefabs")]
         [SerializeField] GameObject pointPrefab;
         [SerializeField] GameObject movingPlatformPrefab;
@@ -20,10 +22,10 @@ namespace Avocado
         [Header("Points and Platforms")]
         [SerializeField, Range(1, 25)] float platformSpeed = 5f;    
         [SerializeField, Range(0.1f, 10)] float platformAcceleration = 2f;    
-         List<GameObject> platformsPool;
-         List<PlatformMovement> activePlatforms;
+        List<GameObject> platformsPool;
+        List<PlatformMovement> activePlatforms;
         [field:SerializeField, Range(1, 100)] public int numPoints = 1;
-        public List<GameObject> points =new List<GameObject>();
+        public List<PlatformPoint> points =new List<PlatformPoint>();
 
        
 
@@ -60,26 +62,37 @@ namespace Avocado
             if (!inMovement) return;
             for (int i = 0; i < activePlatforms.Count; i++)
             {
-                
+                PlatformPoint currentPoint = activePlatforms[i].targetPoint;
+
+                if (  currentPoint.platformDeathPoint)
+                {
+                    activePlatforms[i].DistanceCollisionToPoint(currentPoint.deathZoneIndex);
+                }
+
+
                 if (activePlatforms[i].DistanceToPoint()<0.01f)
                 {
-                    activePlatforms[i].transform.position = activePlatforms[i].targetPoint.position;
+                    activePlatforms[i].transform.position = currentPoint.transform.position;
 
-                    if (activePlatforms[i].targetPoint.GetComponent<PlatformPoint>().spawnPlatformOnPoint)
+                    if (currentPoint.spawnPlatformOnPoint)
                     {
                         spawnPlatform = SpawnPlatform();
                         StartCoroutine(spawnPlatform);
+                    } 
+                    if (currentPoint.stopPlatformOnPoint)
+                    {
+                        platformsStop = PlatformsStop();
+                        StartCoroutine(platformsStop);
                     }
 
-                    int nextIndex = points.FindIndex(x => x.Equals(activePlatforms[i].targetPoint.gameObject)) + 1;
+                    int nextIndex = points.FindIndex(x => x.Equals(currentPoint)) + 1;
                     if (nextIndex >= points.Count)
                     {
                         ReturnToPool(activePlatforms[i].gameObject);
                         continue;
                     }
-
-                    Transform nextTarget = points[nextIndex].transform;
-                    activePlatforms[i].targetPoint = nextTarget;
+                    PlatformPoint nextTarget = points[nextIndex];
+                    activePlatforms[i].SetNextTarget (nextTarget);
                 }
             }
         }
@@ -92,7 +105,7 @@ namespace Avocado
             yield return new WaitUntil(()=>inMovement);
                 
             PlatformMovement platform = GetPlatform(points[0].transform.position, Quaternion.identity);
-            platform.InitMovement(points[1].transform, platformSpeed,platformAcceleration);
+            platform.InitMovement(points[1], platformSpeed,platformAcceleration, distanceToDeath);
                 
             activePlatforms.Add(platform);
             //yield return Helpers.GetWait(spawnPlatformTime);
@@ -143,7 +156,7 @@ namespace Avocado
         #region Point Methods
         public void ClearPoints()
         {
-            foreach (GameObject child in points)
+            foreach (PlatformPoint child in points)
             {
                 DestroyImmediate(child.gameObject);
             }
@@ -155,7 +168,7 @@ namespace Avocado
 
             for (int i = 0; i < numPoints; i++)
             {
-                GameObject newPoint = InstantiatePoint();
+                PlatformPoint newPoint = InstantiatePoint().GetComponent<PlatformPoint>();
                 newPoint.name = "Point" + (i + 1);
                 points.Add(newPoint);
                 newPoint.transform.position = newPoint.transform.position + new Vector3(i * 2, 0, 0);

@@ -32,6 +32,7 @@ public class PlayerLedgeClimbState : PlayerState
     private bool isClimbing;
     private bool jumpInput;
     private bool isTouchingCeiling;
+    public bool platformClimbing;
 
     private int xInput;
     private int yInput;
@@ -115,7 +116,7 @@ public class PlayerLedgeClimbState : PlayerState
             player.transform.position = startPos;
 
             // Inicia el trepado si se mueve hacia la cornisa
-            if (xInput == Movement.FacingDirection && isHanging && !isClimbing)
+            if (xInput == Movement.FacingDirection && isHanging && !isClimbing||platformClimbing)
             {
                 CheckForSpace(); // Verifica que no haya techo bloqueando
                 isClimbing = true;

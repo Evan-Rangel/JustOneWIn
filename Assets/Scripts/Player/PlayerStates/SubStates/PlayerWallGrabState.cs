@@ -14,8 +14,8 @@ y comienza a deslizarse.
 public class PlayerWallGrabState : PlayerTouchingWallState
 {
     // Guarda la posición exacta donde el jugador se queda "pegado" a la pared
-    private Vector2 holdPosition;
-
+    public Vector2 holdPosition;
+    
     public PlayerWallGrabState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }

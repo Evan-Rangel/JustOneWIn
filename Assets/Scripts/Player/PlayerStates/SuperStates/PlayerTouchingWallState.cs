@@ -28,6 +28,7 @@ public class PlayerTouchingWallState : PlayerState
     protected int xInput;
     protected int yInput;
 
+    public bool releaseGrabWall;
     public PlayerTouchingWallState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName) 
     { 
     }
@@ -94,7 +95,7 @@ public class PlayerTouchingWallState : PlayerState
             stateMachine.ChangeState(player.IdleState);
         }
         // Si ya no está tocando la pared o se aleja de ella, va al estado en el aire
-        else if (!isTouchingWall || (xInput != Movement?.FacingDirection && !grabInput))
+        else if (!isTouchingWall || (xInput != Movement?.FacingDirection && !grabInput)|| releaseGrabWall)
         {
             stateMachine.ChangeState(player.InAirState);
         }

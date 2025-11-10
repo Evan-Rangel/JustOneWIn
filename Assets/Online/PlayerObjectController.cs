@@ -69,7 +69,8 @@ public class PlayerObjectController : NetworkBehaviour
         else
         {
             // nombre local de test
-            Debug.Log(playeridNumber);
+           
+           //Debug.Log(playeridNumber);
             CmdSetPlayerName("Player" + playeridNumber);
         }
         gameObject.name = "LocalGamePlayer";

@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6014840333510901124
 MonoBehaviour:
@@ -44,13 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3036b18c88374d42bec4d965c62d922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActivePlatform: 0
   nextPoint: {fileID: 0}
-  platformData:
-    speed: 1
-    stopInPoints: 1
-    stopTime: 1
-    movementTime: 1
-    currentPoint: {fileID: 0}
-  isLastPoint: 0
-  timeToReturnToPool: 0
+  <spawnPlatformOnPoint>k__BackingField: 0
+  <deathZoneIndex>k__BackingField: 0
+  <stopPlatformOnPoint>k__BackingField: 0
+  <platformDeathPoint>k__BackingField: 0

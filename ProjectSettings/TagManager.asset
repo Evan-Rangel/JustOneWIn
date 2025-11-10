@@ -9,6 +9,7 @@ TagManager:
   - Interactuable
   - Item
   - ParticleContainer
+  - MovePlatform
   layers:
   - Default
   - TransparentFX
@@ -73,12 +74,12 @@ TagManager:
   - name: Enemy
     uniqueID: 2308740627
     locked: 0
-  - name: CameraSortingLayer
-    uniqueID: 4121346185
-    locked: 0
   - name: ActiveProjectile
     uniqueID: 3270796263
     locked: 0
   - name: Foreground Decoration
     uniqueID: 1442001559
+    locked: 0
+  - name: CameraSortingLayer
+    uniqueID: 4121346185
     locked: 0

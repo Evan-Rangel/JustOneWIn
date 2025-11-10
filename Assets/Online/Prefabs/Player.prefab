@@ -1090,6 +1090,10 @@ MonoBehaviour:
   playerName: 
   ready: 0
   mapChoice: 0
+  primaryGenerator: {fileID: 0}
+  secondaryGenerator: {fileID: 0}
+  detector: {fileID: 0}
+  allWeapons: []
   character: 0
   sprs:
   - {fileID: 9006638247172626232}
@@ -1292,11 +1296,17 @@ MonoBehaviour:
   grappleLayer:
     serializedVersion: 2
     m_Bits: 128
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   maxGrappleDistance: 15
   lateralBoostForce: 5
   laserPointer: {fileID: 9006638246179931482}
   showLaserWhenIdle: 1
   hookHeadPrefab: {fileID: 4171860014360999258}
+  hookSpeed: 100
+  hookReturnSpeed: 80
+  bounceForce: 2
   mainCamera: {fileID: 9006638247010546724}
 --- !u!120 &9006638247172626235
 LineRenderer:
@@ -1922,6 +1932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2c866657ebb6c4b84389e4ab08708a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  platformVelocity: {x: 0, y: 0}
 --- !u!1 &9006638248183573032
 GameObject:
   m_ObjectHideFlags: 0
