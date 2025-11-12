@@ -73,7 +73,14 @@ namespace Avocado
                 if (activePlatforms[i].DistanceToPoint()<0.01f)
                 {
                     activePlatforms[i].transform.position = currentPoint.transform.position;
-
+                    if (currentPoint.platformDisableCollision)
+                    {
+                        activePlatforms[i].DisableCollider();
+                    }
+                    if (currentPoint.platformEnableCollision)
+                    {
+                        activePlatforms[i].EnableCollider();
+                    }
                     if (currentPoint.spawnPlatformOnPoint)
                     {
                         spawnPlatform = SpawnPlatform();

@@ -20,7 +20,7 @@ namespace Avocado.CoreSystem
         public Vector2 CurrentVelocity { get; private set; }
 
         private Vector2 workspace;
-        public Vector2 platformVelocity;
+       // public Vector2 platformVelocity;
         protected override void Awake()
         {
             base.Awake();

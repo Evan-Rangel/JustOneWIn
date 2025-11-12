@@ -14,6 +14,23 @@ namespace Avocado
         float distanceToSpawnDeathZone;
         [SerializeField]GameObject collision;
         [SerializeField] GameObject[] deathZones;
+       
+        public void DisableCollider()
+        { 
+            collision.SetActive(false); 
+        }
+        public void EnableCollider()
+        {
+            collision.SetActive(true);
+        }
+        private void OnDisable()
+        {
+            collision.SetActive(true);
+            for (int i = 0; i < deathZones.Length; i++)
+            {
+                deathZones[i].SetActive(false);
+            }
+        }
         public void ActiveDeathZone(int deathZoneIndex)
         {
             Debug.Log("aaaa");
@@ -34,7 +51,6 @@ namespace Avocado
         {
 
             if (targetPoint == null ) return;
-            //Debug.Log(_deathZoneIndex);
             if (Vector2.Distance(sensors[_deathZoneIndex].position, targetPoint.transform.position)<distanceToSpawnDeathZone)
                 deathZones[_deathZoneIndex].SetActive(true);
         }

@@ -10,6 +10,8 @@ namespace Avocado
         [field:SerializeField]public int deathZoneIndex { get;private set;  }
         [field:SerializeField]public bool stopPlatformOnPoint { get;private set;  }
         [field:SerializeField]public bool platformDeathPoint { get;private set;  }
+        [field:SerializeField]public bool platformEnableCollision { get;private set;  }
+        [field:SerializeField]public bool platformDisableCollision { get;private set;  }
 
         private void OnDrawGizmos()
         {

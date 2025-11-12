@@ -33,6 +33,7 @@ public class PlayerLedgeClimbState : PlayerState
     private bool jumpInput;
     private bool isTouchingCeiling;
     public bool platformClimbing;
+    public bool platformFalling;
 
     private int xInput;
     private int yInput;
@@ -123,7 +124,7 @@ public class PlayerLedgeClimbState : PlayerState
                 player.Anim.SetBool("climbLedge", true); // Activa animación
             }
             // Si presiona hacia abajo, se suelta
-            else if (yInput == -1 && isHanging && !isClimbing)
+            else if (yInput == -1 && isHanging && !isClimbing ||platformFalling)
             {
                 stateMachine.ChangeState(player.InAirState);
             }
