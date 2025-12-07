@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace Avocado
 {
-    public class FabricTorretCollision : MonoBehaviour
+    public class FabricOctopusPlayerDetector : MonoBehaviour
     {
-        FabricTorretCanon canon;
+        FabricOctopusController controller;
         private void Awake()
         {
-            canon= transform.root.GetComponentInChildren<FabricTorretCanon>();
+            controller = GetComponentInParent<FabricOctopusController>();
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
             {
-                canon.Aiming(collision.transform);
+                controller.TargetFinded();
             }
         }
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
             {
-                canon.StopAiming();
+                controller.TargetLost();
             }
         }
     }

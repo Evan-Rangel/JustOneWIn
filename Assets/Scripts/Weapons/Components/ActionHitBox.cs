@@ -44,7 +44,6 @@ namespace Avocado.Weapons.Components
 
             // Detecta todas las colisiones dentro del área del hitbox
             detected = Physics2D.OverlapBoxAll(offset, currentAttackData.HitBox.size, 0f, data.DetectableLayers);
-
             // Si no se detectaron colisiones, termina aquí
             if (detected.Length == 0)
                 return;

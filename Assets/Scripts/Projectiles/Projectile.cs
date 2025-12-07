@@ -21,6 +21,7 @@ namespace Avocado.Projectiles
         [SerializeField] private float damageRadius;    
 
         private Rigidbody2D rb;
+        private Animator anim;
 
         private bool isGravityOn;     
         private bool hasHitGround;    
@@ -28,9 +29,9 @@ namespace Avocado.Projectiles
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private LayerMask whatIsPlayer;
         [SerializeField] private Transform damagePosition; // Punto desde el cual se detecta daño
-
         private void Start()
         {
+            TryGetComponent<Animator>(out anim);   
             rb = GetComponent<Rigidbody2D>();
             rb.gravityScale = 0.0f; // Desactiva la gravedad al principio
             rb.velocity = transform.right * speed; // Lo lanza en dirección local derecha
@@ -65,11 +66,19 @@ namespace Avocado.Projectiles
                 {
                     // Si golpea a un jugador, se destruye (aquí iría lógica de daño)
                     //damageHit.transform.SendMessage("Damage", attackDetails);
-                    Destroy(gameObject);
+                    if (anim)
+                        Invoke("DelayPlayerStop", 0.05f);
+                    else
+                        Destroy(gameObject);
                 }
 
                 if (groundHit)
                 {
+                  
+                    if (anim)
+                    {
+                        anim.SetTrigger("Hit");
+                    }
                     // Si golpea el suelo, se detiene
                     hasHitGround = true;
                     rb.gravityScale = 0f;
@@ -83,6 +92,17 @@ namespace Avocado.Projectiles
                     rb.gravityScale = gravity;
                 }
             }
+        }
+        void DelayPlayerStop()
+        {
+            anim.SetTrigger("Hit");
+
+            rb.gravityScale = 0f;
+            rb.velocity = Vector2.zero;
+        }
+        public void DestroyProjectile()
+        {
+            Destroy(gameObject);
         }
 
         // Inicializa los parámetros del proyectil desde fuera

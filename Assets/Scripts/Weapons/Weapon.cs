@@ -167,7 +167,7 @@ namespace Avocado.Weapons
         // Reinicia el contador de ataques a 0
         private void ResetAttackCounter()
         {
-            print("Reset Attack Counter");
+           // print("Reset Attack Counter");
             CurrentAttackCounter = 0;
         }
 
