@@ -11,6 +11,7 @@ namespace Avocado
     {
         Animator anim;
         [SerializeField] GameObject canon;
+        [SerializeField] GameObject explosiveEffect;
         [SerializeField] GameObject coll;
         IEnumerator damageEffect;
         [SerializeField]SpriteRenderer[] sprites;
@@ -27,7 +28,9 @@ namespace Avocado
         }
         public void DisableTorret()
         {
-            gameObject.SetActive(false);
+            Destroy(canon);
+            Destroy(gameObject);
+            //gameObject.SetActive(false);
         }
 
        
@@ -61,6 +64,7 @@ namespace Avocado
             health-=data.Amount;
             if (health <= 0)
             {
+                explosiveEffect.SetActive(true);
                 DestroyTorret();
                 return;
             }

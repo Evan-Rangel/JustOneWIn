@@ -6,7 +6,7 @@ public class FakeLight_S : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField, Range(0, 5)] float fadeTime;
     MaterialPropertyBlock propertyBlock;
-[SerializeField]    GameObject player;
+    [SerializeField]    GameObject player;
     public static FakeLight_S instance;
     private void Awake()
     {

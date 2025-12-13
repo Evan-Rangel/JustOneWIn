@@ -12,26 +12,26 @@ public enum EffectType
 
 public class PlayerCamera_S : MonoBehaviour
 {
-    GameObject player;
+    [SerializeField]GameObject player;
     MaterialPropertyBlock propertyBlock;
     SpriteRenderer spr;
-    [SerializeField]List <ShaderEffectCamera> objectsToTrack;
+    [SerializeField] List<ShaderEffectCamera> objectsToTrack;
+    [SerializeField] List<ShaderEffectCameraLocal> objectsToTrackLocal;
     int textureWidth = 10;
-    [SerializeField]Camera mainCamera;
+    [SerializeField] Camera mainCamera;
     private Texture2D positionsTexture;
 
 
 
     private Texture2D playersPositionsTexture;
     [SerializeField] List<GameObject> players;
-    
+
     static PlayerCamera_S instance;
     public static PlayerCamera_S Instance { get { return instance; } }
     private void Awake()
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
-        spr = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
@@ -40,8 +40,8 @@ public class PlayerCamera_S : MonoBehaviour
         for (int i = 0; i < positionsTexture.width; i++)
         {
             for (int j = 0; j < positionsTexture.height; j++)
-            { 
-            positionsTexture.SetPixel(i, j, new Color(0, 0, 0, 0));
+            {
+                positionsTexture.SetPixel(i, j, new Color(0, 0, 0, 0));
 
             }
         }
@@ -52,24 +52,25 @@ public class PlayerCamera_S : MonoBehaviour
         {
             for (int j = 0; j < playersPositionsTexture.height; j++)
             {
-                playersPositionsTexture.SetPixel(i, j, new Color(0,0,0,0));
+                playersPositionsTexture.SetPixel(i, j, new Color(0, 0, 0, 0));
             }
         }
-
+        spr = GetComponent<SpriteRenderer>();
 
         propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);
         propertyBlock.SetTexture("_PlayersPositionsTexture", playersPositionsTexture);
         spr.SetPropertyBlock(propertyBlock);
         objectsToTrack = new List<ShaderEffectCamera>(30);
-        spr.enabled=false;
+        objectsToTrackLocal = new List<ShaderEffectCameraLocal>(30);
+        spr.enabled = false;
     }
     public void AddPlayerToPool(GameObject _player)
     {
         spr.enabled = true;
         for (int i = 0; i < players.Count; i++)
         {
-            if (players[i]==null)
+            if (players[i] == null)
             {
                 players[i] = _player;
                 return;
@@ -91,6 +92,20 @@ public class PlayerCamera_S : MonoBehaviour
         }
         objectsToTrack.Add(obj);
     }
+    public void AddToPool( ShaderEffectCameraLocal obj)
+    {
+        spr.enabled = true;
+
+        for (int i = 0; i < objectsToTrackLocal.Count; i++)
+        {
+            if (objectsToTrackLocal[i] == null)
+            {
+                objectsToTrackLocal[i] = obj;
+                return;
+            }
+        }
+        objectsToTrackLocal.Add(obj);
+    }
     public void RemoveFromPool(ShaderEffectCamera obj)
     {
         for (int i = 0; i < objectsToTrack.Count; i++)
@@ -111,6 +126,26 @@ public class PlayerCamera_S : MonoBehaviour
         }
         spr.enabled = false;
     }
+    public void RemoveFromPool(ShaderEffectCameraLocal obj)
+    {
+        for (int i = 0; i < objectsToTrackLocal.Count; i++)
+        {
+            if (objectsToTrackLocal[i] != obj) continue;
+
+            positionsTexture.SetPixel(i, (int)objectsToTrackLocal[i].effectType, new Color(0, 0, 0, 0));
+            objectsToTrackLocal[i] = null;
+            break;
+        }
+        positionsTexture.Apply();
+        propertyBlock.SetTexture("_PositionsTexture", positionsTexture);
+        spr.SetPropertyBlock(propertyBlock);
+        for (int i = 0; i < objectsToTrackLocal.Count; i++)
+        {
+            if (objectsToTrackLocal[i] != null)
+                return;
+        }
+        spr.enabled = false;
+    }
     private void Update()
     {
         if (player != null)
@@ -121,12 +156,21 @@ public class PlayerCamera_S : MonoBehaviour
             if (player!=null)
             mainCamera= player.GetComponent<PCameraController>().mainCamera;
         }
+        if (objectsToTrack.Count < 1 && objectsToTrackLocal.Count < 1) return;
+
         for (int i = 0; i < objectsToTrack.Count; i++)
         {
             if (objectsToTrack[i] == null)
                 continue;
             Vector3 viewportPos = mainCamera.WorldToViewportPoint(objectsToTrack[i].transform.position);
             positionsTexture.SetPixel(i, (int)objectsToTrack[i].effectType, new Color(viewportPos.x, viewportPos.y, objectsToTrack[i].timeValue, 1));
+        }  
+        for (int i = 0; i < objectsToTrackLocal.Count; i++)
+        {
+            if (objectsToTrackLocal[i] == null)
+                continue;
+            Vector3 viewportPos = mainCamera.WorldToViewportPoint(objectsToTrackLocal[i].transform.root.position);
+            positionsTexture.SetPixel(i, (int)objectsToTrackLocal[i].effectType, new Color(viewportPos.x, viewportPos.y, objectsToTrackLocal[i].timeValue, 1));
         }
         positionsTexture.Apply();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);

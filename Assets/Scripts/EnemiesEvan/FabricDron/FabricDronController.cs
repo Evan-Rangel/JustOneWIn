@@ -17,7 +17,7 @@ namespace Avocado
         [SerializeField] float health;
         SpriteRenderer sprite;
         IEnumerator damageEffect;
-
+        [SerializeField] GameObject explosionEffect;
         [SerializeField] float maxVerticalDistance;
         [SerializeField] float maxHorizontalDistance;
         [SerializeField] float verticalSpeed;
@@ -273,6 +273,7 @@ namespace Avocado
             if (health <= 0)
             {
                 anim.SetBool("Death", true);
+                explosionEffect.SetActive(true);
                 return;
             }
             if (damageEffect != null)
