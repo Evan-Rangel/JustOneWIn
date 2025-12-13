@@ -17,7 +17,7 @@ public class PlayerCamera_S : MonoBehaviour
     SpriteRenderer spr;
     [SerializeField]List <ShaderEffectCamera> objectsToTrack;
     int textureWidth = 10;
-    Camera mainCamera;
+    [SerializeField]Camera mainCamera;
     private Texture2D positionsTexture;
 
 

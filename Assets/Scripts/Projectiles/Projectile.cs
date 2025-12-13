@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Avocado.Combat.Damage;
+using Avocado.Combat.KnockBack;
+using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
 Este script controla el comportamiento de un proyectil físico:
@@ -16,6 +18,8 @@ namespace Avocado.Projectiles
         private float speed;
         private float travelDistance; // Distancia máxima antes de que se active la gravedad
         private float xStartPos;      // Posición inicial en X
+        private float damage;
+        //KnockBackData knockbackData;
 
         [SerializeField] private float gravity;         
         [SerializeField] private float damageRadius;    
@@ -64,8 +68,24 @@ namespace Avocado.Projectiles
 
                 if (damageHit)
                 {
+                    hasHitGround = true;
+
+
                     // Si golpea a un jugador, se destruye (aquí iría lógica de daño)
                     //damageHit.transform.SendMessage("Damage", attackDetails);
+
+                    IDamageable damageable = damageHit.transform.root.GetComponentInChildren<IDamageable>();//GetComponent<IDamageable>();
+                    if (damageable != null)
+                    {
+                        DamageData damageData = new DamageData(damage, null); // Ejemplo de daño
+                        damageable.Damage(damageData);
+                    }
+                    IKnockBackable knockBackable = damageHit.transform.root.GetComponentInChildren<IKnockBackable>();
+                    if (knockBackable != null)
+                    {
+                        knockBackable.KnockBack(new KnockBackData(Vector2.one, 10, transform.right.x >= 0 ? 1 : -1, null));
+                    }
+
                     if (anim)
                         Invoke("DelayPlayerStop", 0.05f);
                     else
@@ -110,7 +130,7 @@ namespace Avocado.Projectiles
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
-            //attackDetails.damageAmount = damage;
+            this.damage = damage;
         }
 
         // Dibuja el área de daño en la escena para depuración

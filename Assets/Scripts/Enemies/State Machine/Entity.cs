@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Avocado.CoreSystem;
+﻿using Avocado.CoreSystem;
 using UnityEngine;
 
 public class Entity : MonoBehaviour {

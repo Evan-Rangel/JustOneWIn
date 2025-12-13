@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Avocado.Combat.Damage;
+﻿using Avocado.Combat.Damage;
 using Avocado.Combat.KnockBack;
 using Avocado.Combat.PoiseDamage;
 using Avocado.CoreSystem;
