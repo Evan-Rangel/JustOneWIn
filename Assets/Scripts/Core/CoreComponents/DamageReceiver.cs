@@ -11,6 +11,7 @@ namespace Avocado.CoreSystem
     public class DamageReceiver : CoreComponent, IDamageable
     {
         [SerializeField] private GameObject damageParticles;
+        SoundReproductor soundReproductor;
 
         // Sistema de modificadores que permiten alterar el daño recibido antes de aplicarlo.
         // Ejemplo: Un escudo puede reducir el daño recibido.
@@ -18,6 +19,7 @@ namespace Avocado.CoreSystem
 
         private Stats stats;
         private ParticleManager particleManager;
+        RespawnController respawnController;
 
         // Método que recibe daño, aplica modificadores, y afecta la salud.
         public void Damage(DamageData data)
@@ -34,10 +36,14 @@ namespace Avocado.CoreSystem
             // Si después de modificar el daño es 0 o menor, no hacer nada
             if (data.Amount <= 0f)
                 return;
+            if (soundReproductor==null)
+                soundReproductor = core.Root.GetComponent<SoundReproductor>();
+            respawnController.FastDamageEffect();
+            soundReproductor.PlayDamageSound();
 
             // Disminuir salud
             stats.Health.Decrease(data.Amount);
-
+            
             // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);
         }
@@ -50,6 +56,7 @@ namespace Avocado.CoreSystem
             // Obtener referencias a otros componentes del Core
             stats = core.GetCoreComponent<Stats>();
             particleManager = core.GetCoreComponent<ParticleManager>();
+            respawnController = transform.root.GetComponent<RespawnController>();
         }
     }
 }

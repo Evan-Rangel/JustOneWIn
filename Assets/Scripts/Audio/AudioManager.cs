@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -44,9 +42,9 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.PlayOneShot(_clip);
     }
-    public void PlayClipAtPointSFX(AudioClip _clip, Transform _position)
+    public void PlayClipAtPointSFX(AudioClip _clip, Vector2 _position)
     {
-        AudioSource.PlayClipAtPoint(_clip, transform.position);
+        AudioSource.PlayClipAtPoint(_clip, _position);
     }
     public void PlayMusic(AudioClip _clip)
     {

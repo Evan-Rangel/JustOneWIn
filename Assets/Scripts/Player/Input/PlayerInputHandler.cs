@@ -16,6 +16,7 @@ ejecutarse si se mantiene dentro de una ventana de tiempo (inputHoldTime).
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    [SerializeField] bool localGame;
     public event Action<bool> OnInteractInputChanged;
     public event Action<bool> OnGrappleInputChanged;
     // Evento que notifica si se ha iniciado o cancelado una interacción
@@ -144,7 +145,7 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnDashDirectionInput(InputAction.CallbackContext context)
     {
         if (playerInput == null) return;
-        if (gameObject.name != "LocalGamePlayer") { return; }
+        if (gameObject.name != "LocalGamePlayer"&& !localGame) { return; }
         RawDashDirectionInput = context.ReadValue<Vector2>();
 
         // Si el esquema es teclado, convierte el input a dirección relativa al mundo

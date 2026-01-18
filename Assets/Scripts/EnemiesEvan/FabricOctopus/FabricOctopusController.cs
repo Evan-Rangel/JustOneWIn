@@ -169,8 +169,15 @@ namespace Avocado
             damageEffect = DamageEffect();
             StartCoroutine(damageEffect);
         }
+     
         void DestroyDron()
         {
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject coin = GameManager.instance.RequestCoin();
+                coin.transform.position = transform.position;
+                coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(1f, 3f)), ForceMode2D.Impulse);
+            }
             Destroy(gameObject);
 
         }

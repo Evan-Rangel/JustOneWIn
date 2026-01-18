@@ -59,7 +59,8 @@ namespace Avocado.UI
         {
             if (weaponInventory==null)
                 weaponInventory = GameObject.Find("LocalGamePlayer").GetComponentInChildren<WeaponInventory>();
-
+            if (weaponInventory==null)
+                weaponInventory = GameObject.Find("PlayerSingleplayer").GetComponentInChildren<WeaponInventory>();
             weaponInventory.OnWeaponDataChanged += HandleWeaponDataChanged;
         }
 

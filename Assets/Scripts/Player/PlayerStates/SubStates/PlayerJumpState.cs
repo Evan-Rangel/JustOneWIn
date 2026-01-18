@@ -33,6 +33,9 @@ public class PlayerJumpState : PlayerAbilityState
         // Se consume la entrada de salto para evitar múltiples usos con la misma pulsación
         player.InputHandler.UseJumpInput();
 
+
+        player.SoundReproductor.PlayJumpSound();
+
         // Establece la velocidad vertical del jugador según el valor de salto configurado
         Movement?.SetVelocityY(playerData.jumpVelocity);
 

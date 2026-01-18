@@ -128,5 +128,37 @@ namespace Avocado
             }
 
         }
+        public void FastDamageEffect()
+        {
+            StartCoroutine(DamageEffect());
+        }
+        IEnumerator DamageEffect()
+        {
+            Color alphaOn = Color.white;
+            Color alphaOff = new Color(1, 1, 1, 0);
+            yield return Helpers.GetWait(0.1f);
+
+            foreach (SpriteRenderer item in sprs)
+            {
+                item.material.SetColor("_Color", alphaOff);
+            }
+            yield return Helpers.GetWait(0.15f);
+            foreach (SpriteRenderer item in sprs)
+            {
+                item.material.SetColor("_Color", alphaOn);
+            }
+            yield return Helpers.GetWait(0.3f);
+
+            foreach (SpriteRenderer item in sprs)
+            {
+                item.material.SetColor("_Color", alphaOff);
+            }
+            yield return Helpers.GetWait(0.15f);
+            foreach (SpriteRenderer item in sprs)
+            {
+                item.material.SetColor("_Color", alphaOn);
+            }
+               
+        }
     }
 }

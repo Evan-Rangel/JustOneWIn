@@ -18,11 +18,16 @@ namespace Avocado.CoreSystem
         private Stats Stats => stats ? stats : core.GetCoreComponent(ref stats);
 
         private Stats stats;
-
+        private SoundReproductor sound;
         // Método llamado para "matar" el objeto.
         // Lanza partículas de muerte y desactiva el GameObject raíz.
         public void Die()
         {
+
+            if (sound == null)sound = core.Root.GetComponent<SoundReproductor>();
+
+                sound.PlayDeathSound();
+
             // Iniciar partículas de muerte
             foreach (var particle in deathParticles)
             {
@@ -36,6 +41,7 @@ namespace Avocado.CoreSystem
         // Suscribe el método Die al evento de vida en cero.
         private void OnEnable()
         {
+            //sound = core.Root.GetComponent<SoundReproductor>();
             Stats.Health.OnCurrentValueZero += Die;
         }
 

@@ -28,7 +28,9 @@ public class PlayerWallJumpState : PlayerAbilityState
 
         // Consume el input de salto para evitar múltiples registros del mismo salto
         player.InputHandler.UseJumpInput();
+        
 
+        player.SoundReproductor.PlayJumpSound();
         // Restaura la cantidad de saltos disponibles (para permitir un salto doble después, por ejemplo)
         player.JumpState.ResetAmountOfJumpsLeft();
 

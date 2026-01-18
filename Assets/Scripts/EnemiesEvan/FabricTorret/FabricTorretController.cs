@@ -11,7 +11,6 @@ namespace Avocado
     {
         Animator anim;
         [SerializeField] GameObject canon;
-        [SerializeField] GameObject explosiveEffect;
         [SerializeField] GameObject coll;
         IEnumerator damageEffect;
         [SerializeField]SpriteRenderer[] sprites;
@@ -26,14 +25,20 @@ namespace Avocado
             coll.SetActive(false);
             anim.enabled = true;
         }
+
         public void DisableTorret()
         {
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject coin = GameManager.instance.RequestCoin() ;
+                coin.transform.position = transform.position;
+                coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(1f, 3f)), ForceMode2D.Impulse);
+            }
             Destroy(canon);
             Destroy(gameObject);
-            //gameObject.SetActive(false);
         }
 
-       
+      
         IEnumerator DamageEffect()
         {
             foreach (SpriteRenderer sprite in sprites)
@@ -64,7 +69,6 @@ namespace Avocado
             health-=data.Amount;
             if (health <= 0)
             {
-                explosiveEffect.SetActive(true);
                 DestroyTorret();
                 return;
             }

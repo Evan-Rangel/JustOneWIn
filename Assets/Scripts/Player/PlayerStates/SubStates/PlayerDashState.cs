@@ -29,6 +29,8 @@ public class PlayerDashState : PlayerAbilityState {
 	public override void Enter() {
 		base.Enter();
 
+		player.SoundReproductor.PlayDashSound();
+
 		CanDash = false;
 		player.InputHandler.UseDashInput(); // Marca el input de dash como usado
 

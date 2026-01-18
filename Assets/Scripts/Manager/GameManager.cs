@@ -4,12 +4,94 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
-using Avocado.Weapons.Components;
-using Unity.VisualScripting;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class GameManager : MonoBehaviour
 {
+
+
+
+    #region Local Game
+    #region Coins 
+    [Header("Coins")]
+    public int coins = 0;
+    [SerializeField] TMP_Text coinsText;
+    public void AddCoin(int _value)
+    {
+        if (coins == 999)
+            return;
+        coins+=_value;
+        coinsText.text = coins.ToString();
+    }
+    public void SubstractCoin(int _value)
+    { 
+        coins -= _value;
+        coinsText.text = coins.ToString();
+    }
+
+
+
+    [SerializeField] GameObject coinPrefab;
+    List<GameObject> coinsPool=new List<GameObject>();
+    public GameObject RequestCoin()
+    {
+        foreach (GameObject coin in coinsPool)
+        {
+            if (!coin.activeInHierarchy)
+            {
+                coin.SetActive(true);
+                return coin;
+            }
+        }
+        GameObject newCoin = Instantiate(coinPrefab);
+        coinsPool.Add(newCoin);
+        return newCoin;
+    }
+
+
+    #endregion
+
+    #region UI
+
+    [Header("User Interface")]
+    [SerializeField] GameObject statsHolder;
+    [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
+    int healthLevel = 1, staminaLevel = 1;
+    public void HealthBuff()
+    {
+        healthLevel++;
+        healthAnimator.SetInteger("Level", healthLevel);
+        if (statsBackgroundAnimator.GetInteger("Level") < healthLevel)
+            statsBackgroundAnimator.SetInteger("Level", healthLevel);
+
+    }
+    public void StaminaBuff()
+    {
+        staminaLevel++;
+        staminaAnimator.SetInteger("Level", staminaLevel);
+        if (statsBackgroundAnimator.GetInteger("Level") < staminaLevel)
+            statsBackgroundAnimator.SetInteger("Level", staminaLevel);
+    }
+
+
+
+
+
+    #endregion
+
+
+
+    public void LoadNextLevel()
+    {
+        SceneManager.LoadScene("SecondLevel");
+    }
+
+    
+
+    #endregion
+
     #region Prone UI Weapons Manager
     // Evento que se dispara cuando cambia el estado del juego
     public event Action<GameState> OnGameStateChanged;
@@ -188,5 +270,4 @@ public interface ICollidable
 public enum CHARACTERS
 {
     Blue
-
 }

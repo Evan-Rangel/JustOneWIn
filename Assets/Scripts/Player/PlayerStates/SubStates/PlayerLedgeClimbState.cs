@@ -64,7 +64,6 @@ public class PlayerLedgeClimbState : PlayerState
         Movement?.SetVelocityZero();              // Detiene el movimiento
         player.transform.position = detectedPos;  // Coloca al jugador donde se detectó el borde
         cornerPos = DetermineCornerPosition();    // Calcula la esquina del borde
-
         // Calcula posición inicial y final de la animación de trepar
         startPos.Set(cornerPos.x - (Movement.FacingDirection * playerData.startOffset.x),
                      cornerPos.y - playerData.startOffset.y);
@@ -80,7 +79,7 @@ public class PlayerLedgeClimbState : PlayerState
         base.Exit();
 
         isHanging = false;
-
+        player.SoundReproductor.PlayWalkSound();
         // Si trepó exitosamente, lo coloca en la posición final
         if (isClimbing)
         {

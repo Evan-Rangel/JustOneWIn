@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Avocado;
+﻿
 using Avocado.CoreSystem;
 using Avocado.FSM;
 using Avocado.Weapons;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 /*---------------------------------------------------------------------------------------------
 Este script define el comportamiento base del jugador y gestiona su lógica mediante una máquina 
 de estados finita (FSM). Cada estado representa una acción o condición diferente (como correr, 
 saltar, atacar, escalar paredes, etc.).
-El script también contiene referencias a múltiples componentes clave como físicas, animaciones, 
+El script también contiene referencias a múltiples componentes clave como físicas, animaciones,
 manejo de inputs y estadísticas del jugador. A través de eventos y funciones auxiliares, 
 permite controlar la interacción, la adaptación del collider, y reaccionar a eventos como 
 quedarse sin poise.
@@ -62,6 +57,7 @@ public class Player : MonoBehaviour
     public Stats Stats { get; private set; }
 
     public InteractableDetector InteractableDetector { get; private set; }
+    public SoundReproductor SoundReproductor { get; private set; }
     #endregion
 
     #region Weapons Variables         
@@ -86,6 +82,7 @@ public class Player : MonoBehaviour
 
         Stats = Core.GetCoreComponent<Stats>();
         InteractableDetector = Core.GetCoreComponent<InteractableDetector>();
+        SoundReproductor = GetComponent<SoundReproductor>();
 
         GrappleHandler = GetComponent<GrappleHandler>();
 
@@ -124,7 +121,7 @@ public class Player : MonoBehaviour
 
         // Evento que escucha cuando la estadística de poise llega a 0
         Stats.Poise.OnCurrentValueZero += HandlePoiseCurrentValueZero;
-
+        { { } }
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
     }

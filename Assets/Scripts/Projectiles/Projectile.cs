@@ -20,7 +20,6 @@ namespace Avocado.Projectiles
         private float xStartPos;      // Posición inicial en X
         private float damage;
         //KnockBackData knockbackData;
-        [SerializeField] GameObject explosiveEffect;
 
         [SerializeField] private float gravity;         
         [SerializeField] private float damageRadius;    
@@ -116,7 +115,6 @@ namespace Avocado.Projectiles
         }
         void DelayPlayerStop()
         {
-            explosiveEffect.SetActive(true);
             anim.SetTrigger("Hit");
 
             rb.gravityScale = 0f;
