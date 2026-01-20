@@ -8,6 +8,7 @@ namespace Avocado
     {
         [SerializeField] GameObject textHolder;
         GameObject player;
+        [SerializeField] string textToShow;
         private void Awake()
         {
             textHolder = GameObject.FindGameObjectWithTag("PopOutCanvas");
@@ -22,6 +23,7 @@ namespace Avocado
             {
                 player = collision.gameObject;
                 textHolder.SetActive(true);
+                //textHolder.GetComponent<PopOutTextManager>().ChangeText(textToShow);
                 textHolder.transform.position = transform.position + new Vector3(0, 1.5f, 0);
                 player.GetComponent<PlayerInputHandler>().OnInteractEventInputChanged += OnInteractEvent;
             }

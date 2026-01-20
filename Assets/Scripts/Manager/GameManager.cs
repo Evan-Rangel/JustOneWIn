@@ -1,5 +1,6 @@
 ﻿using Avocado;
 using Avocado.CoreSystem;
+using Avocado.Weapons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,10 +12,31 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region FPS Display
+    [SerializeField]TMPro.TMP_Text fpsText;
+    [SerializeField] float maxFps=0, minFps=1000;
 
-    Stats stats;
+    void ShowFps()
+    {
+        /*
+        float fps = 1f / Time.unscaledDeltaTime;
+        if (fps < minFps)
+        {
+            minFps = fps;
+            Debug.Log(minFps);
+        }
+        if (fps > maxFps)
+            maxFps = fps;
 
+        fpsText.text = Mathf.RoundToInt(fps).ToString();
+        Invoke("ShowFps", 0.1f);
+        */
+    
+    }
+    #endregion
     #region Local Game
+    Stats stats;
+    public Transform newGameStartPosition;
     #region Coins 
     [Header("Coins")]
     public int coins = 0;
@@ -24,14 +46,20 @@ public class GameManager : MonoBehaviour
         if (coins == 999)
             return;
         coins+=_value;
+        SaveManager.SaveCoins(coins);
         coinsText.text = coins.ToString();
     }
     public void SubstractCoin(int _value)
     { 
         coins -= _value;
+        SaveManager.SaveCoins(coins);
         coinsText.text = coins.ToString();
     }
-
+    void CoinsInPlayerPrefs()
+    { 
+        coins= SaveManager.GetCoins();
+        coinsText.text = coins.ToString();
+    }
 
 
     [SerializeField] GameObject coinPrefab;
@@ -63,6 +91,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
     [SerializeField] Image healthBar, staminaBar;
     int healthLevel = 1, staminaLevel = 1;
+    [SerializeField] ShopItemHolder[] shopItemHolders;
+    [field: SerializeField] public WeaponDataSO[] weaponsData { get; private set; }
     public void HideHolders()
     {
         ChangeState(GameState.Gameplay);
@@ -73,23 +103,34 @@ public class GameManager : MonoBehaviour
     }
     public void HealthBuff()
     {
+        if (healthLevel >= 3)return;
         healthLevel++;
+        SaveManager.SaveHealthLevel(healthLevel);
         stats.UpdateHealthLevel(healthLevel-1);
         healthAnimator.SetInteger("Level", healthLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < healthLevel)
             statsBackgroundAnimator.SetInteger("Level", healthLevel);
-
     }
     public void StaminaBuff()
     {
+        if (staminaLevel >= 3)return;
         staminaLevel++;
+        SaveManager.SaveStaminaLevel(staminaLevel);
         stats.UpdateStaminaLevel(staminaLevel - 1);
-
         staminaAnimator.SetInteger("Level", staminaLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < staminaLevel)
             statsBackgroundAnimator.SetInteger("Level", staminaLevel);
     }
-
+    public void InitStatsWithPlayerPrefs()
+    {
+        healthLevel = SaveManager.GetHealthLevel();
+        staminaLevel = SaveManager.GetStaminaLevel();
+        stats.UpdateHealthLevel(healthLevel - 1);
+        stats.UpdateStaminaLevel(staminaLevel - 1);
+        healthAnimator.SetInteger("Level", healthLevel);
+        staminaAnimator.SetInteger("Level", staminaLevel);
+        statsBackgroundAnimator.SetInteger("Level", Math.Max(healthLevel, staminaLevel));
+    }
     public void UpdateHealthBar(float _value)
     {
         healthBar.fillAmount =1-_value;
@@ -208,8 +249,13 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
-        stats= GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
+        Invoke("ShowFps", 2);
+
+        stats = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
         HideHolders();
+        CoinsInPlayerPrefs();
+        InitStatsWithPlayerPrefs();
+
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());

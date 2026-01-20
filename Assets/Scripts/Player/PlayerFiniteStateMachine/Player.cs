@@ -1,4 +1,5 @@
 ﻿
+using Avocado;
 using Avocado.CoreSystem;
 using Avocado.FSM;
 using Avocado.Weapons;
@@ -126,6 +127,7 @@ public class Player : MonoBehaviour
         { { } }
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
+        transform.position= SaveManager.GetPlayerPosition();
     }
 
     private void HandlePoiseCurrentValueZero()

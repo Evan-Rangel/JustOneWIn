@@ -4,11 +4,11 @@ namespace Avocado
 {
     public class GameSave : InteractEventManager
     {
-        [SerializeField] Vector3 savePointPosition;
+        [SerializeField] Transform savePointPosition;
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
-
+            SaveManager.SavePlayerPositionInPlayerPrefs(savePointPosition.position);
         }
     }
 }

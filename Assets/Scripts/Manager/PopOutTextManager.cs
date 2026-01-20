@@ -8,6 +8,10 @@ namespace Avocado
     {
         [SerializeField] Image[] backgrounImage;
         [SerializeField] TMP_Text text;
+        public void ChangeText(string newText)
+        {
+            text.SetText(newText);
+        }
         private void Start()
         {
             gameObject.SetActive(false);
