@@ -28,6 +28,7 @@ namespace Avocado
 
         public void DisableTorret()
         {
+            GameManager.instance.StaminaBuff();
             for (int i = 0; i < 5; i++)
             {
                 GameObject coin = GameManager.instance.RequestCoin() ;

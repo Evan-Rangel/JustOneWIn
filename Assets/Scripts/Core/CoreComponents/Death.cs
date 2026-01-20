@@ -41,10 +41,13 @@ namespace Avocado.CoreSystem
         // Suscribe el método Die al evento de vida en cero.
         private void OnEnable()
         {
-            //sound = core.Root.GetComponent<SoundReproductor>();
-            Stats.Health.OnCurrentValueZero += Die;
+            Invoke("DelayOnEnable", 0.1f);
         }
+        void DelayOnEnable()
+        { 
+            Stats.Health.OnCurrentValueZero += Die;
 
+        }
         // Desuscribe el método Die para evitar problemas cuando el objeto se desactive.
         private void OnDisable()
         {

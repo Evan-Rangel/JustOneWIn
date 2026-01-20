@@ -30,7 +30,7 @@ public class PlayerWallSlideState : PlayerTouchingWallState
 
             // Si el jugador mantiene el botón de agarre y no está moviéndose verticalmente (yInput == 0),
             // entonces cambia al estado de agarre en pared
-            if (grabInput && yInput == 0)
+            if (grabInput && yInput == 0 && core.grabUnlocked)
             {
                 stateMachine.ChangeState(player.WallGrabState);
             }

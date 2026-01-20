@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
 
     public InteractableDetector InteractableDetector { get; private set; }
     public SoundReproductor SoundReproductor { get; private set; }
+
+   
     #endregion
 
     #region Weapons Variables         

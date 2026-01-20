@@ -43,6 +43,7 @@ public class PlayerInAirState : PlayerState
 
     private float startWallJumpCoyoteTime;
 
+    Stats stats;
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -98,6 +99,9 @@ public class PlayerInAirState : PlayerState
     {
         base.LogicUpdate();
 
+        if (stats is null)
+            stats = core.GetCoreComponent<Stats>();
+
         // Verificar si aún se puede saltar (coyote time)
         CheckCoyoteTime();
         CheckWallJumpCoyoteTime();
@@ -140,7 +144,7 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && grabInput && isTouchingLedge)
+        else if (isTouchingWall && grabInput && isTouchingLedge && core.grabUnlocked)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
@@ -148,9 +152,11 @@ public class PlayerInAirState : PlayerState
         {
             stateMachine.ChangeState(player.WallSlideState);
         }
-        else if (dashInput && player.DashState.CheckIfCanDash())
+        else if (dashInput && player.DashState.CheckIfCanDash() && stats.Stamina.CurrentValue>20 && core.dashUnlocked)
         {
             stateMachine.ChangeState(player.DashState);
+           
+            stats.Stamina.Decrease(20);
         }
         else
         {

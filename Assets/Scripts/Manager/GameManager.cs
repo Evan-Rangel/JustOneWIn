@@ -1,17 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Events;
+﻿using Avocado;
+using Avocado.CoreSystem;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
 
-
+    Stats stats;
 
     #region Local Game
     #region Coins 
@@ -57,11 +58,23 @@ public class GameManager : MonoBehaviour
 
     [Header("User Interface")]
     [SerializeField] GameObject statsHolder;
+    [SerializeField] GameObject[] holderToHideWithEsc;
+    [field: SerializeField]public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
+    [SerializeField] Image healthBar, staminaBar;
     int healthLevel = 1, staminaLevel = 1;
+    public void HideHolders()
+    {
+        ChangeState(GameState.Gameplay);
+        foreach (GameObject holder in holderToHideWithEsc)
+        {
+            holder.SetActive(false);
+        }
+    }
     public void HealthBuff()
     {
         healthLevel++;
+        stats.UpdateHealthLevel(healthLevel-1);
         healthAnimator.SetInteger("Level", healthLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < healthLevel)
             statsBackgroundAnimator.SetInteger("Level", healthLevel);
@@ -70,11 +83,21 @@ public class GameManager : MonoBehaviour
     public void StaminaBuff()
     {
         staminaLevel++;
+        stats.UpdateStaminaLevel(staminaLevel - 1);
+
         staminaAnimator.SetInteger("Level", staminaLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < staminaLevel)
             statsBackgroundAnimator.SetInteger("Level", staminaLevel);
     }
 
+    public void UpdateHealthBar(float _value)
+    {
+        healthBar.fillAmount =1-_value;
+    }
+    public void UpdateStaminaBar(float _value)
+    {
+        staminaBar.fillAmount = 1 - _value;
+    }
 
 
 
@@ -185,6 +208,8 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
+        stats= GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
+        HideHolders();
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());

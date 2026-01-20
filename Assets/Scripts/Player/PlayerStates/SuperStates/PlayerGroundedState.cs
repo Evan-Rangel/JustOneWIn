@@ -32,6 +32,7 @@ public class PlayerGroundedState : PlayerState
     private bool isTouchingWall;
     private bool isTouchingLedge;
     private bool dashInput;
+    Stats stats;
 
     public PlayerGroundedState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
@@ -68,6 +69,10 @@ public class PlayerGroundedState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+
+        if (stats is null)
+            stats = core.GetCoreComponent<Stats>();
         if (player == null || player.InputHandler == null) return;
         if (player.InputHandler.AttackInputs == null) return;
         // Captura las entradas del jugador
@@ -99,14 +104,16 @@ public class PlayerGroundedState : PlayerState
             stateMachine.ChangeState(player.InAirState);
         }
         // Agarre de pared (solo si está tocando la pared y la repisa)
-        else if (isTouchingWall && grabInput && isTouchingLedge)
+        else if (isTouchingWall && grabInput && isTouchingLedge && core.grabUnlocked)
         {
             stateMachine.ChangeState(player.WallGrabState);
         }
         // Dash
-        else if (dashInput && player.DashState.CheckIfCanDash() && !isTouchingCeiling)
+        else if (dashInput && player.DashState.CheckIfCanDash() && !isTouchingCeiling && stats.Stamina.CurrentValue > 20 && core.dashUnlocked)
         {
             stateMachine.ChangeState(player.DashState);
+            stats.Stamina.Decrease(20);
+
         }
     }
 

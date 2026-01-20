@@ -16,6 +16,8 @@ namespace Avocado.CoreSystem
         // Por defecto, se asigna al GameObject padre de este Core.
         [field: SerializeField] public GameObject Root { get; private set; }
 
+        //Unlockables
+        public bool grappleUnlocked, dashUnlocked, grabUnlocked;
         // Lista que mantiene todos los CoreComponents registrados en este Core.
         private readonly List<CoreComponent> CoreComponents = new List<CoreComponent>();
 

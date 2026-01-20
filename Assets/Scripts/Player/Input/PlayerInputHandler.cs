@@ -19,6 +19,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] bool localGame;
     public event Action<bool> OnInteractInputChanged;
     public event Action<bool> OnGrappleInputChanged;
+    public event Action OnInteractEventInputChanged;
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
@@ -58,13 +59,29 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         cam = Camera.main; // Obtiene la cámara principal
     }
+ 
 
     private void Update()
     {
         CheckJumpInputHoldTime();
         CheckDashInputHoldTime();
     }
+    public void OnEscapeInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            GameManager.instance.HideHolders();
+            //Debug.Log(onEscapeInput.GetInvocationList()[0].ToString());
+            //onEscapeInput?.Invoke();
+        }
+    }
+    public void OnInteractEvent(InputAction.CallbackContext context)
+    { 
+        if (context.started)
+            OnInteractEventInputChanged?.Invoke();
 
+
+    }
     public void OnInteractInput(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -121,7 +138,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnGrabInput(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started )
             GrabInput = true;
 
         if (context.canceled)

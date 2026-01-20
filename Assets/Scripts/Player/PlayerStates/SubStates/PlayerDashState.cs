@@ -29,7 +29,7 @@ public class PlayerDashState : PlayerAbilityState {
 	public override void Enter() {
 		base.Enter();
 
-		player.SoundReproductor.PlayDashSound();
+		//player.SoundReproductor.PlayDashSound();
 
 		CanDash = false;
 		player.InputHandler.UseDashInput(); // Marca el input de dash como usado
@@ -86,7 +86,9 @@ public class PlayerDashState : PlayerAbilityState {
                 // Si suelta el botón o pasa el tiempo máximo de espera, se lanza el dash
                 if (dashInputStop || Time.unscaledTime >= startTime + playerData.maxHoldTime) 
 				{
-					isHolding = false;
+                    player.SoundReproductor.PlayDashSound();
+
+                    isHolding = false;
 					Time.timeScale = 1f;
 					startTime = Time.time; // Restaura el tiempo normal
                     Movement?.CheckIfShouldFlip(Mathf.RoundToInt(dashDirection.x)); // Gira si es necesario

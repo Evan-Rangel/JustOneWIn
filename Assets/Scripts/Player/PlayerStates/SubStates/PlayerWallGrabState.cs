@@ -59,12 +59,12 @@ public class PlayerWallGrabState : PlayerTouchingWallState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
         if (!isExitingState)
         {
             // Mantiene al jugador fijo en la pared sin movimiento
             HoldPosition();
 
+            
             // Si el jugador presiona hacia arriba, pasa al estado de escalar
             if (yInput > 0)
             {

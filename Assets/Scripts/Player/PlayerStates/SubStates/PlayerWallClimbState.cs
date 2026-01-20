@@ -30,7 +30,7 @@ public class PlayerWallClimbState : PlayerTouchingWallState
             Movement?.SetVelocityY(playerData.wallClimbVelocity);
 
             // Si el jugador ya no mantiene la dirección hacia arriba, cambia al estado de agarrarse a la pared
-            if (yInput != 1)
+            if (yInput != 1 && core.grabUnlocked)
             {
                 stateMachine.ChangeState(player.WallGrabState);
             }

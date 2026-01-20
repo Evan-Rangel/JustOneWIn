@@ -20,8 +20,15 @@ namespace Avocado.CoreSystem.StatsSystem
     {
         // Evento que se dispara cuando el valor actual llega a cero
         public event Action OnCurrentValueZero;
+        public event Action OnCurrentValueDecrease;
+        public event Action<float> OnCurrentValueChange;
 
         [field: SerializeField] public float MaxValue { get; private set; }
+        public void NewMaxValue(float newMaxValue)
+        {
+            MaxValue = newMaxValue;
+            Init();
+        }
 
         public float CurrentValue
         {
@@ -30,7 +37,7 @@ namespace Avocado.CoreSystem.StatsSystem
             {
                 // Clamp para que CurrentValue siempre esté entre 0 y MaxValue
                 currentValue = Mathf.Clamp(value, 0f, MaxValue);
-
+                OnCurrentValueChange?.Invoke(currentValue/MaxValue);
                 // Si llega a 0, dispara el evento
                 if (currentValue <= 0f)
                 {
@@ -48,6 +55,6 @@ namespace Avocado.CoreSystem.StatsSystem
         public void Increase(float amount) => CurrentValue += amount;
 
         // Disminuye el valor actual en una cantidad dada
-        public void Decrease(float amount) => CurrentValue -= amount;
+        public void Decrease(float amount) { CurrentValue -= amount; OnCurrentValueDecrease?.Invoke(); }
     }
 }

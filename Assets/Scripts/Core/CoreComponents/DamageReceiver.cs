@@ -25,13 +25,13 @@ namespace Avocado.CoreSystem
         public void Damage(DamageData data)
         {
             // Mostrar el daño antes de aplicar modificadores
-            print($"Damage Amount Before Modifiers: {data.Amount}");
+            //print($"Damage Amount Before Modifiers: {data.Amount}");
 
             // Aplicar todos los modificadores activos al daño
             data = Modifiers.ApplyAllModifiers(data);
 
             // Mostrar el daño después de modificadores
-            print($"Damage Amount After Modifiers: {data.Amount}");
+            //print($"Damage Amount After Modifiers: {data.Amount}");
 
             // Si después de modificar el daño es 0 o menor, no hacer nada
             if (data.Amount <= 0f)
@@ -43,7 +43,8 @@ namespace Avocado.CoreSystem
 
             // Disminuir salud
             stats.Health.Decrease(data.Amount);
-            
+           // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
+
             // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);
         }
