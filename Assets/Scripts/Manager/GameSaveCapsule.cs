@@ -7,7 +7,6 @@ namespace Avocado
 {
     public class GameSaveCapsule : MonoBehaviour
     {
-        Animator animator;
         SpriteRenderer spriteRenderer;
         [SerializeField]Sprite[] sprites;
         bool isOpen = false;
@@ -17,6 +16,7 @@ namespace Avocado
         public bool spawnWeaponAnimation;
         int spawnWeaponDirection=1;
         public event Action OnSpawnWeaponAnimationEnd;
+        [SerializeField] Transform spawnWeaponPosition;
         private void Update()
         {
             timer -= Time.deltaTime;    
@@ -65,14 +65,13 @@ namespace Avocado
         {
             spriteRenderer=GetComponent<SpriteRenderer>();
             spriteRenderer.sprite= sprites[0];
-            animator = GetComponent<Animator>();
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
             {
                 isOpen = true;
-                //animator.SetBool("Open", true);
+                GameManager.instance.SetWeaponSpawn(spawnWeaponPosition);
             }
         }
         private void OnTriggerExit2D(Collider2D collision)
@@ -80,7 +79,6 @@ namespace Avocado
             if (collision.CompareTag("Player"))
             {
                 isOpen = false;
-                //animator.SetBool("Open", false);
             }
         }
     }

@@ -92,7 +92,7 @@ Transform:
   - {fileID: 7002959372488733404}
   - {fileID: 8897983848841811052}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7002959371737094107
 MonoBehaviour:
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Rigidbody2D>k__BackingField: {fileID: 5814087343190203649}
-  weaponIcon: {fileID: 7002959372488733395}
+  <weaponIcon>k__BackingField: {fileID: 7002959372488733395}
   bobber: {fileID: 182172274595342521}
   weaponData: {fileID: 11400000, guid: 34a22b2e4f061dd4e833ca5b0b73ddc6, type: 2}
 --- !u!50 &5814087343190203649

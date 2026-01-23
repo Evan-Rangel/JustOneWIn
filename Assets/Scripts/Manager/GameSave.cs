@@ -8,7 +8,7 @@ namespace Avocado
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
-            SaveManager.SavePlayerPositionInPlayerPrefs(savePointPosition.position);
+           // SaveManager.SavePlayerPositionInPlayerPrefs(savePointPosition.position);
         }
     }
 }

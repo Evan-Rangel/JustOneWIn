@@ -23,7 +23,7 @@ namespace Avocado.Interaction.Interactables
     {
         [field: SerializeField] public Rigidbody2D Rigidbody2D { get; private set; }
 
-        [SerializeField] private SpriteRenderer weaponIcon; // Icono visual del arma
+        [field:SerializeField] public SpriteRenderer weaponIcon { get; private set; }// Icono visual del arma
         [SerializeField] private Bobber bobber;             // Efecto visual de bobbing (flotar hacia arriba y abajo)
 
         [SerializeField] private WeaponDataSO weaponData;   // Datos del arma que este pickup contiene
@@ -40,6 +40,8 @@ namespace Avocado.Interaction.Interactables
         {
             weaponData = context;
             weaponIcon.sprite = weaponData.Icon;
+            GameManager.instance.AddWeaponOnGame(context);
+
         }
 
         // Lógica cuando el jugador interactúa con el objeto (lo recoge)
@@ -64,6 +66,7 @@ namespace Avocado.Interaction.Interactables
         }
         void DestroyGameObject()
         {
+            GameManager.instance.RemoveWeaponOnGame(weaponData);
             if (canDestroy)
                 Destroy(gameObject);
         }

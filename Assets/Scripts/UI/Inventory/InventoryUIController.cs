@@ -1,3 +1,4 @@
+using Avocado.Interaction.Interactables;
 using Avocado.Weapons;
 using System;
 using UnityEngine;
@@ -8,14 +9,30 @@ namespace Avocado
     public class InventoryUIController : MonoBehaviour
     {
         public event Action<WeaponDataSO> showWeapon;
+        public event Action<WeaponDataSO> selectWeapon;
         [SerializeField] Image uiImage;
         [SerializeField] TMPro.TMP_Text uiName;
         [SerializeField] TMPro.TMP_Text uiDescription;
         int currentIndex;
         [SerializeField] GameObject buttons;
-        private void Awake()
+        WeaponDataSO selectedWeaponData;
+        [SerializeField] GameObject weaponPickupPrefab;
+        public void SelectButton()
+        { 
+            selectWeapon?.Invoke(selectedWeaponData);
+        }
+        void SelectWeapon(WeaponDataSO _data)
         {
-            //gameObject.SetActive(false);
+            WeaponPickup weapon = Instantiate(weaponPickupPrefab, GameManager.instance.weaponSpawn.position, Quaternion.identity).GetComponent<WeaponPickup>();
+            weapon.weaponIcon.enabled = false;
+            weapon.SetContext(_data);
+            GameSaveCapsule capsule = GameManager.instance.weaponSpawn.root.GetComponentInChildren<GameSaveCapsule>();
+
+            capsule.spawnWeaponAnimation = true;
+            capsule.OnSpawnWeaponAnimationEnd += () =>
+            {
+                weapon.weaponIcon.enabled = true;
+            };
         }
 
         public void OnShowWeapon(WeaponDataSO weaponData)
@@ -23,6 +40,7 @@ namespace Avocado
             uiImage.sprite = weaponData.Icon;
             uiName.text = weaponData.Name;
             uiDescription.text = weaponData.Description;
+            selectedWeaponData = weaponData;
         }
         public void NextWeapon()
         { 
@@ -45,12 +63,12 @@ namespace Avocado
         private void OnEnable()
         {
             showWeapon += OnShowWeapon;
+            selectWeapon += SelectWeapon;
             currentIndex = 0;
             if (GameManager.instance.GetWeaponDataAtIndex(currentIndex))
             {
                 showWeapon?.Invoke(GameManager.instance.GetWeaponDataAtIndex(currentIndex));
                 buttons.SetActive(GameManager.instance.GetTotalWeapons() > 1);
-                GameManager.instance.ChangeState(GameManager.GameState.UI);
             }
             else
             {
@@ -59,9 +77,11 @@ namespace Avocado
         }
         private void OnDisable()
         {
-            GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
+           // GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
 
             showWeapon -= OnShowWeapon;
+            selectWeapon -= SelectWeapon;
+
         }
 
     }

@@ -17,8 +17,6 @@ namespace Avocado
         
 
         [SerializeField] GameObject weaponPickupPrefab;
-        [SerializeField] Transform weaponPickupSpawnPoint;
-        GameSaveCapsule capsule;
         GameManager gameManager;
         public override void Start()
         {
@@ -35,7 +33,6 @@ namespace Avocado
             }
             gameManager = GameManager.instance;
             shopItemHolders = gameManager.shopHolder.GetComponentsInChildren<ShopItemHolder>();
-            capsule= weaponPickupSpawnPoint.root.GetComponentInChildren<GameSaveCapsule>();
         }
 
         public override void OnInteractEvent()
@@ -43,6 +40,9 @@ namespace Avocado
             base.OnInteractEvent();
             gameManager.shopHolder.SetActive(true);
             gameManager.windowSelector.SetActive(true);
+            gameManager.SetInfoMenuComputer("Shop");
+            SaveManager.SavePlayerPositionInPlayerPrefs(gameManager.weaponSpawn.position);
+
             int shopIndex = 0;
             foreach (var holder in shopItemHolders)
             {
@@ -80,18 +80,18 @@ namespace Avocado
         }
         public void SpawnWeaponPickup(WeaponDataSO _data)
         {
-            if (gameManager.coins < _data.PriceOnShop)
+            if (!gameManager.SubstractCoin(_data.PriceOnShop))
                 return;
-            gameManager.SubstractCoin(_data.PriceOnShop);
             gameManager.AddWeaponDataToInventory(_data);
-            WeaponPickup weapon = Instantiate(weaponPickupPrefab, weaponPickupSpawnPoint.position, Quaternion.identity).GetComponent<WeaponPickup>();
-            weapon.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            WeaponPickup weapon = Instantiate(weaponPickupPrefab, gameManager.weaponSpawn.position, Quaternion.identity).GetComponent<WeaponPickup>();
+            weapon.weaponIcon.enabled = false;
             weapon.SetContext(_data);
+            GameSaveCapsule capsule = gameManager.weaponSpawn.root.GetComponentInChildren<GameSaveCapsule>();
+
             capsule.spawnWeaponAnimation = true;
             capsule.OnSpawnWeaponAnimationEnd += () =>
             {
-                Debug.Log("Disable sprite");
-                weapon.GetComponentInChildren<SpriteRenderer>().enabled = true;
+                weapon.weaponIcon.enabled = true;
             };
             OnInteractEvent();
         }

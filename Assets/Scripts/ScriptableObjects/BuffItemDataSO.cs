@@ -16,9 +16,8 @@ namespace Avocado
 
         public void ApllyBuff(string _shopID)
         {
-            if (GameManager.instance.coins < buffPrice)
+            if (!GameManager.instance.SubstractCoin(buffPrice))
                 return;
-            GameManager.instance.SubstractCoin(buffPrice);
             SaveManager.SaveBuffPurchaseInPlayerPrefs(_shopID, 1);
             switch (buffType)
             {

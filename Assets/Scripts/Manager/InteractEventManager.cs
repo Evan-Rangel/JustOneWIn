@@ -17,13 +17,12 @@ namespace Avocado
         {
             textHolder.SetActive(false);
         }
-        private void OnTriggerEnter2D(Collider2D collision)
+        public  void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
                 player = collision.gameObject;
                 textHolder.SetActive(true);
-                //textHolder.GetComponent<PopOutTextManager>().ChangeText(textToShow);
                 textHolder.transform.position = transform.position + new Vector3(0, 1.5f, 0);
                 player.GetComponent<PlayerInputHandler>().OnInteractEventInputChanged += OnInteractEvent;
             }

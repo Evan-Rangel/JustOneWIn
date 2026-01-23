@@ -4,6 +4,7 @@ using Avocado.Weapons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,8 +14,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region FPS Display
-    [SerializeField]TMPro.TMP_Text fpsText;
-    [SerializeField] float maxFps=0, minFps=1000;
+    [SerializeField] TMPro.TMP_Text fpsText;
+    [SerializeField] float maxFps = 0, minFps = 1000;
 
     void ShowFps()
     {
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
         fpsText.text = Mathf.RoundToInt(fps).ToString();
         Invoke("ShowFps", 0.1f);
         */
-    
+
     }
     #endregion
     #region Local Game
@@ -41,29 +42,34 @@ public class GameManager : MonoBehaviour
     [Header("Coins")]
     public int coins;
     [SerializeField] TMP_Text coinsText;
+    [Header("SpawnPoints")]
+    [SerializeField] List<Transform> spawnPoints= new List<Transform>();
     public void AddCoin(int _value)
     {
         if (coins == 999)
             return;
-        coins+=_value;
+        coins += _value;
         SaveManager.SaveCoins(coins);
         coinsText.text = coins.ToString();
     }
-    public void SubstractCoin(int _value)
-    { 
+    public bool SubstractCoin(int _value)
+    {
+        if (coins - _value < 0)
+            return false;
         coins -= _value;
         SaveManager.SaveCoins(coins);
         coinsText.text = coins.ToString();
+        return true;
     }
     void CoinsInPlayerPrefs()
-    { 
-        coins= SaveManager.GetCoins();
+    {
+        coins = SaveManager.GetCoins();
         coinsText.text = coins.ToString();
     }
 
 
     [SerializeField] GameObject coinPrefab;
-    List<GameObject> coinsPool=new List<GameObject>();
+    List<GameObject> coinsPool = new List<GameObject>();
     public GameObject RequestCoin()
     {
         foreach (GameObject coin in coinsPool)
@@ -80,6 +86,7 @@ public class GameManager : MonoBehaviour
     }
 
 
+
     #endregion
 
     #region UI
@@ -87,17 +94,25 @@ public class GameManager : MonoBehaviour
     [Header("User Interface")]
     [SerializeField] GameObject statsHolder;
     [SerializeField] GameObject[] holderToHideWithEsc;
-    [field: SerializeField]public GameObject shopHolder { get; private set; }
+    [field: SerializeField] public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
     [SerializeField] Image healthBar, staminaBar;
     int healthLevel = 1, staminaLevel = 1;
     [SerializeField] ShopItemHolder[] shopItemHolders;
     [field: SerializeField] public WeaponDataSO[] weaponsData { get; private set; }
-    [SerializeField]List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
+    [SerializeField] List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
+    [SerializeField] List<WeaponDataSO> weaponsInGame = new List<WeaponDataSO>();
     public GameObject windowSelector;
+    [field: SerializeField] public Transform weaponSpawn { get; private set; }
+    public void SetWeaponSpawn(Transform _spawn)
+    {
+        weaponSpawn = _spawn;
+        if (!spawnPoints.Contains(_spawn))
+            spawnPoints.Add(_spawn);
+    }
     public WeaponDataSO GetWeaponDataAtIndex(int idx)
     {
-        if (idx>=weaponUnlocked.Count || idx<0)
+        if (idx >= weaponUnlocked.Count || idx < 0)
             return null;
         return weaponUnlocked[idx];
     }
@@ -118,6 +133,22 @@ public class GameManager : MonoBehaviour
         SaveManager.SaveWeaponInPlayerPrefs(_data);
         weaponUnlocked.Add(_data);
     }
+    public void AddWeaponOnGame(WeaponDataSO _data)
+    {
+        if (!weaponsInGame.Contains(_data))
+            weaponsInGame.Add(_data);
+    }
+    public void RemoveWeaponOnGame(WeaponDataSO _data)
+    {
+        if (weaponsInGame.Contains(_data))
+            weaponsInGame.Remove(_data);
+    }
+    public bool IsWeaponInGame(WeaponDataSO _data)
+    {
+        return weaponsInGame.Contains(_data);
+    }
+
+
     public void HideHolders()
     {
         ChangeState(GameState.Gameplay);
@@ -128,17 +159,17 @@ public class GameManager : MonoBehaviour
     }
     public void HealthBuff()
     {
-        if (healthLevel >= 3)return;
+        if (healthLevel >= 3) return;
         healthLevel++;
         SaveManager.SaveHealthLevel(healthLevel);
-        stats.UpdateHealthLevel(healthLevel-1);
+        stats.UpdateHealthLevel(healthLevel - 1);
         healthAnimator.SetInteger("Level", healthLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < healthLevel)
             statsBackgroundAnimator.SetInteger("Level", healthLevel);
     }
     public void StaminaBuff()
     {
-        if (staminaLevel >= 3)return;
+        if (staminaLevel >= 3) return;
         staminaLevel++;
         SaveManager.SaveStaminaLevel(staminaLevel);
         stats.UpdateStaminaLevel(staminaLevel - 1);
@@ -158,7 +189,7 @@ public class GameManager : MonoBehaviour
     }
     public void UpdateHealthBar(float _value)
     {
-        healthBar.fillAmount =1-_value;
+        healthBar.fillAmount = 1 - _value;
     }
     public void UpdateStaminaBar(float _value)
     {
@@ -166,10 +197,38 @@ public class GameManager : MonoBehaviour
     }
     [Header("Title Colors")]
     [SerializeField] Image titleBackgroundImage;
-    [SerializeField] Image  titleBorderImage01, titleBorderImage02;
+    [SerializeField] Image titleBorderImage01, titleBorderImage02;
+    [SerializeField]TMPro.TMP_Text titleText;
 
     [SerializeField] Color shopBackgroundColor, inventoryBackgroundColor, statsBackgroundColor;
     [SerializeField] Color shopBorderColor, inventoryBorderColor, statsBorderColor;
+    public void SetInfoMenuComputer(string _menuTitle)
+    {
+        titleText.SetText(_menuTitle);
+        switch (_menuTitle)
+        {
+            case "Shop":
+                titleBorderImage01.color = shopBorderColor;
+                titleBorderImage02.color = shopBorderColor;
+                titleBackgroundImage.color = shopBackgroundColor;
+
+                return;
+            case "Stats":
+                titleBorderImage01.color = statsBorderColor;
+                titleBorderImage02.color = statsBorderColor;
+                titleBackgroundImage.color = statsBackgroundColor;
+
+                return;
+            case "Inventory":
+                titleBorderImage01.color = inventoryBorderColor;
+                titleBorderImage02.color = inventoryBorderColor;
+                titleBackgroundImage.color = inventoryBackgroundColor;
+
+                return;
+            default:
+                return;
+        }
+    }
     public void GetTitleBackgroundColor( string _menuTitle)
     {
         switch (_menuTitle)
@@ -286,6 +345,8 @@ public class GameManager : MonoBehaviour
     [field: SerializeField, Range(1, 10f)] public float itemTimeRespawn { get; private set; }
 
     #endregion
+
+
     LevelData levelData;
     [SerializeField] Image loadImage;
     [SerializeField] TMP_Text loadText;
@@ -318,7 +379,7 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
-        SaveManager.DeleteSaved();
+      //  SaveManager.DeleteSaved();
         Invoke("ShowFps", 2);
         stats = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
         HideHolders();

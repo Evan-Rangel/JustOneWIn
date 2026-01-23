@@ -57,7 +57,6 @@ namespace Avocado.CoreSystem
         public void UpdateHealthLevel(int _value)
         {
             if (_value >= HealthLevels.Length)return;
-            Debug.Log("Updating Health Level to: " + _value);
             Health = HealthLevels[_value];
             Health.OnCurrentValueChange += UpdateHealth;
             Health.Init();
