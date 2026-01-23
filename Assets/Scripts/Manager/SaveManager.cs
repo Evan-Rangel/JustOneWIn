@@ -33,7 +33,6 @@ namespace Avocado
             PlayerPrefs.SetFloat("YPos", _position.y);
             PlayerPrefs.SetFloat("ZPos", _position.z);
             PlayerPrefs.Save();
-
         }
         public static Vector3 GetPlayerPosition()
         {
@@ -46,7 +45,7 @@ namespace Avocado
         }
         #endregion
 
-        #region BuffsPrefs
+        #region AbilitiesPrefs
         public static void SaveDashUnlocked(bool _unlocked)
         {
             PlayerPrefs.SetInt("DashUnlocked", _unlocked ? 1 : 0);
@@ -108,52 +107,20 @@ namespace Avocado
             return PlayerPrefs.HasKey("HealthLevel") ? PlayerPrefs.GetInt("HealthLevel", 1) : 1;
         }
         #endregion
-
+        #region Shop Buffs
+        public static void SaveBuffPurchaseInPlayerPrefs(string _shopID, int value)
+        {
+            PlayerPrefs.SetInt("DamageBuffLevel", value);
+            PlayerPrefs.Save();
+        }
+        public static bool IsBuffPurchasedInPlayerPrefs(string _shopID)
+        {
+            return PlayerPrefs.HasKey("DamageBuffLevel") && PlayerPrefs.GetInt("DamageBuffLevel")==1;
+        }
+        #endregion
         public static void DeleteSaved()
         {
             PlayerPrefs.DeleteAll();
         }
-      /*  public static void SavePlayerPrefs()
-        { 
-            PlayerPrefs.SetInt("DashUnlocked", dashUnlocked ? 1 : 0);
-            PlayerPrefs.SetInt("GrabUnlocked", grabUnlocked ? 1 : 0);
-            PlayerPrefs.SetInt("GrappleUnlocked", grappleUnlocked ? 1 : 0);
-            PlayerPrefs.SetInt("FirstWeapon", firstWeapon);
-            PlayerPrefs.SetInt("SecondWeapon", secondWeapon);
-            PlayerPrefs.SetInt("StaminaLevel", staminaLevel);
-            PlayerPrefs.SetInt("HealthLevel", healthLevel);
-            PlayerPrefs.SetInt("XPos", xPos);
-            PlayerPrefs.SetInt("YPos", yPos);
-            PlayerPrefs.SetInt("ZPos", zPos);
-            PlayerPrefs.SetInt("Coins", coins);
-            PlayerPrefs.Save();
-        }
-        public static void LoadPlayerPrefs()
-        {
-            if (PlayerPrefs.HasKey("DashUnlocked"))
-                dashUnlocked = PlayerPrefs.GetInt("DashUnlocked") == 1;
-            if (PlayerPrefs.HasKey("GrabUnlocked"))
-                grabUnlocked = PlayerPrefs.GetInt("GrabUnlocked") == 1;
-            if (PlayerPrefs.HasKey("GrappleUnlocked"))
-                grappleUnlocked = PlayerPrefs.GetInt("GrappleUnlocked") == 1;
-            if (PlayerPrefs.HasKey("FirstWeapon"))
-                firstWeapon = PlayerPrefs.GetInt("FirstWeapon");
-            if (PlayerPrefs.HasKey("SecondWeapon"))
-                secondWeapon = PlayerPrefs.GetInt("SecondWeapon");
-            if (PlayerPrefs.HasKey("StaminaLevel"))
-                staminaLevel = PlayerPrefs.GetInt("StaminaLevel");
-            if (PlayerPrefs.HasKey("HealthLevel"))
-                healthLevel = PlayerPrefs.GetInt("HealthLevel");
-            if (PlayerPrefs.HasKey("XPos"))
-                xPos = PlayerPrefs.GetInt("XPos");
-            if (PlayerPrefs.HasKey("YPos"))
-                yPos = PlayerPrefs.GetInt("YPos");
-            if (PlayerPrefs.HasKey("ZPos"))
-                zPos = PlayerPrefs.GetInt("ZPos");
-            if (PlayerPrefs.HasKey("Coins"))
-                coins = PlayerPrefs.GetInt("Coins");
-        }*/
-
-
     }
 }

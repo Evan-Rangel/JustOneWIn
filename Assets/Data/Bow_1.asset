@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a5a6cd738645369231540dd8f9631f, type: 3}
   m_Name: Bow_1
   m_EditorClassIdentifier: 
-  <Icon>k__BackingField: {fileID: 1097030419, guid: 6dab0a2e3c53f2c4394e969a0c1e6019,
-    type: 3}
+  <PriceOnShop>k__BackingField: 10
+  <Icon>k__BackingField: {fileID: 1097030419, guid: 6dab0a2e3c53f2c4394e969a0c1e6019, type: 3}
   <Name>k__BackingField: Cyan Bow
   <Description>k__BackingField: Basic Bow that shot 1 arrow
-  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1089e6ad3ab9c034382f2409dbcddd6c,
-    type: 2}
+  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1089e6ad3ab9c034382f2409dbcddd6c, type: 2}
   <NumberOfAttacks>k__BackingField: 1
   <ComponentData>k__BackingField:
   - rid: 3281099369942351876
@@ -65,8 +64,7 @@ MonoBehaviour:
           <SpawnInfos>k__BackingField:
           - <Offset>k__BackingField: {x: 1.24, y: 0.2}
             <Direction>k__BackingField: {x: 1, y: 0}
-            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: 32fff9d08a788b44c88d29b10964cf4d,
-              type: 3}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: 32fff9d08a788b44c88d29b10964cf4d, type: 3}
             <DamageData>k__BackingField:
               <Amount>k__BackingField: 15
             <KnockBackData>k__BackingField:
@@ -75,8 +73,7 @@ MonoBehaviour:
             <PoiseDamageData>k__BackingField:
               <Amount>k__BackingField: 5
             <SpriteDataPackage>k__BackingField:
-              <Sprite>k__BackingField: {fileID: 532677330, guid: dd9c93c673e5e164686171e344bd447a,
-                type: 3}
+              <Sprite>k__BackingField: {fileID: 532677330, guid: dd9c93c673e5e164686171e344bd447a, type: 3}
     - rid: 3281099369942351880
       type: {class: MovementData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
       data:
@@ -94,8 +91,7 @@ MonoBehaviour:
         attackData:
         - name: Attack 1
           <UseOptionalSprite>k__BackingField: 1
-          <Sprite>k__BackingField: {fileID: 532677330, guid: dd9c93c673e5e164686171e344bd447a,
-            type: 3}
+          <Sprite>k__BackingField: {fileID: 532677330, guid: dd9c93c673e5e164686171e344bd447a, type: 3}
     - rid: 3281099369942351882
       type: {class: DrawData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
       data:

@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a5a6cd738645369231540dd8f9631f, type: 3}
   m_Name: Shield_1
   m_EditorClassIdentifier: 
-  <Icon>k__BackingField: {fileID: -48840149, guid: 6dab0a2e3c53f2c4394e969a0c1e6019,
-    type: 3}
+  <PriceOnShop>k__BackingField: 5
+  <Icon>k__BackingField: {fileID: -48840149, guid: 6dab0a2e3c53f2c4394e969a0c1e6019, type: 3}
   <Name>k__BackingField: Shield
   <Description>k__BackingField: Normal Shield
-  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1baa3682ee132644cbd959c267628da5,
-    type: 2}
+  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1baa3682ee132644cbd959c267628da5, type: 2}
   <NumberOfAttacks>k__BackingField: 1
   <ComponentData>k__BackingField:
   - rid: 3281099369942351914
@@ -103,8 +102,7 @@ MonoBehaviour:
           <BlockWindowEnd>k__BackingField:
             <Duration>k__BackingField: 0
             <Phase>k__BackingField: 3
-          <Particles>k__BackingField: {fileID: 6240072112886026631, guid: 25aeb624df7917e4aa9cbe2204b85ed6,
-            type: 3}
+          <Particles>k__BackingField: {fileID: 6240072112886026631, guid: 25aeb624df7917e4aa9cbe2204b85ed6, type: 3}
           <ParticlesOffset>k__BackingField: {x: 0.75, y: -0.25}
     - rid: 3281099369942351917
       type: {class: MovementData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
@@ -134,8 +132,7 @@ MonoBehaviour:
           <ParryWindowEnd>k__BackingField:
             <Duration>k__BackingField: 0.25
             <Phase>k__BackingField: 0
-          <Particles>k__BackingField: {fileID: 6240072112886026631, guid: 25aeb624df7917e4aa9cbe2204b85ed6,
-            type: 3}
+          <Particles>k__BackingField: {fileID: 6240072112886026631, guid: 25aeb624df7917e4aa9cbe2204b85ed6, type: 3}
           <ParticlesOffset>k__BackingField: {x: 0.75, y: -0.25}
     - rid: 3281099369942351919
       type: {class: KnockBackOnParryData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}

@@ -28,6 +28,8 @@ namespace Avocado.Interaction.Interactables
 
         [SerializeField] private WeaponDataSO weaponData;   // Datos del arma que este pickup contiene
 
+
+        bool canDestroy;
         // Implementación de IInteractable<WeaponDataSO>
 
         // Devuelve los datos del arma
@@ -50,12 +52,20 @@ namespace Avocado.Interaction.Interactables
         public void EnableInteraction()
         {
             bobber.StartBobbing();
+            canDestroy = false;
         }
 
         // Desactiva interacción visual (detiene el bobbing)
         public void DisableInteraction()
         {
             bobber.StopBobbing();
+            canDestroy = true;
+            Invoke("DestroyGameObject", 5);
+        }
+        void DestroyGameObject()
+        {
+            if (canDestroy)
+                Destroy(gameObject);
         }
 
         // Devuelve la posición del pickup en el mundo

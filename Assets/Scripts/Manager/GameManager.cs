@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public Transform newGameStartPosition;
     #region Coins 
     [Header("Coins")]
-    public int coins = 0;
+    public int coins;
     [SerializeField] TMP_Text coinsText;
     public void AddCoin(int _value)
     {
@@ -93,6 +93,31 @@ public class GameManager : MonoBehaviour
     int healthLevel = 1, staminaLevel = 1;
     [SerializeField] ShopItemHolder[] shopItemHolders;
     [field: SerializeField] public WeaponDataSO[] weaponsData { get; private set; }
+    [SerializeField]List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
+    public GameObject windowSelector;
+    public WeaponDataSO GetWeaponDataAtIndex(int idx)
+    {
+        if (idx>=weaponUnlocked.Count || idx<0)
+            return null;
+        return weaponUnlocked[idx];
+    }
+    public int GetTotalWeapons()
+    {
+        return weaponUnlocked.Count;
+    }
+    void CkeckForAvailableWepons()
+    {
+        foreach (WeaponDataSO weapon in weaponsData)
+        {
+            if (SaveManager.IsWeaponSavedInPlayerPrefs(weapon))
+                weaponUnlocked.Add(weapon);
+        }
+    }
+    public void AddWeaponDataToInventory(WeaponDataSO _data)
+    {
+        SaveManager.SaveWeaponInPlayerPrefs(_data);
+        weaponUnlocked.Add(_data);
+    }
     public void HideHolders()
     {
         ChangeState(GameState.Gameplay);
@@ -139,8 +164,52 @@ public class GameManager : MonoBehaviour
     {
         staminaBar.fillAmount = 1 - _value;
     }
+    [Header("Title Colors")]
+    [SerializeField] Image titleBackgroundImage;
+    [SerializeField] Image  titleBorderImage01, titleBorderImage02;
 
+    [SerializeField] Color shopBackgroundColor, inventoryBackgroundColor, statsBackgroundColor;
+    [SerializeField] Color shopBorderColor, inventoryBorderColor, statsBorderColor;
+    public void GetTitleBackgroundColor( string _menuTitle)
+    {
+        switch (_menuTitle)
+        { 
+        case "Shop":
+                titleBackgroundImage.color = shopBorderColor;
+                return;
+            case "Stats":
+                titleBackgroundImage.color = statsBackgroundColor;
 
+                return;
+            case "Inventory":
+                titleBackgroundImage.color = inventoryBackgroundColor;
+
+                return;
+
+            default:
+                return ;
+        }
+    }
+    public void GetTitleBorderColor(string _menuTitle)
+    {
+        switch (_menuTitle)
+        {
+            case "Shop":
+                titleBorderImage01.color = shopBorderColor;
+                titleBorderImage02.color = shopBorderColor;
+                return ;
+            case "Stats":
+                titleBorderImage01.color = statsBorderColor;
+                titleBorderImage02.color = statsBorderColor;
+                return ;
+            case "Inventory":
+                titleBorderImage01.color = inventoryBorderColor;
+                titleBorderImage02.color = inventoryBorderColor;
+                return;
+            default:
+                return ;
+        }
+    }
 
 
     #endregion
@@ -174,10 +243,10 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case GameState.UI:
-                EnterUIState();
+                //EnterUIState();
                 break;
             case GameState.Gameplay:
-                EnterGameplayState();
+               // EnterGameplayState();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
@@ -249,13 +318,13 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
+        SaveManager.DeleteSaved();
         Invoke("ShowFps", 2);
-
         stats = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
         HideHolders();
         CoinsInPlayerPrefs();
         InitStatsWithPlayerPrefs();
-
+        CkeckForAvailableWepons();
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());
@@ -341,4 +410,9 @@ public interface ICollidable
 public enum CHARACTERS
 {
     Blue
+}
+public enum STAT
+{
+    Health,
+    Stamina
 }

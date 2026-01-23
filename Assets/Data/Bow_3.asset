@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a5a6cd738645369231540dd8f9631f, type: 3}
   m_Name: Bow_3
   m_EditorClassIdentifier: 
-  <Icon>k__BackingField: {fileID: -1900970966, guid: 6dab0a2e3c53f2c4394e969a0c1e6019,
-    type: 3}
+  <PriceOnShop>k__BackingField: 40
+  <Icon>k__BackingField: {fileID: -1900970966, guid: 6dab0a2e3c53f2c4394e969a0c1e6019, type: 3}
   <Name>k__BackingField: TeleBow
   <Description>k__BackingField: Especial bow that shot at the third shot a telepatic
     attack
-  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1089e6ad3ab9c034382f2409dbcddd6c,
-    type: 2}
+  <AnimatorController>k__BackingField: {fileID: 9100000, guid: 1089e6ad3ab9c034382f2409dbcddd6c, type: 2}
   <NumberOfAttacks>k__BackingField: 3
   <ComponentData>k__BackingField:
   - rid: 3281099369942351893
@@ -68,8 +67,7 @@ MonoBehaviour:
           <SpawnInfos>k__BackingField:
           - <Offset>k__BackingField: {x: 1.24, y: 0.2}
             <Direction>k__BackingField: {x: 1, y: 0}
-            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e,
-              type: 3}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e, type: 3}
             <DamageData>k__BackingField:
               <Amount>k__BackingField: 15
             <KnockBackData>k__BackingField:
@@ -78,14 +76,12 @@ MonoBehaviour:
             <PoiseDamageData>k__BackingField:
               <Amount>k__BackingField: 5
             <SpriteDataPackage>k__BackingField:
-              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890,
-                type: 3}
+              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890, type: 3}
         - name: Attack 2
           <SpawnInfos>k__BackingField:
           - <Offset>k__BackingField: {x: 1.24, y: 0.2}
             <Direction>k__BackingField: {x: 0, y: 0}
-            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e,
-              type: 3}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e, type: 3}
             <DamageData>k__BackingField:
               <Amount>k__BackingField: 15
             <KnockBackData>k__BackingField:
@@ -94,14 +90,12 @@ MonoBehaviour:
             <PoiseDamageData>k__BackingField:
               <Amount>k__BackingField: 5
             <SpriteDataPackage>k__BackingField:
-              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890,
-                type: 3}
+              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890, type: 3}
         - name: Attack 3
           <SpawnInfos>k__BackingField:
           - <Offset>k__BackingField: {x: 1.24, y: 0.2}
             <Direction>k__BackingField: {x: 1, y: 0}
-            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e,
-              type: 3}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: a1875a7ddba25504ea218efcc98de62e, type: 3}
             <DamageData>k__BackingField:
               <Amount>k__BackingField: 15
             <KnockBackData>k__BackingField:
@@ -110,12 +104,10 @@ MonoBehaviour:
             <PoiseDamageData>k__BackingField:
               <Amount>k__BackingField: 5
             <SpriteDataPackage>k__BackingField:
-              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890,
-                type: 3}
+              <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890, type: 3}
           - <Offset>k__BackingField: {x: -0.77, y: 0.42}
             <Direction>k__BackingField: {x: -0.41, y: 0.25}
-            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: 51229c82c454efa4e842828bfce59c73,
-              type: 3}
+            <ProjectilePrefab>k__BackingField: {fileID: 1775009464070235410, guid: 51229c82c454efa4e842828bfce59c73, type: 3}
             <DamageData>k__BackingField:
               <Amount>k__BackingField: 10
             <KnockBackData>k__BackingField:
@@ -124,8 +116,7 @@ MonoBehaviour:
             <PoiseDamageData>k__BackingField:
               <Amount>k__BackingField: 0
             <SpriteDataPackage>k__BackingField:
-              <Sprite>k__BackingField: {fileID: 398887673, guid: dd9c93c673e5e164686171e344bd447a,
-                type: 3}
+              <Sprite>k__BackingField: {fileID: 398887673, guid: dd9c93c673e5e164686171e344bd447a, type: 3}
     - rid: 3281099369942351896
       type: {class: MovementData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
       data:
@@ -143,8 +134,7 @@ MonoBehaviour:
         attackData:
         - name: Attack 1
           <UseOptionalSprite>k__BackingField: 1
-          <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890,
-            type: 3}
+          <Sprite>k__BackingField: {fileID: -689130813, guid: f2d1422f5da25f948a4236cb29080890, type: 3}
     - rid: 3281099369942351898
       type: {class: DrawData, ns: Avocado.Weapons.Components, asm: Assembly-CSharp}
       data:
