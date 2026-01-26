@@ -229,45 +229,19 @@ public class GameManager : MonoBehaviour
                 return;
         }
     }
-    public void GetTitleBackgroundColor( string _menuTitle)
+
+    [Header("Minimap")]
+    [SerializeField]
+    Transform minimapCameraTransform;
+    Vector2 minimapCameraDirection;
+    public void SetminimapCameraDiraction(Vector2 _value)
     {
-        switch (_menuTitle)
-        { 
-        case "Shop":
-                titleBackgroundImage.color = shopBorderColor;
-                return;
-            case "Stats":
-                titleBackgroundImage.color = statsBackgroundColor;
-
-                return;
-            case "Inventory":
-                titleBackgroundImage.color = inventoryBackgroundColor;
-
-                return;
-
-            default:
-                return ;
-        }
+        minimapCameraDirection = _value.normalized;
     }
-    public void GetTitleBorderColor(string _menuTitle)
+    private void Update()
     {
-        switch (_menuTitle)
-        {
-            case "Shop":
-                titleBorderImage01.color = shopBorderColor;
-                titleBorderImage02.color = shopBorderColor;
-                return ;
-            case "Stats":
-                titleBorderImage01.color = statsBorderColor;
-                titleBorderImage02.color = statsBorderColor;
-                return ;
-            case "Inventory":
-                titleBorderImage01.color = inventoryBorderColor;
-                titleBorderImage02.color = inventoryBorderColor;
-                return;
-            default:
-                return ;
-        }
+        
+        minimapCameraTransform.position +=(Vector3) minimapCameraDirection;
     }
 
 

@@ -25,7 +25,6 @@ namespace Avocado
             timer = maxTimer;
 
 
-
             if (spawnWeaponAnimation)
             {
                 if (currentIndex >= sprites.Length - 1)

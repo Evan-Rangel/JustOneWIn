@@ -1,5 +1,89 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &211370200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 211370201}
+  - component: {fileID: 211370202}
+  m_Layer: 14
+  m_Name: Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &211370201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211370200}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6853976413428451533}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &211370202
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211370200}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 202008921
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 0, g: 0.215487, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &4598415429190235755
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,7 +635,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f2c866657ebb6c4b84389e4ab08708a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformVelocity: {x: 0, y: 0}
 --- !u!1 &6853976412697838623
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,8 +986,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b855a94ad4b374daa7555873414221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Health>k__BackingField:
-    <MaxValue>k__BackingField: 100
+  <HealthLevels>k__BackingField:
+  - <MaxValue>k__BackingField: 50
+  - <MaxValue>k__BackingField: 100
+  - <MaxValue>k__BackingField: 150
+  <StaminaLevels>k__BackingField:
+  - <MaxValue>k__BackingField: 50
+  - <MaxValue>k__BackingField: 100
+  - <MaxValue>k__BackingField: 150
   <Poise>k__BackingField:
     <MaxValue>k__BackingField: 50
   poiseRecoveryRate: 25
@@ -1116,6 +1205,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Root>k__BackingField: {fileID: 0}
+  grappleUnlocked: 0
+  dashUnlocked: 0
+  grabUnlocked: 0
 --- !u!1 &6853976413428451520
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,6 +1228,7 @@ GameObject:
   - component: {fileID: 6853976413428451541}
   - component: {fileID: 6853976413428451530}
   - component: {fileID: 4023692297692124040}
+  - component: {fileID: 1199685196}
   m_Layer: 11
   m_Name: PlayerSingleplayer
   m_TagString: Player
@@ -1161,8 +1254,9 @@ Transform:
   - {fileID: 5510694494772290626}
   - {fileID: 6853976412451008246}
   - {fileID: 6853976413043972776}
+  - {fileID: 211370201}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6853976413428451522
 MonoBehaviour:
@@ -1333,6 +1427,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1febccea-4cbd-492f-afb3-93dbcc27a252
     m_ActionName: Gameplay/Grapple[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6853976413428451523}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: OnInteractEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 71d4bdb2-2e9d-4b07-84a8-0c71b1bb9076
+    m_ActionName: Gameplay/InteractShop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6853976413428451523}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: OnEscapeInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 43106d78-64a9-4f76-8f3a-22ac7a81ce22
+    m_ActionName: UI/Escape[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1363,6 +1489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7641726e322e6244e9f3c8975354ac13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localGame: 1
   cam: {fileID: 0}
   inputHoldTime: 0.2
 --- !u!212 &6853976413428451529
@@ -1657,6 +1784,39 @@ MonoBehaviour:
   - {fileID: 1319486912132078756}
   - {fileID: 8512564601995973754}
   - {fileID: 6192254481822596189}
+--- !u!114 &1199685196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6853976413428451520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ad4076d60e7064a9797e372c732d96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpSound:
+  - {fileID: 8300000, guid: 9c2b131a42b71ca439692d5ba23595aa, type: 3}
+  - {fileID: 8300000, guid: 8e305e42b16b08848bda6931c8a48f46, type: 3}
+  - {fileID: 8300000, guid: 3c9b971de8f4690468f0353cae038def, type: 3}
+  landSound:
+  - {fileID: 8300000, guid: ee9d038396049c7489d7022e82ae9075, type: 3}
+  dashSound:
+  - {fileID: 8300000, guid: 432ad0a4529c60f429354cdd84f0fb3e, type: 3}
+  - {fileID: 8300000, guid: d0c04e0b29f319242ba4322f88d6d1b7, type: 3}
+  walkSound:
+  - {fileID: 8300000, guid: 58a16e431acca8e4ab4f6bda2940047e, type: 3}
+  - {fileID: 8300000, guid: f5510ebc4ae850b4387878548c8862be, type: 3}
+  - {fileID: 8300000, guid: c8a1355164d8c5749bafd72c6284abe0, type: 3}
+  climbSound:
+  - {fileID: 8300000, guid: 3aa166ba68b80c44696d074304aceba7, type: 3}
+  deathSound:
+  - {fileID: 8300000, guid: fb7dec709f00eda46980aa781ac97586, type: 3}
+  damageSound:
+  - {fileID: 8300000, guid: f08742b174dda6345b1d803e43a3a7ac, type: 3}
+  - {fileID: 8300000, guid: c5318b2ddcbbe6040b420f3e6c387cdc, type: 3}
+  - {fileID: 8300000, guid: 6b69624d5a523c94ca934c868d09f77f, type: 3}
 --- !u!1 &6853976413525721896
 GameObject:
   m_ObjectHideFlags: 0

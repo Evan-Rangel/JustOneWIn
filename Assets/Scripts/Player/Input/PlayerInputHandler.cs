@@ -75,6 +75,14 @@ public class PlayerInputHandler : MonoBehaviour
             //onEscapeInput?.Invoke();
         }
     }
+    public void OnMinimapInput(InputAction.CallbackContext context)
+    {
+        Vector2 p = context.ReadValue<Vector2>();
+        GameManager.instance.SetminimapCameraDiraction(p);
+    }
+    
+
+
     public void OnInteractEvent(InputAction.CallbackContext context)
     { 
         if (context.started)
