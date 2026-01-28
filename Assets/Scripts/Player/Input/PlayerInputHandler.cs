@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avocado;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -77,10 +78,20 @@ public class PlayerInputHandler : MonoBehaviour
     }
     public void OnMinimapInput(InputAction.CallbackContext context)
     {
+        if (!MinimapCamera.Instance.isActiveAndEnabled) return;
         Vector2 p = context.ReadValue<Vector2>();
-        GameManager.instance.SetminimapCameraDiraction(p);
+        MinimapCamera.Instance.SetDirection(p);
     }
-    
+    public void OnZoomIn(InputAction.CallbackContext context)
+    {
+        if (context.started && MinimapCamera.Instance.isActiveAndEnabled)
+            MinimapCamera.Instance.ZoomIn();
+    }
+    public void OnZoomOut(InputAction.CallbackContext context)
+    {
+        if (context.started && MinimapCamera.Instance.isActiveAndEnabled)
+            MinimapCamera.Instance.ZoomOut();
+    }
 
 
     public void OnInteractEvent(InputAction.CallbackContext context)

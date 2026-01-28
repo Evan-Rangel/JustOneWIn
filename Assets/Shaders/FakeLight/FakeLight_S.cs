@@ -6,12 +6,12 @@ public class FakeLight_S : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField, Range(0, 5)] float fadeTime;
     MaterialPropertyBlock propertyBlock;
-    [SerializeField]    GameObject player;
+    [SerializeField] GameObject player;
     public static FakeLight_S instance;
     private void Awake()
     {
         instance = this;
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         propertyBlock = new MaterialPropertyBlock();
         spr = GetComponent<SpriteRenderer>();
     }
@@ -21,14 +21,69 @@ public class FakeLight_S : MonoBehaviour
         propertyBlock.SetFloat("_DarknessStrength", 0);
         propertyBlock.SetFloat("_RespawnEffect", 0);
         spr.SetPropertyBlock(propertyBlock);
+        UnShadeEffect();
     }
     private void Update()
     {
 
-        if (player == null) player = GameObject.Find("LocalGamePlayer") ;
+        if (player == null) player = GameObject.Find("LocalGamePlayer");
 
         if (player != null) transform.position = player.transform.position;
+    }
+    public void UnShadeEffect()
+    {
+        StartCoroutine(IUnShadeEffect());
+    }
+    IEnumerator IUnShadeEffect()
+    {
+        propertyBlock.SetFloat("_RespawnEffect", 1);
+        spr.SetPropertyBlock(propertyBlock);
+        float t = 1;
+        while (t >0)
+        {
+            yield return Helpers.GetWait(Time.deltaTime);
 
+            //t = Mathf.PingPong(cTime / fadeTime, 1.0f);
+            t -= Time.deltaTime*2;
+
+            //if (t > 0.99f) t = 1;
+
+            propertyBlock.SetFloat("_RespawnEffect", t);
+            spr.SetPropertyBlock(propertyBlock);
+
+            //if (t == 1) yield return Helpers.GetWait(.3f);
+        }
+        propertyBlock.SetFloat("_RespawnEffect", 0);
+        spr.SetPropertyBlock(propertyBlock);
+    }
+    public void ShadeEffect()
+    { 
+        StartCoroutine(IShadeEffect());
+    }
+    IEnumerator IShadeEffect()
+    {
+        //float cTime = 0;
+        float t = 0;
+        while (t < 1 )
+        {
+            yield return Helpers.GetWait(Time.deltaTime);
+
+            //t = Mathf.PingPong(cTime / fadeTime, 1.0f);
+            t += Time.deltaTime*2;
+
+            //if (t > 0.99f) t = 1;
+
+            propertyBlock.SetFloat("_RespawnEffect", t);
+            spr.SetPropertyBlock(propertyBlock);
+
+            //if (t == 1) yield return Helpers.GetWait(.3f);
+        }
+        propertyBlock.SetFloat("_RespawnEffect", 1);
+        spr.SetPropertyBlock(propertyBlock);
+
+
+        //propertyBlock.SetFloat("_RespawnEffect", 0);
+        //spr.SetPropertyBlock(propertyBlock);
     }
     public void StartRespawnEffect()
     { 

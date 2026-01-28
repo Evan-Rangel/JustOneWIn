@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
         { { } }
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
-        transform.position= SaveManager.GetPlayerPosition();
+        transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
     }
 
     private void HandlePoiseCurrentValueZero()

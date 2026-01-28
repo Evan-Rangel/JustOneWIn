@@ -5,16 +5,15 @@ using UnityEngine;
 
 namespace Avocado
 {
-   
     public class ShopManager : InteractEventManager
     {
-        [SerializeField] string shopID="01";
+        [field: SerializeField] public TpEntity shopID {get; private set;} 
 
         [SerializeField] WeaponDataSO[] weaponsToSell;
         [SerializeField] BuffItemDataSO[] buffsToSell;
         List<ScriptableObject> itemsToSell;
         ShopItemHolder[] shopItemHolders;
-        
+       // [SerializeField] Transform spawnPosition;
 
         [SerializeField] GameObject weaponPickupPrefab;
         GameManager gameManager;
@@ -38,11 +37,13 @@ namespace Avocado
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
+            gameManager.ActiveShop(shopID);
+            /*
             gameManager.shopHolder.SetActive(true);
             gameManager.windowSelector.SetActive(true);
             gameManager.SetInfoMenuComputer("Shop");
-            SaveManager.SavePlayerPositionInPlayerPrefs(gameManager.weaponSpawn.position);
-
+            SaveManager.SavePlayerPositionInPlayerPrefs(gameManager.currentSpawnPosition.position);
+            */
             int shopIndex = 0;
             foreach (var holder in shopItemHolders)
             {
@@ -56,7 +57,7 @@ namespace Avocado
                     shopItemHolders[shopIndex].button.onClick.AddListener(() => SpawnWeaponPickup((WeaponDataSO)item));
                     shopIndex++;
                 }
-                else if (item is BuffItemDataSO && !SaveManager.IsBuffPurchasedInPlayerPrefs(shopID))
+                else if (item is BuffItemDataSO && !SaveManager.IsBuffPurchasedInPlayerPrefs(shopID.zoneName))
                 { 
                     shopItemHolders[shopIndex].SetItemData((BuffItemDataSO)item);
                     shopItemHolders[shopIndex].button.onClick.AddListener(() => ApplyBuffEffect((BuffItemDataSO)item));
@@ -70,11 +71,11 @@ namespace Avocado
                 if (i>=shopIndex)
                    shopItemHolders[i].gameObject.SetActive(false);
             }
-            gameManager.ChangeState(GameManager.GameState.UI);
+           // gameManager.ChangeState(GameManager.GameState.UI);
         }
         public void ApplyBuffEffect(BuffItemDataSO _data)
         {
-            _data.ApllyBuff(shopID);
+            _data.ApllyBuff(shopID.zoneName);
             
             OnInteractEvent();
         }
@@ -83,10 +84,10 @@ namespace Avocado
             if (!gameManager.SubstractCoin(_data.PriceOnShop))
                 return;
             gameManager.AddWeaponDataToInventory(_data);
-            WeaponPickup weapon = Instantiate(weaponPickupPrefab, gameManager.weaponSpawn.position, Quaternion.identity).GetComponent<WeaponPickup>();
+            WeaponPickup weapon = Instantiate(weaponPickupPrefab, gameManager.currentSpawnPosition.pos.position, Quaternion.identity).GetComponent<WeaponPickup>();
             weapon.weaponIcon.enabled = false;
             weapon.SetContext(_data);
-            GameSaveCapsule capsule = gameManager.weaponSpawn.root.GetComponentInChildren<GameSaveCapsule>();
+            GameSaveCapsule capsule = gameManager.currentSpawnPosition.pos.root.GetComponentInChildren<GameSaveCapsule>();
 
             capsule.spawnWeaponAnimation = true;
             capsule.OnSpawnWeaponAnimationEnd += () =>

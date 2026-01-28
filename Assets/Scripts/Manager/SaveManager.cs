@@ -27,6 +27,19 @@ namespace Avocado
         #endregion
 
         #region PlayerPositionPrefs
+        public static void SaveZoneSpawnName(string _zoneName)
+        { 
+            PlayerPrefs.SetString("ZoneSpawn", _zoneName);
+            PlayerPrefs.Save();
+        }
+        public static string GetZoneSpawnName()
+        {
+            if (PlayerPrefs.HasKey("ZoneSpawn"))
+            {
+                return PlayerPrefs.GetString("ZoneSpawn");
+            }
+            return "";
+        }
         public static void SavePlayerPositionInPlayerPrefs(Vector3 _position)
         {
             PlayerPrefs.SetFloat("XPos", _position.x);
@@ -38,11 +51,25 @@ namespace Avocado
         {
             if (PlayerPrefs.HasKey("XPos")&& PlayerPrefs.HasKey("YPos")&& PlayerPrefs.HasKey("ZPos"))
             {
+                Debug.Log("Position");
                 Vector3 pos = new Vector3(PlayerPrefs.GetFloat("XPos"), PlayerPrefs.GetFloat("YPos"), PlayerPrefs.GetFloat("ZPos"));
                 return pos;
             }
+            Debug.Log("Default");
             return GameManager.instance.newGameStartPosition.position;
         }
+        #endregion
+        #region ZonesPrefs
+        public static void SaveZoneUnlocked(string zoneName)
+        {
+            PlayerPrefs.SetInt(zoneName, 1);
+            PlayerPrefs.Save();
+        }
+        public static bool IsZoneUnlocked(string zoneName)
+        {
+            return PlayerPrefs.HasKey(zoneName) && PlayerPrefs.GetInt(zoneName, 0) == 1;
+        }
+      
         #endregion
 
         #region AbilitiesPrefs

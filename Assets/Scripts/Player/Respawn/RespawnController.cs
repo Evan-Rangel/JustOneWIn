@@ -18,7 +18,8 @@ namespace Avocado
         bool respawning = false;
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.transform.name == "Respawn")
+
+            if (collision.transform.name == "Respawn" || collision.CompareTag("Respawn"))
             {
                 respawn = collision.transform;
             }

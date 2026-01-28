@@ -17,16 +17,22 @@ namespace Avocado
         [SerializeField] GameObject buttons;
         WeaponDataSO selectedWeaponData;
         [SerializeField] GameObject weaponPickupPrefab;
+        [SerializeField] Button selectButton;
         public void SelectButton()
         { 
             selectWeapon?.Invoke(selectedWeaponData);
         }
+        private void Update()
+        {
+            if (selectWeapon == null) return; 
+            selectButton.interactable=!GameManager.instance.IsWeaponInGame(selectedWeaponData);
+        }
         void SelectWeapon(WeaponDataSO _data)
         {
-            WeaponPickup weapon = Instantiate(weaponPickupPrefab, GameManager.instance.weaponSpawn.position, Quaternion.identity).GetComponent<WeaponPickup>();
+            WeaponPickup weapon = Instantiate(weaponPickupPrefab, GameManager.instance.currentSpawnPosition.pos.position, Quaternion.identity).GetComponent<WeaponPickup>();
             weapon.weaponIcon.enabled = false;
             weapon.SetContext(_data);
-            GameSaveCapsule capsule = GameManager.instance.weaponSpawn.root.GetComponentInChildren<GameSaveCapsule>();
+            GameSaveCapsule capsule = GameManager.instance.currentSpawnPosition.pos.root.GetComponentInChildren<GameSaveCapsule>();
 
             capsule.spawnWeaponAnimation = true;
             capsule.OnSpawnWeaponAnimationEnd += () =>

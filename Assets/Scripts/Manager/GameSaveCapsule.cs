@@ -14,16 +14,38 @@ namespace Avocado
         [SerializeField]float maxTimer;  
         float timer;
         public bool spawnWeaponAnimation;
+        public bool closeCapsuleAnimation;
         int spawnWeaponDirection=1;
         public event Action OnSpawnWeaponAnimationEnd;
-        [SerializeField] Transform spawnWeaponPosition;
+        public event Action OnCloseAnimationEnd;
         private void Update()
         {
             timer -= Time.deltaTime;    
             if (timer > 0)
                 return;
             timer = maxTimer;
+            if (closeCapsuleAnimation)
+            {
+                if (currentIndex >= sprites.Length - 1)
+                {
+                    spawnWeaponDirection = -1;
+                }
 
+                currentIndex += ((currentIndex == 0 && spawnWeaponDirection == -1) ||
+                    (currentIndex == sprites.Length && spawnWeaponDirection == 1))
+                    ? 0 : spawnWeaponDirection;
+
+                if (currentIndex == 0)
+                {
+                    spawnWeaponDirection = 1;
+                    closeCapsuleAnimation = false;
+                    OnCloseAnimationEnd?.Invoke();
+                    OnCloseAnimationEnd = null;
+                }
+
+                spriteRenderer.sprite = sprites[currentIndex];
+                return;
+            }
 
             if (spawnWeaponAnimation)
             {
@@ -70,7 +92,6 @@ namespace Avocado
             if (collision.CompareTag("Player"))
             {
                 isOpen = true;
-                GameManager.instance.SetWeaponSpawn(spawnWeaponPosition);
             }
         }
         private void OnTriggerExit2D(Collider2D collision)

@@ -4,7 +4,6 @@ using Avocado.Weapons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,8 +41,6 @@ public class GameManager : MonoBehaviour
     [Header("Coins")]
     public int coins;
     [SerializeField] TMP_Text coinsText;
-    [Header("SpawnPoints")]
-    [SerializeField] List<Transform> spawnPoints= new List<Transform>();
     public void AddCoin(int _value)
     {
         if (coins == 999)
@@ -103,12 +100,43 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
     [SerializeField] List<WeaponDataSO> weaponsInGame = new List<WeaponDataSO>();
     public GameObject windowSelector;
-    [field: SerializeField] public Transform weaponSpawn { get; private set; }
-    public void SetWeaponSpawn(Transform _spawn)
+    [Header("SpawnPoints")]
+    [SerializeField] ShopManager[] allSavePoints;
+    [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
+
+    [field: SerializeField] public List<TpEntity> activeSavePoints { get; private set; } = new List<TpEntity>();
+
+    public void TeleportPlayerToSavePoint(TpEntity target)
+    { 
+        SaveManager.SaveZoneSpawnName(target.zoneName);
+        SceneManager.LoadScene("TransitionScene");
+        //SceneManager.LoadScene("Main");
+    }
+    public Vector2 GetSavePositionBySavedZoneName()
     {
-        weaponSpawn = _spawn;
-        if (!spawnPoints.Contains(_spawn))
-            spawnPoints.Add(_spawn);
+        string _zoneName = SaveManager.GetZoneSpawnName();
+        for (int i = 0; i < allSavePoints.Length; i++)
+        {
+            if (allSavePoints[i].shopID.zoneName == _zoneName)
+                return allSavePoints[i].shopID.pos.position;
+        }
+        return newGameStartPosition.position;
+    }
+    public void AddSavePoint(TpEntity _point)
+    {
+        SaveManager.SaveZoneSpawnName(_point.zoneName);
+        currentSpawnPosition = _point;
+        if (activeSavePoints.Contains(_point)) return;
+        SaveManager.SaveZoneUnlocked(_point.zoneName);
+        activeSavePoints.Add(_point);   
+    }
+    void CheckForSavePoints()
+    {
+        for (int i = 0; i < allSavePoints.Length; i++)
+        {
+            if (SaveManager.IsZoneUnlocked(allSavePoints[i].shopID.zoneName))
+                activeSavePoints.Add(allSavePoints[i].shopID);
+        }
     }
     public WeaponDataSO GetWeaponDataAtIndex(int idx)
     {
@@ -195,6 +223,18 @@ public class GameManager : MonoBehaviour
     {
         staminaBar.fillAmount = 1 - _value;
     }
+
+
+
+    public void ActiveShop(TpEntity _spawn)
+    {
+        AddSavePoint(_spawn);
+        currentSpawnPosition = _spawn;
+        shopHolder.SetActive(true);
+        windowSelector.SetActive(true);
+        SetInfoMenuComputer("Shop");
+        ChangeState(GameState.UI);
+    }
     [Header("Title Colors")]
     [SerializeField] Image titleBackgroundImage;
     [SerializeField] Image titleBorderImage01, titleBorderImage02;
@@ -230,24 +270,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     [Header("Minimap")]
-    [SerializeField]
-    Transform minimapCameraTransform;
-    Vector2 minimapCameraDirection;
-    public void SetminimapCameraDiraction(Vector2 _value)
+    [SerializeField] GameObject minimapHolder;
+    public void ToggleMinimap(bool _active)
     {
-        minimapCameraDirection = _value.normalized;
+        ChangeState(GameState.UI);
+        minimapHolder.SetActive(_active);
     }
-    private void Update()
-    {
-        
-        minimapCameraTransform.position +=(Vector3) minimapCameraDirection;
-    }
-
-
     #endregion
-
-
+ 
 
     public void LoadNextLevel()
     {
@@ -264,7 +296,6 @@ public class GameManager : MonoBehaviour
 
     // Estado actual del juego, inicializado en Gameplay
     private GameState currentGameState = GameState.Gameplay;
-
     // Método para cambiar de estado
     public void ChangeState(GameState state)
     {
@@ -349,7 +380,7 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
-        DontDestroyOnLoad(gameObject);
+       // DontDestroyOnLoad(gameObject);
     }
     public void Start()
     {
@@ -360,6 +391,7 @@ public class GameManager : MonoBehaviour
         CoinsInPlayerPrefs();
         InitStatsWithPlayerPrefs();
         CkeckForAvailableWepons();
+        CheckForSavePoints();
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());

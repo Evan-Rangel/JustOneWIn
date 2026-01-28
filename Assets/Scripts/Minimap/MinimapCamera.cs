@@ -1,32 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Avocado
 {
+    [Serializable]
+    public class TpEntity
+    {
+        public Transform pos;
+        public string zoneName;
+    }
     public class MinimapCamera : MonoBehaviour
     {
-        [SerializeField] Transform _camera;
-        [SerializeField]Transform[] _mapObjects;
+        Camera cam;
+        public static MinimapCamera Instance;
+        Vector2 currentDirection;
+       // [SerializeField] MinimapUIManager minimapUIManager;
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
+            cam=GetComponentInChildren<Camera>();
+        }
         private void Update()
         {
-            transform.position = new Vector3(_camera.position.x, _camera.position.y, 0);
-            foreach (Transform item in _mapObjects)
-            {
-                if (Vector2.Distance(transform.position, item.position) < 10 && item.localScale == new Vector3(5, 5, 1))
-                    item.localScale = new Vector3(10, 10, 1);
-               if (Vector2.Distance(transform.position, item.position) >= 10 && item.localScale == new Vector3(10, 10, 1))
-                    item.localScale = new Vector3(5, 5, 1);
-            }
+            transform.position+= (Vector3)currentDirection; 
         }
-        private void OnTriggerEnter2D(Collider2D collision)
+        public void SetDirection(Vector2 dir)
         {
-            Debug.Log("Colision");
-            if (collision.CompareTag("MapObject"))
-            {
-                Debug.Log("Enter");
-            }
+            currentDirection = dir;
         }
-
+        public void ZoomIn()
+        {
+            if (cam.fieldOfView > 165)
+                cam.fieldOfView -= 1;
+        }
+        public void ZoomOut()
+        {
+            if (cam.fieldOfView<175)
+                cam.fieldOfView += 1;
+        }
     }
 }
