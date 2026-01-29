@@ -102,6 +102,9 @@ public class GrappleHandler : MonoBehaviour
         Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         hookDirection = (mouseWorldPos - (Vector2)firePoint.position).normalized;
 
+        if (!UnityEngine.Cursor.visible)
+            hookDirection = inputHandler.RawMovementInput;
+        
         // Calculamos el punto objetivo (máxima distancia en esa dirección)
         targetPoint = (Vector2)firePoint.position + hookDirection * maxGrappleDistance;
 

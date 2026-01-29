@@ -29,6 +29,7 @@ public class PlayerInputHandler : MonoBehaviour
     // Propiedades para obtener el input en bruto y normalizado
     public Vector2 RawMovementInput { get; private set; }
     public Vector2 RawDashDirectionInput { get; private set; }
+    public Vector2 RawGrappleDirectionInput { get; private set; }
     public Vector2Int DashDirectionInput { get; private set; }
     public int NormInputX { get; private set; }
     public int NormInputY { get; private set; }
@@ -139,7 +140,7 @@ public class PlayerInputHandler : MonoBehaviour
         NormInputX = Mathf.RoundToInt(RawMovementInput.x);
         NormInputY = Mathf.RoundToInt(RawMovementInput.y);
     }
-
+    
     public void OnJumpInput(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -157,7 +158,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnGrabInput(InputAction.CallbackContext context)
     {
-        if (context.started )
+        if (context.started)
             GrabInput = true;
 
         if (context.canceled)

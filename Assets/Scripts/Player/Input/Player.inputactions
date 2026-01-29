@@ -199,7 +199,7 @@
                 {
                     "name": "",
                     "id": "5839750a-1389-46bd-b465-7d983a55fe5f",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -221,7 +221,7 @@
                 {
                     "name": "",
                     "id": "fcaf1fbc-c936-4f1d-a571-c75dd9212be4",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -330,6 +330,17 @@
                 },
                 {
                     "name": "",
+                    "id": "66e79c24-3204-4a3d-93b4-773b11676788",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "03baea65-1af5-450c-ab3d-d21d8f6cd721",
                     "path": "<Keyboard>/c",
                     "interactions": "",
@@ -341,8 +352,30 @@
                 },
                 {
                     "name": "",
+                    "id": "dfb2a091-4b7f-4449-9c34-30659baaae28",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4673ed12-c312-44cb-be41-e7e8910042d4",
                     "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractShop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "999cc384-5808-4315-a348-a65107ce997d",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -406,6 +439,28 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "91e0ee7d-31ad-4c03-b271-4fe23b52b7fc",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fbeeb736-33a1-474a-9c38-d4028c91360a",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "738b8dbe-d42a-4466-b341-925668350715",
                     "path": "2DVector",
@@ -462,6 +517,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8bad6740-7e53-44c3-8f2e-d89e3f308a0a",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Minimap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3b79d64c-84e6-4a2a-8e00-c297e72b1b03",
                     "path": "<Keyboard>/e",
                     "interactions": "",
@@ -473,8 +539,30 @@
                 },
                 {
                     "name": "",
+                    "id": "c9e6317b-0415-4da9-bdf3-0236334a80a4",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom+",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7e72899f-fb69-403d-9ccc-e75a9006cede",
                     "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom-",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bcf1808b-8b82-406e-a1ff-2cbcfdd2b59e",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

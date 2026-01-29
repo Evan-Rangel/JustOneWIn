@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -384,7 +385,9 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
-      //  SaveManager.DeleteSaved();
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible=false;
+        //  SaveManager.DeleteSaved();
         Invoke("ShowFps", 2);
         stats = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
         HideHolders();
