@@ -40,25 +40,9 @@ namespace Avocado
             }
             return "";
         }
-        public static void SavePlayerPositionInPlayerPrefs(Vector3 _position)
-        {
-            PlayerPrefs.SetFloat("XPos", _position.x);
-            PlayerPrefs.SetFloat("YPos", _position.y);
-            PlayerPrefs.SetFloat("ZPos", _position.z);
-            PlayerPrefs.Save();
-        }
-        public static Vector3 GetPlayerPosition()
-        {
-            if (PlayerPrefs.HasKey("XPos")&& PlayerPrefs.HasKey("YPos")&& PlayerPrefs.HasKey("ZPos"))
-            {
-                Debug.Log("Position");
-                Vector3 pos = new Vector3(PlayerPrefs.GetFloat("XPos"), PlayerPrefs.GetFloat("YPos"), PlayerPrefs.GetFloat("ZPos"));
-                return pos;
-            }
-            Debug.Log("Default");
-            return GameManager.instance.newGameStartPosition.position;
-        }
+      
         #endregion
+
         #region ZonesPrefs
         public static void SaveZoneUnlocked(string zoneName)
         {

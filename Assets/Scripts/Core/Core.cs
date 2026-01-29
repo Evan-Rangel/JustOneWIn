@@ -17,7 +17,7 @@ namespace Avocado.CoreSystem
         [field: SerializeField] public GameObject Root { get; private set; }
 
         //Unlockables
-        public bool grappleUnlocked, dashUnlocked, grabUnlocked;
+        public bool  dashUnlocked, grabUnlocked;
         // Lista que mantiene todos los CoreComponents registrados en este Core.
         private readonly List<CoreComponent> CoreComponents = new List<CoreComponent>();
 
@@ -26,7 +26,11 @@ namespace Avocado.CoreSystem
             // Si Root no está asignado manualmente, se usa el padre de este GameObject.
             Root = Root ? Root : transform.parent.gameObject;
         }
-
+        private void Start()
+        {
+            dashUnlocked = SaveManager.GetDashUnlocked();
+            grabUnlocked = SaveManager.GetGrabUnlocked();
+        }
         // Llama al método LogicUpdate de cada componente registrado.
         public void LogicUpdate()
         {

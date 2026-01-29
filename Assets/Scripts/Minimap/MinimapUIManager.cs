@@ -65,11 +65,6 @@ namespace Avocado
                 currentPointIndex = GameManager.instance.activeSavePoints.Count - 1;
             onPrevPoint?.Invoke(GameManager.instance.activeSavePoints[currentPointIndex]);
         }
-        public void StartTP()
-        { 
-        
-        
-        }
         private void OnEnable()
         {
             minimapCamera.SetActive(true);

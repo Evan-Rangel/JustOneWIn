@@ -1,3 +1,4 @@
+using Avocado;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -68,6 +69,8 @@ public class GrappleHandler : MonoBehaviour
             hookHead = Instantiate(hookHeadPrefab);
             hookHead.SetActive(false);
         }
+        if(!SaveManager.GetGrappleUnlocked())
+           this.enabled = false;
     }
 
     private void OnEnable()
