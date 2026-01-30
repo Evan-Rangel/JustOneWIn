@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Avocado.CoreSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,9 @@ public class PlayerWallGrabState : PlayerTouchingWallState
 {
     // Guarda la posición exacta donde el jugador se queda "pegado" a la pared
     public Vector2 holdPosition;
-    
+    Stats playerStats;
+    float maxTime = 0.2f;
+    float currentTime;
     public PlayerWallGrabState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
     }
@@ -44,7 +47,8 @@ public class PlayerWallGrabState : PlayerTouchingWallState
 
         // Guarda la posición actual del jugador
         holdPosition = player.transform.position;
-
+        playerStats = core.GetCoreComponent<Stats>();
+        currentTime = 0;
         // Fija al jugador en esa posición
         HoldPosition();
     }
@@ -66,12 +70,12 @@ public class PlayerWallGrabState : PlayerTouchingWallState
 
             
             // Si el jugador presiona hacia arriba, pasa al estado de escalar
-            if (yInput > 0)
+            if (yInput > 0&& playerStats.Stamina.CurrentValue>0)
             {
                 stateMachine.ChangeState(player.WallClimbState);
             }
             // Si presiona hacia abajo o suelta el botón de agarre, comienza a deslizarse
-            else if (yInput < 0 || !grabInput)
+            else if (yInput < 0 || !grabInput||playerStats.Stamina.CurrentValue<=0)
             {
                 stateMachine.ChangeState(player.WallSlideState);
             }
@@ -81,6 +85,12 @@ public class PlayerWallGrabState : PlayerTouchingWallState
     // Mantiene al jugador congelado en la pared
     private void HoldPosition()
     {
+        if (currentTime > maxTime)
+        {
+            currentTime = 0;
+            playerStats.Stamina.Decrease(1);
+        }
+        currentTime += Time.deltaTime;
         player.transform.position = holdPosition;
 
         Movement?.SetVelocityX(0f);

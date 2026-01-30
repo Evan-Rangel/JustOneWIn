@@ -1,4 +1,5 @@
 using Avocado;
+using Avocado.CoreSystem;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +36,7 @@ public class GrappleHandler : MonoBehaviour
     private bool isHookFlying;
     private bool isHookReturning;
     private Vector2 hookDirection;
+    Stats playerStats;
 
     // Estados del gancho
     private enum HookState
@@ -52,6 +54,7 @@ public class GrappleHandler : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         lineRenderer = GetComponent<LineRenderer>();
         mainCamera = (mainCamera != null) ? mainCamera : Camera.main;
+        playerStats = GetComponentInChildren<Stats>();
         //mainCamera = Camera.main;
 
         springJoint = gameObject.AddComponent<SpringJoint2D>();
@@ -85,7 +88,7 @@ public class GrappleHandler : MonoBehaviour
 
     private void HandleGrappleInput(bool isPressed)
     {
-        if (isPressed && currentHookState == HookState.Idle)
+        if (isPressed && currentHookState == HookState.Idle && playerStats.Stamina.CurrentValue>10)
         {
             LaunchHook();
         }
@@ -210,6 +213,8 @@ public class GrappleHandler : MonoBehaviour
 
     private void AttachHook()
     {
+        playerStats.Stamina.Decrease(10);
+
         currentHookState = HookState.Attached;
         isGrappling = true;
 

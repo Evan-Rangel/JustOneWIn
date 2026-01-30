@@ -18,7 +18,7 @@ namespace Avocado
         float timer;
         int currentIconSprite;
         int maxIconSprite;
-        [SerializeField] TutorialSO tutorialItem;
+        TutorialSO tutorialItem;
         public static TutorialManager Instance { get; private set; }
         private void Awake()
         {
@@ -31,7 +31,7 @@ namespace Avocado
                 Instance = this;
             }
             tutorialUIHolder.SetActive(false);
-            Invoke("TempTest", 2);
+           // Invoke("TempTest", 2);
         }
         void TempTest()
         {
@@ -51,24 +51,23 @@ namespace Avocado
             tutorialUIHolder.SetActive(false);
 
         }
-        public void ShowTutorialItem(TutorialSO tutorialItem)
+        public void ShowTutorialItem(TutorialSO _tutorialItem)
         {
+            tutorialItem = _tutorialItem;
             activeTutorial = true;
             timer = 0;
             tutorialUIHolder.SetActive(true);
-            inputOnImage.sprite = tutorialItem.keyboardKey.OnKeySprite;
-            inputOffImage.sprite = tutorialItem.keyboardKey.OffKeySprite;
+            inputOnImage.sprite = _tutorialItem.keyboardKey.OnKeySprite;
+            inputOffImage.sprite = _tutorialItem.keyboardKey.OffKeySprite;
             inputOffImage.gameObject.SetActive(false);
             inputOnImage.gameObject.SetActive(true);
             currentIconSprite = 0;
-            iconImage.sprite = tutorialItem.iconSprite[currentIconSprite];
-            maxIconSprite = tutorialItem.iconSprite.Length;
-            descriptionText.text = tutorialItem.description;
+            iconImage.sprite = _tutorialItem.iconSprite[currentIconSprite];
+            maxIconSprite = _tutorialItem.iconSprite.Length;
+            descriptionText.text = _tutorialItem.description;
             descriptionHolder.SetActive(true);
-            GameManager.instance.ChangeState(GameManager.GameState.UI);
             StartCoroutine(InputAnimation());
             StartCoroutine(ActionAnimation());
-            Invoke("PlayerStaticDelay", 0.5f);
         }
         IEnumerator InputAnimation()
         {
@@ -90,14 +89,11 @@ namespace Avocado
                 currentIconSprite++;
                 if (currentIconSprite >= maxIconSprite)
                     currentIconSprite = 0;
+                Debug.Log("Icon Sprite Changed to: " + currentIconSprite);
                 iconImage.sprite = tutorialItem.iconSprite[currentIconSprite];
 
             }
 
-        }
-        void PlayerStaticDelay()
-        { 
-            GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
         }
     }
 }

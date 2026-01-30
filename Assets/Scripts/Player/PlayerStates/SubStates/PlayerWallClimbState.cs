@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Avocado.CoreSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,8 +16,17 @@ jugador puede trepar superficies.
 
 public class PlayerWallClimbState : PlayerTouchingWallState
 {
+    Stats playerStats;
+    float maxTime = 0.2f;
+    float currentTime;
     public PlayerWallClimbState(Player player, PlayerStateMachine stateMachine, PlayerData playerData, string animBoolName) : base(player, stateMachine, playerData, animBoolName)
     {
+    }
+    public override void Enter()
+    {
+        base.Enter();
+        playerStats = core.GetCoreComponent<Stats>();
+        currentTime = 0;
     }
 
     // Se ejecuta cada frame mientras el jugador está en este estado
@@ -28,7 +38,12 @@ public class PlayerWallClimbState : PlayerTouchingWallState
         {
             // Establece la velocidad vertical hacia arriba para simular que el jugador escala
             Movement?.SetVelocityY(playerData.wallClimbVelocity);
-
+            if (currentTime>maxTime)
+            {
+                currentTime = 0;
+                playerStats.Stamina.Decrease(1);
+            }
+            currentTime += Time.deltaTime;
             // Si el jugador ya no mantiene la dirección hacia arriba, cambia al estado de agarrarse a la pared
             if (yInput != 1 && core.grabUnlocked)
             {
