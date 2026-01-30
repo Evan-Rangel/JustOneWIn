@@ -20,6 +20,8 @@ namespace Avocado
             {
                 collision.transform.GetComponentInChildren<Core>().dashUnlocked = true;
                 SaveManager.SaveDashUnlocked(true);
+                GameManager.instance.ActiveAbilityHolder("dash");
+
                 Destroy(gameObject);
             }
         }

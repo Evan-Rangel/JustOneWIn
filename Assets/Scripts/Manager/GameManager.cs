@@ -176,7 +176,25 @@ public class GameManager : MonoBehaviour
     {
         return weaponsInGame.Contains(_data);
     }
-
+    [Header("Abilities Unlock Holders")]
+    [SerializeField] GameObject hookHolder;
+    [SerializeField] GameObject dashHolder;
+    [SerializeField] GameObject climbHolder;
+    public void ActiveAbilityHolder(string _holdername)
+    {
+        switch (_holdername)
+        {
+            case "hook":
+                hookHolder.SetActive(true);
+                break;
+            case "climb": 
+                climbHolder.SetActive(true);
+                break;
+            case "dash": 
+                dashHolder.SetActive(true);
+                break;
+        }
+    }
 
     public void HideHolders()
     {

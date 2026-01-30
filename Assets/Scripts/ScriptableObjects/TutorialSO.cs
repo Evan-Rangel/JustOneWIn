@@ -7,7 +7,7 @@ namespace Avocado
     public class TutorialSO : ScriptableObject
     {
         public KeyboardKeySO keyboardKey;
-        public Sprite iconSprite;
+        public Sprite[] iconSprite;
         public string description;
     }
 
