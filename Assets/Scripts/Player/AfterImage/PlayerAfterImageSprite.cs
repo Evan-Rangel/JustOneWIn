@@ -34,8 +34,8 @@ public class PlayerAfterImageSprite : MonoBehaviour
             SR = GetComponent<SpriteRenderer>();
 
             // Buscar al jugador y obtener su renderer}
-            // player = GameObject.FindGameObjectWithTag("Player").transform;
-            player = GameObject.Find("LocalGamePlayer").transform;
+             player = GameObject.FindGameObjectWithTag("Player").transform;
+            //player = GameObject.Find("LocalGamePlayer").transform;
             playerSR = player.GetComponent<SpriteRenderer>();
 
             // Inicializar valores
