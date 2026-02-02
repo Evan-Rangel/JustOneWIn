@@ -21,8 +21,21 @@ namespace Avocado
             vol = GetComponent<Volume>();
             chromaticAberration=vol.profile.TryGet<ChromaticAberration>(out var ca) ? ca : null;
         }
-        void test()
-        { 
+      
+        private void Update()
+        {
+            if (chromaticAberration != null&& chromaticAberration.intensity.value>0)
+            { 
+                chromaticAberration.intensity.value -= Time.deltaTime;
+            }
+
+        }
+       public void test()
+        {
+            if (chromaticAberration != null)
+            {
+                chromaticAberration.intensity.value = 1f;
+            }
         }
     }
 }

@@ -42,7 +42,6 @@ namespace Avocado.CoreSystem
         // Establece la velocidad usando un ángulo y dirección (útil para saltos o knockbacks).
         public void SetVelocity(float velocity, Vector2 angle, int direction)
         {
-            Debug.Log("Angle");
 
             angle.Normalize();
             workspace.Set(angle.x * velocity * direction, angle.y * velocity);
