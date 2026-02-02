@@ -115,7 +115,11 @@ public class PlayerInputHandler : MonoBehaviour
             OnInteractInputChanged?.Invoke(false);
         }
     }
-
+    public void OnPauseInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+            GameManager.instance.ActivePauseHolder();
+    }
     public void OnPrimaryAttackInput(InputAction.CallbackContext context)
     {
         if (context.started)

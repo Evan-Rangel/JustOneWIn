@@ -63,7 +63,6 @@ public class PlayerState
     // Se llama en cada frame (Update), útil para lógica como leer inputs
     public virtual void LogicUpdate()
     {
-
     }
 
     // Se llama en cada frame de física (FixedUpdate), útil para mover al jugador o detectar colisiones

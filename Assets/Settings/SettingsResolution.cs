@@ -28,7 +28,7 @@ public class SettingsResolution : MonoBehaviour
     }
     void LoadResolution()
     {
-        dropdown.onValueChanged.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(dropdownClip); });
+       // dropdown.onValueChanged.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(dropdownClip); });
         dropdown.value = PlayerPrefs.GetInt("Resolution");
     }
     public void SetResolution()

@@ -129,7 +129,6 @@ public class Player : MonoBehaviour
         StateMachine.Initialize(IdleState);
         transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
     }
-
     private void HandlePoiseCurrentValueZero()
     {
         // Cambia al estado de stun cuando poise llega a 0

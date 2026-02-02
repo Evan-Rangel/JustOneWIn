@@ -18,7 +18,6 @@ namespace Avocado
             //button.Select();
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(gameObject); 
-            Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
         }
        
     }

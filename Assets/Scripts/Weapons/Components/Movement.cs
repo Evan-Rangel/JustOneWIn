@@ -1,6 +1,4 @@
-﻿using System;
-using Avocado.Weapons.Components;
-using UnityEngine;
+﻿using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
 Este componente se encarga de controlar el movimiento durante los ataques, como un impulso 
@@ -21,12 +19,13 @@ namespace Avocado.Weapons.Components
 
         private float velocity;       // Velocidad actual del ataque
         private Vector2 direction;    // Dirección actual del ataque
-
+        PlayerInputHandler inputHandler;
         // Evento que inicia el movimiento (desde la animación).
         private void HandleStartMovement()
         {
             velocity = currentAttackData.Velocity;     // Obtiene la velocidad definida en el ataque
             direction = currentAttackData.Direction;   // Obtiene la dirección definida en el ataque
+            Debug.Log("HandleStart");
 
             SetVelocity(); // Aplica el movimiento completo
         }
@@ -36,7 +35,6 @@ namespace Avocado.Weapons.Components
         {
             velocity = 0f;
             direction = Vector2.zero;
-
             SetVelocity(); // Detiene el movimiento
         }
 
@@ -61,13 +59,17 @@ namespace Avocado.Weapons.Components
         // Aplica la velocidad completa (X y Y) al personaje.
         private void SetVelocity()
         {
-            coreMovement.SetVelocity(velocity, direction, coreMovement.FacingDirection);
+            if (coreMovement.CurrentVelocity.y <-.01f || coreMovement.CurrentVelocity.y>0.01f) return;
+                coreMovement.SetVelocity(velocity, direction, coreMovement.FacingDirection);
         }
 
         // Aplica solo la velocidad en el eje X .
         private void SetVelocityX()
         {
-            coreMovement.SetVelocityX((direction * velocity).x * coreMovement.FacingDirection);
+            if (coreMovement.CurrentVelocity.y < -.01f || coreMovement.CurrentVelocity.y > 0.01f)
+                coreMovement.SetVelocityX(coreMovement.CurrentVelocity.x);
+            else
+                coreMovement.SetVelocityX((direction * velocity).x * coreMovement.FacingDirection);
         }
 
         protected override void Start()
@@ -75,7 +77,7 @@ namespace Avocado.Weapons.Components
             base.Start();
 
             coreMovement = Core.GetCoreComponent<CoreSystem.Movement>();
-
+            inputHandler = Core.Root.GetComponent<Player>().InputHandler;
             AnimationEventHandler.OnStartMovement += HandleStartMovement;
             AnimationEventHandler.OnStopMovement += HandleStopMovement;
         }

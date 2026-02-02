@@ -91,6 +91,8 @@ public class GameManager : MonoBehaviour
 
     [Header("User Interface")]
     [SerializeField] GameObject statsHolder;
+    [SerializeField] GameObject pauseHolder;
+    [SerializeField] GameObject pausePrincipalHolder;
     [SerializeField] GameObject[] holderToHideWithEsc;
     [field: SerializeField] public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
@@ -106,7 +108,11 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
 
     [field: SerializeField] public List<TpEntity> activeSavePoints { get; private set; } = new List<TpEntity>();
-
+    public void ActivePauseHolder()
+    { 
+        pauseHolder.SetActive(true);
+        ChangeState(GameState.UI);
+    }
     public void TeleportPlayerToSavePoint(TpEntity target)
     { 
         SaveManager.SaveZoneSpawnName(target.zoneName);
@@ -199,6 +205,7 @@ public class GameManager : MonoBehaviour
     public void HideHolders()
     {
         ChangeState(GameState.Gameplay);
+        pausePrincipalHolder.SetActive(true);
         foreach (GameObject holder in holderToHideWithEsc)
         {
             holder.SetActive(false);
