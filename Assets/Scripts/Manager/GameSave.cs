@@ -12,7 +12,7 @@ namespace Avocado
         bool isHighlightedOnMap = false;
         TpEntity shopID;
         public event Action<TpEntity> onSavePointActivated;
-        public event Action onSavePointDisabled;
+       // public event Action onSavePointDisabled;
         public override void Start()
         {
             base.Start();
@@ -36,13 +36,14 @@ namespace Avocado
         }
         private void DelayOnEnable()
         {
-            onSavePointDisabled += MinimapUIManager.instance.HideInfo;
-            onSavePointActivated += MinimapUIManager.instance.ShowInfo;
+            //onSavePointDisabled += MinimapUIManager.instance.HideInfo;
+            onSavePointActivated += GameManager.instance.HideInfoMinimap;
         }
         private void OnDisable()
         {
-            onSavePointDisabled -= MinimapUIManager.instance.HideInfo;
-            onSavePointActivated -= MinimapUIManager.instance.ShowInfo;
+            //onSavePointDisabled -= MinimapUIManager.instance.HideInfo;
+            onSavePointActivated -= GameManager.instance.HideInfoMinimap;
+
         }
         void ActivePointOnMap()
         { 

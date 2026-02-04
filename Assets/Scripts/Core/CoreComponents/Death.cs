@@ -33,9 +33,15 @@ namespace Avocado.CoreSystem
             {
                 ParticleManager.StartParticles(particle);
             }
+            FakeLight_S.instance.ShadeEffect(); 
+            Invoke("ResetLevel", 1.5f);
 
             // Desactivar el objeto completo
             core.transform.parent.gameObject.SetActive(false);
+        }
+        void ResetLevel()
+        {
+            GameManager.instance.ResetLevel();
         }
 
         // Suscribe el método Die al evento de vida en cero.

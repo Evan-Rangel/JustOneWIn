@@ -20,10 +20,21 @@ namespace Avocado.CoreSystem
         private Stats stats;
         private ParticleManager particleManager;
         RespawnController respawnController;
+        float invulneravilityTime=0;
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
+            if(invulneravilityTime>0)
+            invulneravilityTime -= Time.deltaTime;
+        }
 
         // Método que recibe daño, aplica modificadores, y afecta la salud.
         public void Damage(DamageData data)
         {
+            if (invulneravilityTime > 0) return;
+                
+            invulneravilityTime = 1.5f;
+
             // Mostrar el daño antes de aplicar modificadores
             //print($"Damage Amount Before Modifiers: {data.Amount}");
             GlobalVolumeController.instance.test();

@@ -108,6 +108,11 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
 
     [field: SerializeField] public List<TpEntity> activeSavePoints { get; private set; } = new List<TpEntity>();
+    public void HideInfoMinimap(TpEntity _entity)
+    {
+        MinimapUIManager.instance.ShowInfo(_entity);
+    }
+    
     public void ActivePauseHolder()
     { 
         pauseHolder.SetActive(true);
@@ -118,6 +123,10 @@ public class GameManager : MonoBehaviour
         SaveManager.SaveZoneSpawnName(target.zoneName);
         SceneManager.LoadScene("TransitionScene");
         //SceneManager.LoadScene("Main");
+    }
+    public void ResetLevel()
+    { 
+        SceneManager.LoadScene("TransitionScene");
     }
     public Vector2 GetSavePositionBySavedZoneName()
     {
