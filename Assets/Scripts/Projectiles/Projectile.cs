@@ -33,15 +33,32 @@ namespace Avocado.Projectiles
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private LayerMask whatIsPlayer;
         [SerializeField] private Transform damagePosition; // Punto desde el cual se detecta daño
+        private void Awake()
+        {
+            TryGetComponent<Animator>(out anim);
+            rb = GetComponent<Rigidbody2D>();
+
+        }
         private void Start()
         {
-            TryGetComponent<Animator>(out anim);   
-            rb = GetComponent<Rigidbody2D>();
             rb.gravityScale = 0.0f; // Desactiva la gravedad al principio
-            rb.velocity = transform.right * speed; // Lo lanza en dirección local derecha
+//            rb.velocity = transform.right * speed; // Lo lanza en dirección local derecha
 
             isGravityOn = false;
             xStartPos = transform.position.x;
+        
+            }
+        private void OnEnable()
+        {
+            xStartPos = transform.position.x;
+        }
+        private void OnDisable()
+        {
+            // Reinicia el estado del proyectil cada vez que se activa
+            hasHitGround = false;
+            isGravityOn = false;
+            rb.gravityScale = 0.0f;
+            rb.velocity = transform.right * speed;
         }
 
         private void Update()
@@ -70,9 +87,7 @@ namespace Avocado.Projectiles
                 {
                     hasHitGround = true;
 
-
                     // Si golpea a un jugador, se destruye (aquí iría lógica de daño)
-                    //damageHit.transform.SendMessage("Damage", attackDetails);
 
                     IDamageable damageable = damageHit.transform.root.GetComponentInChildren<IDamageable>();//GetComponent<IDamageable>();
                     if (damageable != null)
@@ -88,8 +103,8 @@ namespace Avocado.Projectiles
 
                     if (anim)
                         Invoke("DelayPlayerStop", 0.05f);
-                    else
-                        Destroy(gameObject);
+                    else gameObject.SetActive(false);
+                    //Destroy(gameObject);
                 }
 
                 if (groundHit)
@@ -108,6 +123,7 @@ namespace Avocado.Projectiles
                 // Si ya ha recorrido la distancia establecida y aún no tiene gravedad
                 if (Mathf.Abs(xStartPos - transform.position.x) >= travelDistance && !isGravityOn)
                 {
+
                     isGravityOn = true;
                     rb.gravityScale = gravity;
                 }
@@ -122,7 +138,7 @@ namespace Avocado.Projectiles
         }
         public void DestroyProjectile()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         // Inicializa los parámetros del proyectil desde fuera
@@ -131,6 +147,21 @@ namespace Avocado.Projectiles
             this.speed = speed;
             this.travelDistance = travelDistance;
             this.damage = damage;
+            rb.velocity = transform.right * speed;
+        }
+         public void FireProjectileWithAngle(float speed, float travelDistance, float damage)
+        {
+            this.speed = speed;
+            this.travelDistance = travelDistance;
+            this.damage = damage;
+            rb.velocity = transform.right * speed;
+        }
+         public void FireProjectileWithDirection(float speed, float travelDistance, float damage)
+        {
+            this.speed = speed;
+            this.travelDistance = travelDistance;
+            this.damage = damage;
+            rb.velocity = Vector2.right * speed;
         }
 
         // Dibuja el área de daño en la escena para depuración

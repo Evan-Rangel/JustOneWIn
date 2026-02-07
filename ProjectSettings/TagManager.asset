@@ -13,6 +13,8 @@ TagManager:
   - MapObject
   - ShopUI
   - PopOutCanvas
+  - EnemyJump
+  - EnemyDespawner
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Projectile
   - Grapple
   - Ground
   - Damageable
@@ -71,11 +73,11 @@ TagManager:
   - name: Decoration 2
     uniqueID: 851115129
     locked: 0
-  - name: Player
-    uniqueID: 1242827863
-    locked: 0
   - name: Enemy
     uniqueID: 2308740627
+    locked: 0
+  - name: Player
+    uniqueID: 1242827863
     locked: 0
   - name: ActiveProjectile
     uniqueID: 3270796263

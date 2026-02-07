@@ -21,6 +21,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action<bool> OnInteractInputChanged;
     public event Action<bool> OnGrappleInputChanged;
     public event Action OnInteractEventInputChanged;
+    public event Action<float> OnCameraTargetInputChanged;
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
@@ -144,7 +145,28 @@ public class PlayerInputHandler : MonoBehaviour
         NormInputX = Mathf.RoundToInt(RawMovementInput.x);
         NormInputY = Mathf.RoundToInt(RawMovementInput.y);
     }
-    
+    public void OnLookDownInput(InputAction.CallbackContext context)
+    {
+       // if (DashInput || GrabInput || JumpInput) return;
+        
+        if (context.started)
+            OnCameraTargetInputChanged?.Invoke(-5);
+        if (context.canceled)
+            OnCameraTargetInputChanged?.Invoke(0);
+
+
+    }
+
+    public void OnLookUpInput(InputAction.CallbackContext context)
+    {
+        //if (DashInput || GrabInput || JumpInput) return;
+        if (context.started)
+            OnCameraTargetInputChanged?.Invoke(5);
+        if (context.canceled)
+            OnCameraTargetInputChanged?.Invoke(0);
+
+
+    }
     public void OnJumpInput(InputAction.CallbackContext context)
     {
         if (context.started)

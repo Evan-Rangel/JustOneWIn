@@ -3,6 +3,7 @@ using Avocado;
 using Avocado.CoreSystem;
 using Avocado.FSM;
 using Avocado.Weapons;
+using System.Collections;
 using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private PlayerData playerData;
+    [SerializeField] Transform camTarget;
     #endregion
 
     #region Components
@@ -108,7 +110,23 @@ public class Player : MonoBehaviour
         SecondaryAttackState = new PlayerAttackState(this, StateMachine, playerData, "attack", secondaryWeapon, CombatInputs.secondary);
         PlayerStunState = new PlayerStunState(this, StateMachine, playerData, "stun");
     }
-
+    float currentYOffset=0;
+    public void ChangeCamTargetPosition(float yOfFsetPosition)
+    {
+        if (yOfFsetPosition == 0)
+        {
+            StopAllCoroutines();
+            camTarget.localPosition = new Vector3(camTarget.localPosition.x, yOfFsetPosition, camTarget.localPosition.z);
+            return;
+        }
+        currentYOffset = yOfFsetPosition;
+        StartCoroutine(DelayTargetCameraMove());
+    }
+    IEnumerator DelayTargetCameraMove()
+    {
+        yield return Helpers.GetWait(1);
+        camTarget.localPosition = new Vector3(camTarget.localPosition.x, currentYOffset, camTarget.localPosition.z);
+    }
     private void Start()
     {
         // Más referencias necesarias
@@ -117,7 +135,7 @@ public class Player : MonoBehaviour
 
         // Evento cuando se intenta interactuar con algo
         InputHandler.OnInteractInputChanged += InteractableDetector.TryInteract;
-
+        InputHandler.OnCameraTargetInputChanged += ChangeCamTargetPosition;
         RB = GetComponent<Rigidbody2D>();
         DashDirectionIndicator = transform.Find("DashDirectionIndicator");
         MovementCollider = GetComponent<BoxCollider2D>();

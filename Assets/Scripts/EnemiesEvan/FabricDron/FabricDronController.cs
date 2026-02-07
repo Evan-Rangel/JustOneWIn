@@ -2,19 +2,22 @@ using Avocado.Combat.Damage;
 using Avocado.CoreSystem;
 using Org.BouncyCastle.Math;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 namespace Avocado
 {
     public class FabricDronController : MonoBehaviour, IDamageable
     {
+        FabricEnemyCollision fabricCollision;
         Rigidbody2D rb;
         [SerializeField] LayerMask playerLayer;
         [SerializeField] LayerMask groundLayer;
         Vector3 startPos;
         Transform player;
         bool canFollowPlayer;
-        [SerializeField] float health;
+         float currentHealht;
+        [SerializeField] float maxHealth;
         SpriteRenderer sprite;
         IEnumerator damageEffect;
         [SerializeField] GameObject explosionEffect;
@@ -39,22 +42,33 @@ namespace Avocado
         Animator anim;
         private void Awake()
         {
-            sprite = GetComponentInChildren<SpriteRenderer>();
+            fabricCollision=GetComponentInChildren<FabricEnemyCollision>();
+            sprite = GetComponent<SpriteRenderer>();
             anim =GetComponent<Animator>();
-            verticalDirection = 1;
-            horizontalDirection = 1;
             rb = GetComponent<Rigidbody2D>();
         }
-        private void Start()
+        
+        private void OnEnable()
         {
+            verticalDirection = 1;
+            horizontalDirection = 1;
+            currentHealht = maxHealth;
+            fabricCollision.OnPlayerEnter +=TargetFinded;
+            fabricCollision.OnPlayerExit +=TargetLost;
             startPos = transform.position;
             verticalCheck = true;
             horizontalCheck = true;
             currentHorizontalVelocity = horizontalDirection * horizontalSpeed;
-            currentVerticalVelocity= verticalDirection * verticalSpeed;
+            currentVerticalVelocity = verticalDirection * verticalSpeed;
             ChangeDirection();
         }
-
+        private void OnDisable()
+        {
+            player = null;
+            canFollowPlayer = false;
+            fabricCollision.OnPlayerEnter -= TargetFinded;
+            fabricCollision.OnPlayerExit -= TargetLost;
+        }
         private void Update()
         {
             if (anim.GetBool("Death"))
@@ -119,8 +133,11 @@ namespace Avocado
 
             for (int i = 0; i < numberOfBullets; i++)
             {
-                GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, quaternion);
-                bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectile(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+                //GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, quaternion);
+                GameObject bullet = FabricEnemiesPool.Instance.GetOctopusBullet();
+                bullet.transform.position = bulletSpawn.position;
+                bullet.transform.rotation = quaternion;
+                bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
                 quaternion *= Quaternion.Euler(0, 0, angleOfBullets);
             }
         }
@@ -135,14 +152,14 @@ namespace Avocado
                 randomTargetPosition = Random.insideUnitCircle;
                 if (randomTargetPosition.x < .4f) randomTargetPosition.x =0.4f;
 
-                if (randomTargetPosition.x < .6f) randomTargetPosition.x *= 10;
-                else randomTargetPosition.x *= 5;
+                if (randomTargetPosition.x < .6f) randomTargetPosition.x *= 6;
+                else randomTargetPosition.x *= 3;
 
 
                 if (randomTargetPosition.y < .4f) randomTargetPosition.y =0.4f;
 
-                if (randomTargetPosition.y < .6f) randomTargetPosition.y *= 10;
-                else randomTargetPosition.y *= 5;
+                if (randomTargetPosition.y < .6f) randomTargetPosition.y *= 3;
+                else randomTargetPosition.y *= 1.5f;
 
 
                 randomTargetPosition.y= Mathf.Abs(randomTargetPosition.y);
@@ -225,17 +242,17 @@ namespace Avocado
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
-        public void TargetFinded(Transform _player)
+        public void TargetFinded(Collider2D _player)
         {
            //Shoot();
-            player = _player;
+            player = _player.transform;
             StopAllCoroutines();
             randomTargetPosition = Vector2.zero;
             StartCoroutine(ResetPointAroundPlayer());
             StartCoroutine(Shooting());
            
         }
-        public void TargetLost()
+        public void TargetLost(Collider2D coll)
         {
             StopAllCoroutines();
 
@@ -269,11 +286,13 @@ namespace Avocado
         }
         void IDamageable.Damage(DamageData data)
         {
-            health -= data.Amount;
-            if (health <= 0)
+            currentHealht -= data.Amount;
+            if (currentHealht <= 0)
             {
                 anim.SetBool("Death", true);
-                explosionEffect.SetActive(true);
+                canFollowPlayer = false;
+                player = null;
+                StopAllCoroutines();
                 return;
             }
             if (damageEffect != null)
@@ -290,8 +309,10 @@ namespace Avocado
                 coin.transform.position = transform.position;
                 coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(1f, 3f)), ForceMode2D.Impulse);
             }
-            Destroy(gameObject);
+            anim.SetBool("Death", false);
+            anim.SetBool("Attack", false);
 
+            gameObject.SetActive(false);
         }
       
     }

@@ -25,7 +25,6 @@ namespace Avocado.Weapons.Components
         {
             velocity = currentAttackData.Velocity;     // Obtiene la velocidad definida en el ataque
             direction = currentAttackData.Direction;   // Obtiene la dirección definida en el ataque
-            Debug.Log("HandleStart");
 
             SetVelocity(); // Aplica el movimiento completo
         }

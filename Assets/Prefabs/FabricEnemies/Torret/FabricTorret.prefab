@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6020405890498533927}
   - component: {fileID: 6020405890498533924}
-  - component: {fileID: 6020405890498533925}
+  - component: {fileID: 7532062364839397445}
   m_Layer: 0
   m_Name: Collision
   m_TagString: Untagged
@@ -59,7 +59,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6020405890498533925
+--- !u!114 &7532062364839397445
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6020405890498533926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b36893dc456688f4babb743cf8ea8441, type: 3}
+  m_Script: {fileID: 11500000, guid: 94c7440d1110c684dac7ed793132f7a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6020405890860225926
@@ -106,7 +106,7 @@ Transform:
   - {fileID: 6020405890498533927}
   - {fileID: 6020405892455172531}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6020405890860225927
 SpriteRenderer:
@@ -147,7 +147,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1986226669
-  m_SortingLayer: 9
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: -1376756375, guid: 6d64b97acb1f9cc4783fffc03e5eb3b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -193,12 +193,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canon: {fileID: 6020405892455172530}
-  explosiveEffect: {fileID: 0}
   coll: {fileID: 6020405890498533926}
   sprites:
   - {fileID: 6020405890860225927}
   - {fileID: 6020405892028875546}
-  health: 0
+  maxHealth: 10
 --- !u!61 &6020405890860225923
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -235,7 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6020405892028875549}
   - component: {fileID: 6020405892028875546}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Canon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +296,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1986226669
-  m_SortingLayer: 9
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 1413128109, guid: 6d64b97acb1f9cc4783fffc03e5eb3b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

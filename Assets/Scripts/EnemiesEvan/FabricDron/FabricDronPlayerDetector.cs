@@ -15,14 +15,14 @@ namespace Avocado
         {
             if (collision.CompareTag("Player"))
             {
-                Controller.TargetFinded(collision.transform);
+            //    Controller.TargetFinded(collision.transform);
             }
         }
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
             {
-                Controller.TargetLost();
+               // Controller.TargetLost();
             }
         }
     }

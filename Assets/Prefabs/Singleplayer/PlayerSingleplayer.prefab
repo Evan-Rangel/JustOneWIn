@@ -84,6 +84,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1545774749916095554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 997878536834380943}
+  m_Layer: 11
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &997878536834380943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545774749916095554}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6853976413428451533}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4598415429190235755
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +672,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1242827863
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: bf799efbbea08234bb6e3fc6298ec86b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -757,7 +788,7 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1242827863
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -1092,7 +1123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Root>k__BackingField: {fileID: 0}
-  grappleUnlocked: 0
   dashUnlocked: 0
   grabUnlocked: 0
 --- !u!1 &6853976413428451520
@@ -1142,6 +1172,7 @@ Transform:
   - {fileID: 6853976412451008246}
   - {fileID: 6853976413043972776}
   - {fileID: 211370201}
+  - {fileID: 997878536834380943}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1358,6 +1389,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 74d53f8b-fe43-4c32-a828-f82b1f7fa076
     m_ActionName: UI/Zoom-[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 026a03bd-459c-4514-9b24-babd6884d275
+    m_ActionName: Gameplay/Pause[/XInputControllerWindows/start,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bd6228c2-1537-475f-8d54-1ec87049c257
+    m_ActionName: Gameplay/DownView[/XInputControllerWindows/leftStick/down]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e11dc5b6-bfb9-4406-bd9c-2323ae011b05
+    m_ActionName: Gameplay/UpView[/XInputControllerWindows/leftStick/up]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1376,6 +1419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 97ee086e618d50c4dbefcf4cd7135726, type: 2}
+  camTarget: {fileID: 997878536834380943}
 --- !u!114 &6853976413428451523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1430,7 +1474,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1242827863
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_Sprite: {fileID: 374233818, guid: 3e6790e7693ddd047addecee0d6a4960, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1592,7 +1636,7 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1242827863
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -1870,7 +1914,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 788545134458613805, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 788545134458613805, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID
@@ -1926,7 +1970,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 95b2394cafcd7ac4eb455b8d8735c661, type: 2}
     - target: {fileID: 3386395261383878693, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3386395261383878693, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID
@@ -1958,7 +2002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5571504009190527188, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5571504009190527188, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID
@@ -1997,7 +2041,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 788545134458613805, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 788545134458613805, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID
@@ -2053,7 +2097,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 1baa3682ee132644cbd959c267628da5, type: 2}
     - target: {fileID: 3386395261383878693, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3386395261383878693, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID
@@ -2081,7 +2125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5571504009190527188, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayer
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5571504009190527188, guid: 09ad0fb67dd07c849958ce1a5b26b0ca, type: 3}
       propertyPath: m_SortingLayerID

@@ -15,20 +15,35 @@ namespace Avocado
         Quaternion idleRotation;
         SpriteRenderer spriteRenderer;
         int rootDir;
-        
-        
+        FabricEnemyCollision fabricCollision;
+
         [SerializeField] float angle;
         [SerializeField] float rotationSpeed;
         [SerializeField] Sprite[] shootSprites;
         [SerializeField] D_RangedAttackState rangedAttackData;
         [SerializeField] Transform bulletSpawn;
         [SerializeField, Range(0, 5)] float shootTime;
+        private void Awake()
+        {
+            fabricCollision =transform.root.GetComponentInChildren<FabricEnemyCollision>();
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        }
         private void Start()
         {
             transform.parent = null;
             idleRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             rootDir=(int) transform.root.localScale.y ;
+        }
+        private void OnEnable()
+        {
+            fabricCollision.OnPlayerEnter += Aiming;
+            fabricCollision.OnPlayerExit += StopAiming;
+        }
+        private void OnDisable()
+        {
+            fabricCollision.OnPlayerEnter -= Aiming;
+            fabricCollision.OnPlayerExit -= StopAiming;
         }
         private void Update()
         {
@@ -67,8 +82,12 @@ namespace Avocado
                 if (i==1)
                 {
                     Quaternion bulletRotation = transform.rotation * Quaternion.Euler(0, 0, (-90 * rootDir));
-                    GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, bulletRotation);
-                    bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectile(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+                    
+                   // GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, bulletRotation);
+                    GameObject bullet = FabricEnemiesPool.Instance.GetFabricTorretBullet();
+                    bullet.transform.position = bulletSpawn.position;
+                    bullet.transform.rotation = bulletRotation; 
+                    bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
                 }
                 yield return Helpers.GetWait(0.2f);
             }
@@ -84,12 +103,12 @@ namespace Avocado
                 StartCoroutine(IdleWait());
             }
         }
-        public void Aiming(Transform _target)
+        public void Aiming(Collider2D _target)
         {
-            target = _target;
+            target = _target.transform;
             aiming = true;
         }  
-        public void StopAiming()
+        public void StopAiming(Collider2D _target)
         {
             target = null;
             aiming = false;

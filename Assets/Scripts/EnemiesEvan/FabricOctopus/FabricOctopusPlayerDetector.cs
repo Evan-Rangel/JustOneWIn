@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avocado
@@ -15,14 +13,14 @@ namespace Avocado
         {
             if (collision.CompareTag("Player"))
             {
-                controller.TargetFinded();
+                //controller.TargetFinded();
             }
         }
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))
             {
-                controller.TargetLost();
+               //controller.TargetLost();
             }
         }
     }

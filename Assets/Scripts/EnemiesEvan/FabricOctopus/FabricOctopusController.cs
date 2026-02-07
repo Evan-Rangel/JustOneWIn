@@ -7,12 +7,13 @@ namespace Avocado
 {
     public class FabricOctopusController : MonoBehaviour, IDamageable
     {
+        FabricEnemyCollision fabricCollision;
         Animator animator;
         [SerializeField] int maxShoots;
         int currentShoots;
-        [SerializeField] Transform[] movePoints;
         [SerializeField] Transform bulletSpawn;
-        List<Vector2> movePositions;
+        [SerializeField]List<Vector2> movePositions;
+        List<Vector2> targetPos;
         int currentIndexPoint;
         [SerializeField] float moveSpeed;
         [SerializeField] float idleTime;
@@ -20,29 +21,42 @@ namespace Avocado
         bool shooting;
         [SerializeField] D_RangedAttackState rangedAttackData;
 
-        [SerializeField] float health;
+         float currentHealth;
+        [SerializeField] float maxtHealth;
         SpriteRenderer sprite;
         IEnumerator damageEffect;
         private void Awake()
         {
             sprite = GetComponentInChildren<SpriteRenderer>();
-
-            isIdle = false;
-            currentShoots = 0;
+            fabricCollision= GetComponentInChildren<FabricEnemyCollision>();
+            
             animator = GetComponent<Animator>();
            
-            movePositions=new List<Vector2>();
-            for (int i=0; i<movePoints.Length; i++)
+        }
+
+        private void OnEnable()
+        {
+            isIdle = false;
+            currentShoots = 0;
+            currentHealth = maxtHealth;
+            targetPos = new List<Vector2>();
+            for (int i = 0; i < movePositions.Count; i++)
             {
-                movePositions.Add(movePoints[i].position);
-                movePoints[i].gameObject.SetActive(false);
+                targetPos.Add(movePositions[i] + (Vector2)transform.position);
             }
             currentIndexPoint = 0;
 
-            transform.position = movePositions[currentIndexPoint];
+            transform.position = targetPos[currentIndexPoint];
             StartCoroutine(NextPoint());
-        }
 
+            fabricCollision.OnPlayerEnter += TargetFinded;
+            fabricCollision.OnPlayerExit += TargetLost;
+        }
+        private void OnDisable()
+        {
+            fabricCollision.OnPlayerEnter -= TargetFinded;
+            fabricCollision.OnPlayerExit -= TargetLost;
+        }
         private void Update()
         {
             if (animator.GetBool("Death"))
@@ -54,8 +68,8 @@ namespace Avocado
         {
             if (isIdle || shooting) return;
 
-            if (Vector2.Distance(transform.position, movePositions[currentIndexPoint]) > 0.01f)
-                transform.position = Vector2.MoveTowards(transform.position, movePositions[currentIndexPoint], moveSpeed * Time.deltaTime);
+            if (Vector2.Distance(transform.position, targetPos[currentIndexPoint]) > 0.01f)
+                transform.position = Vector2.MoveTowards(transform.position, targetPos[currentIndexPoint], moveSpeed * Time.deltaTime);
             else
                 StartCoroutine(NextPoint());
 
@@ -68,8 +82,8 @@ namespace Avocado
 
             yield return Helpers.GetWait(idleTime/2);
 
-            currentIndexPoint = (currentIndexPoint < movePositions.Count-1) ? currentIndexPoint + 1: 0 ;
-            FlipSprite(movePositions[currentIndexPoint].x);
+            currentIndexPoint = (currentIndexPoint < targetPos.Count-1) ? currentIndexPoint + 1: 0 ;
+            FlipSprite(targetPos[currentIndexPoint].x);
             yield return Helpers.GetWait(idleTime/2);
 
             isIdle = false;
@@ -78,10 +92,11 @@ namespace Avocado
         }
         public void SpawnProjectile()
         { 
-            GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, Quaternion.identity);
+            GameObject bullet= FabricEnemiesPool.Instance.GetOctopusBullet();
+            bullet.transform.position = bulletSpawn.position;
             bullet.transform.localScale = transform.localScale;
             int direction = (transform.lossyScale.x > 0) ? 1 : -1;
-            bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectile(rangedAttackData.projectileSpeed*direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+            bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithDirection(rangedAttackData.projectileSpeed*direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
 
         }
         void FlipSprite(float _xPos)
@@ -121,7 +136,7 @@ namespace Avocado
                 Shooting();
             }
         }
-        public void TargetFinded()
+        public void TargetFinded(Collider2D coll)
         {
             shooting = true;
             animator.SetBool("Idle", false);
@@ -130,7 +145,7 @@ namespace Avocado
             Shooting();
         }
 
-        public void TargetLost()
+        public void TargetLost(Collider2D coll)
         {
             shooting = false;
             animator.SetBool("Idle", false);
@@ -157,9 +172,8 @@ namespace Avocado
         }
         void IDamageable.Damage(DamageData data)
         {
-            Debug.Log(data.Amount);
-            health -= data.Amount;
-            if (health <= 0)
+            currentHealth -= data.Amount;
+            if (currentHealth <= 0)
             {
                 animator.SetBool("Death", true);
                 return;
@@ -178,8 +192,33 @@ namespace Avocado
                 coin.transform.position = transform.position;
                 coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(1f, 3f)), ForceMode2D.Impulse);
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+        }
+        private void OnDrawGizmos()
 
+        {
+            Gizmos.color = Color.red;
+
+            if (targetPos!=null &&targetPos.Count >0)
+            {
+                for (int i = 0; i < targetPos.Count; i++)
+                {
+                    Gizmos.DrawSphere(targetPos[i], 0.1f);
+                    Gizmos.DrawLine(transform.position, targetPos[i]);
+                }
+            }
+            else
+            {
+
+                for (int i = 0; i < movePositions.Count; i++)
+                {
+                    Vector2 tPos = (Vector2)transform.position + movePositions[i];
+
+                    Gizmos.DrawSphere(tPos, 0.1f);
+                    Gizmos.DrawLine(transform.position, tPos);
+                }
+            }
+        
         }
     }
 }

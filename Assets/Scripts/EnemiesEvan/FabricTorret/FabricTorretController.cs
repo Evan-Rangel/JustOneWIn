@@ -14,9 +14,11 @@ namespace Avocado
         [SerializeField] GameObject coll;
         IEnumerator damageEffect;
         [SerializeField]SpriteRenderer[] sprites;
-        [SerializeField] float health;
+        [SerializeField] float maxHealth;
+        float currentHealth;
         private void Awake()
         {
+            currentHealth = maxHealth;
             anim = GetComponent<Animator>();
         }
          void DestroyTorret()
@@ -28,15 +30,18 @@ namespace Avocado
 
         public void DisableTorret()
         {
-            GameManager.instance.HealthBuff();
             for (int i = 0; i < 5; i++)
             {
                 GameObject coin = GameManager.instance.RequestCoin() ;
                 coin.transform.position = transform.position;
                 coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(1f, 3f)), ForceMode2D.Impulse);
             }
-            Destroy(canon);
-            Destroy(gameObject);
+            currentHealth = maxHealth;
+            anim.enabled = false;
+            canon.SetActive(true);
+            coll.SetActive(true);
+            canon.transform.parent = transform;
+            gameObject.SetActive(false);
         }
 
       
@@ -67,8 +72,8 @@ namespace Avocado
         }
         void IDamageable.Damage(DamageData data)
         {
-            health-=data.Amount;
-            if (health <= 0)
+            currentHealth -= data.Amount;
+            if (currentHealth <= 0)
             {
                 DestroyTorret();
                 return;
