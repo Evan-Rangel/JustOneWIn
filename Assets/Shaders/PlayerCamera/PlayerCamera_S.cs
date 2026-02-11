@@ -1,3 +1,4 @@
+using Avocado;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,9 @@ public class PlayerCamera_S : MonoBehaviour
     MaterialPropertyBlock propertyBlock;
     SpriteRenderer spr;
     [SerializeField] List<ShaderEffectCamera> objectsToTrack;
+    [SerializeField] List<ExplosionEffectController> explosionEffects;
     [SerializeField] List<ShaderEffectCameraLocal> objectsToTrackLocal;
-    int textureWidth = 10;
+    int textureWidth = 16;
     [SerializeField] Camera mainCamera;
     private Texture2D positionsTexture;
 
@@ -31,6 +33,9 @@ public class PlayerCamera_S : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        spr = GetComponent<SpriteRenderer>();
+        explosionEffects = new List<ExplosionEffectController>(30);
+
         //DontDestroyOnLoad(gameObject);
     }
     void Start()
@@ -55,13 +60,11 @@ public class PlayerCamera_S : MonoBehaviour
                 playersPositionsTexture.SetPixel(i, j, new Color(0, 0, 0, 0));
             }
         }
-        spr = GetComponent<SpriteRenderer>();
 
         propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);
         propertyBlock.SetTexture("_PlayersPositionsTexture", playersPositionsTexture);
         spr.SetPropertyBlock(propertyBlock);
-        objectsToTrack = new List<ShaderEffectCamera>(30);
         objectsToTrackLocal = new List<ShaderEffectCameraLocal>(30);
         spr.enabled = false;
     }
@@ -80,7 +83,7 @@ public class PlayerCamera_S : MonoBehaviour
     }
     public void AddToPool(ShaderEffectCamera obj)
     {
-        spr.enabled = true;
+       spr.enabled = true;
 
         for (int i = 0; i < objectsToTrack.Count; i++)
         {
@@ -91,6 +94,22 @@ public class PlayerCamera_S : MonoBehaviour
             }
         }
         objectsToTrack.Add(obj);
+    
+        }
+    
+    public void AddToPool(ExplosionEffectController obj)
+    {
+        spr.enabled = true;
+
+        for (int i = 0; i < explosionEffects.Count; i++)
+        {
+            if (explosionEffects[i] == null)
+            {
+                explosionEffects[i] = obj;
+                return;
+            }
+        }
+        explosionEffects.Add(obj);
     }
     public void AddToPool( ShaderEffectCameraLocal obj)
     {
@@ -145,6 +164,27 @@ public class PlayerCamera_S : MonoBehaviour
                 return;
         }
         spr.enabled = false;
+    }    
+    
+    public void RemoveFromPool(ExplosionEffectController obj)
+    {
+        for (int i = 0; i < explosionEffects.Count; i++)
+        {
+            if (explosionEffects[i] != obj) continue;
+
+            positionsTexture.SetPixel(i, (int)EffectType.Expansive, new Color(0, 0, 0, 0));
+            explosionEffects[i] = null;
+            break;
+        }
+        positionsTexture.Apply();
+        propertyBlock.SetTexture("_PositionsTexture", positionsTexture);
+        spr.SetPropertyBlock(propertyBlock);
+        for (int i = 0; i < explosionEffects.Count; i++)
+        {
+            if (explosionEffects[i] != null)
+                return;
+        }
+        spr.enabled = false;
     }
     private void Update()
     {
@@ -156,7 +196,7 @@ public class PlayerCamera_S : MonoBehaviour
             if (player!=null)
             mainCamera= player.GetComponent<PCameraController>().mainCamera;
         }
-        if (objectsToTrack.Count < 1 && objectsToTrackLocal.Count < 1) return;
+        if (objectsToTrack.Count < 1 && objectsToTrackLocal.Count < 1 && explosionEffects.Count<1) return;
 
         for (int i = 0; i < objectsToTrack.Count; i++)
         {
@@ -171,6 +211,12 @@ public class PlayerCamera_S : MonoBehaviour
                 continue;
             Vector3 viewportPos = mainCamera.WorldToViewportPoint(objectsToTrackLocal[i].transform.root.position);
             positionsTexture.SetPixel(i, (int)objectsToTrackLocal[i].effectType, new Color(viewportPos.x, viewportPos.y, objectsToTrackLocal[i].timeValue, 1));
+        } for (int i = 0; i < explosionEffects.Count; i++)
+        {
+            if (explosionEffects[i] == null)
+                continue;
+            Vector3 viewportPos = mainCamera.WorldToViewportPoint(explosionEffects[i].transform.position);
+            positionsTexture.SetPixel(i, (int)EffectType.Expansive, new Color(viewportPos.x, viewportPos.y, explosionEffects[i].timeValue, 1));
         }
         positionsTexture.Apply();
         propertyBlock.SetTexture("_PositionsTexture", positionsTexture);

@@ -37,7 +37,7 @@ namespace Avocado.CoreSystem
 
             // Mostrar el daño antes de aplicar modificadores
             //print($"Damage Amount Before Modifiers: {data.Amount}");
-            GlobalVolumeController.instance.test();
+            GlobalVolumeController.instance.SetChromaticAberration(1);
             // Aplicar todos los modificadores activos al daño
             data = Modifiers.ApplyAllModifiers(data);
 

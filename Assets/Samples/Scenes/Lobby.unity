@@ -871,6 +871,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f84591ce72545258ea98cb7518d8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &387630939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 387630940}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387630940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387630939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &396966493
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,7 +964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &439551857
 AudioListener:
   m_ObjectHideFlags: 0
@@ -22181,6 +22212,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 980536182}
   m_CullTransparentMesh: 1
+--- !u!1 &1044983339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1044983341}
+  - component: {fileID: 1044983340}
+  m_Layer: 0
+  m_Name: ExplosionEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1044983340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044983339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab51c04b3e6a6d49a27e0a1f57c4e0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectType: 0
+  timeValue: 0
+  timeMax: 1
+  effectSpeed: 1
+--- !u!4 &1044983341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044983339}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01, y: -0.04, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1058096306
 GameObject:
   m_ObjectHideFlags: 0
@@ -22256,6 +22335,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c7895d3443f74f922b6a08c63032e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fpsText: {fileID: 0}
+  maxFps: 0
+  minFps: 1000
+  newGameStartPosition: {fileID: 0}
+  coins: 0
+  coinsText: {fileID: 0}
+  coinPrefab: {fileID: 0}
+  statsHolder: {fileID: 0}
+  pauseHolder: {fileID: 0}
+  pausePrincipalHolder: {fileID: 0}
+  holderToHideWithEsc: []
+  <shopHolder>k__BackingField: {fileID: 0}
+  healthAnimator: {fileID: 0}
+  staminaAnimator: {fileID: 0}
+  statsBackgroundAnimator: {fileID: 0}
+  healthBar: {fileID: 0}
+  staminaBar: {fileID: 0}
+  shopItemHolders: []
+  <weaponsData>k__BackingField: []
+  weaponUnlocked: []
+  weaponsInGame: []
+  windowSelector: {fileID: 0}
+  allSavePoints: []
+  <currentSpawnPosition>k__BackingField:
+    pos: {fileID: 0}
+    zoneName: 
+  <activeSavePoints>k__BackingField: []
+  hookHolder: {fileID: 0}
+  dashHolder: {fileID: 0}
+  climbHolder: {fileID: 0}
+  titleBackgroundImage: {fileID: 0}
+  titleBorderImage01: {fileID: 0}
+  titleBorderImage02: {fileID: 0}
+  titleText: {fileID: 0}
+  shopBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  inventoryBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  statsBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  shopBorderColor: {r: 0, g: 0, b: 0, a: 0}
+  inventoryBorderColor: {r: 0, g: 0, b: 0, a: 0}
+  statsBorderColor: {r: 0, g: 0, b: 0, a: 0}
+  minimapHolder: {fileID: 0}
   itemList: []
   <itemTimeRespawn>k__BackingField: 0
   loadImage: {fileID: 0}
@@ -163484,6 +163604,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8652896552074718135, guid: 12835bc345cd5924da583277ba613997, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 387630939}
+    - target: {fileID: 8652896552074718135, guid: 12835bc345cd5924da583277ba613997, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 439551858}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 12835bc345cd5924da583277ba613997, type: 3}

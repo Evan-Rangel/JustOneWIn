@@ -22,8 +22,9 @@ namespace Avocado.Projectiles
         //KnockBackData knockbackData;
 
         [SerializeField] private float gravity;         
-        [SerializeField] private float damageRadius;    
-
+        [SerializeField] private float damageRadius;
+        [SerializeField] float knockbackForce = 1;
+        [SerializeField] float rotationSpeed = 1000;
         private Rigidbody2D rb;
         private Animator anim;
 
@@ -38,29 +39,29 @@ namespace Avocado.Projectiles
             TryGetComponent<Animator>(out anim);
             rb = GetComponent<Rigidbody2D>();
 
+            rb.gravityScale = 0.0f; // Desactiva la gravedad al principio
+            //isGravityOn = false;
+            //xStartPos = transform.position.x;
         }
         private void Start()
         {
-            rb.gravityScale = 0.0f; // Desactiva la gravedad al principio
 //            rb.velocity = transform.right * speed; // Lo lanza en dirección local derecha
 
-            isGravityOn = false;
-            xStartPos = transform.position.x;
         
-            }
+        }
         private void OnEnable()
         {
             xStartPos = transform.position.x;
+            hasHitGround = false;
+            isGravityOn = false;
+            rb.gravityScale = 0.0f;
         }
         private void OnDisable()
         {
             // Reinicia el estado del proyectil cada vez que se activa
-            hasHitGround = false;
-            isGravityOn = false;
-            rb.gravityScale = 0.0f;
-            rb.velocity = transform.right * speed;
+            //rb.velocity = transform.right * speed;
         }
-
+        float angle = 0;
         private void Update()
         {
             // Mientras no haya impactado el suelo
@@ -69,7 +70,13 @@ namespace Avocado.Projectiles
                 // Si la gravedad está activada, rota el proyectil en dirección a su movimiento
                 if (isGravityOn)
                 {
-                    float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+                    //float angle=Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+                    if (rb.velocity.x < 0)
+                        angle += Time.deltaTime * rotationSpeed;
+                    else
+                        angle -= Time.deltaTime * rotationSpeed;
+
+                    Debug.Log("Angle: " + angle);
                     transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 }
             }
@@ -98,7 +105,9 @@ namespace Avocado.Projectiles
                     IKnockBackable knockBackable = damageHit.transform.root.GetComponentInChildren<IKnockBackable>();
                     if (knockBackable != null)
                     {
-                        knockBackable.KnockBack(new KnockBackData(Vector2.one, 10, transform.right.x >= 0 ? 1 : -1, null));
+                        int direction = transform.position.x - damageHit.transform.position.x >= 0 ? -1 : 1;
+                        //knockBackable.KnockBack(new KnockBackData(Vector2.one, 10*knockbackForce, transform.right.x >= 0 ? 1 : -1, null));
+                        knockBackable.KnockBack(new KnockBackData(Vector2.one, 10*knockbackForce, direction, null));
                     }
 
                     if (anim)
@@ -109,7 +118,6 @@ namespace Avocado.Projectiles
 
                 if (groundHit)
                 {
-                  
                     if (anim)
                     {
                         anim.SetTrigger("Hit");
@@ -119,18 +127,20 @@ namespace Avocado.Projectiles
                     rb.gravityScale = 0f;
                     rb.velocity = Vector2.zero;
                 }
-
+                
                 // Si ya ha recorrido la distancia establecida y aún no tiene gravedad
-                if (Mathf.Abs(xStartPos - transform.position.x) >= travelDistance && !isGravityOn)
+               /* if (Mathf.Abs(xStartPos - transform.position.x) >= travelDistance && !isGravityOn)
                 {
 
                     isGravityOn = true;
                     rb.gravityScale = gravity;
-                }
+                }*/
             }
         }
         void DelayPlayerStop()
         {
+            CancelInvoke("DelayPlayerStop");
+            hasHitGround = true;
             anim.SetTrigger("Hit");
 
             rb.gravityScale = 0f;
@@ -162,6 +172,12 @@ namespace Avocado.Projectiles
             this.travelDistance = travelDistance;
             this.damage = damage;
             rb.velocity = Vector2.right * speed;
+            if (gravity!=0)
+            {
+                rb.gravityScale = gravity;
+                isGravityOn = true;
+                Invoke("DelayPlayerStop", 1.5f);
+            }
         }
 
         // Dibuja el área de daño en la escena para depuración

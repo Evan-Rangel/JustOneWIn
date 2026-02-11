@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6533172735539624145
+--- !u!1 &89181254768847628
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,42 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6533172735539624159}
-  - component: {fileID: 6533172735539624144}
+  - component: {fileID: 89181254768847630}
+  - component: {fileID: 89181254768847617}
   m_Layer: 0
-  m_Name: ExplosionEffect
+  m_Name: ExplosionEffect 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6533172735539624159
+--- !u!4 &89181254768847630
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6533172735539624145}
+  m_GameObject: {fileID: 89181254768847628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3329759, y: 2.1440034, z: -0.024531402}
+  m_LocalPosition: {x: 20.6, y: -6.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6533172735539624144
+--- !u!114 &89181254768847617
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6533172735539624145}
+  m_GameObject: {fileID: 89181254768847628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5914da1345742104b9947a57ec811203, type: 3}
+  m_Script: {fileID: 11500000, guid: b2a9858fb4c834e4484acac02b2fdd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectType: 0
-  timeMax: 1
-  effectSpeed: 1
+  timeValue: 0
+  timeMax: 2
+  effectSpeed: 3

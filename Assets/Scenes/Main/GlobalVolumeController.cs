@@ -11,6 +11,7 @@ namespace Avocado
        Volume vol;
         public static GlobalVolumeController instance;
         ChromaticAberration chromaticAberration;
+        [SerializeField] float chromaticAberrationMinValue;
         Bloom bloom;
 
 
@@ -24,17 +25,18 @@ namespace Avocado
       
         private void Update()
         {
-            if (chromaticAberration != null&& chromaticAberration.intensity.value>0)
-            { 
-                chromaticAberration.intensity.value -= Time.deltaTime;
+            if (chromaticAberration != null&& chromaticAberration.intensity.value> chromaticAberrationMinValue)
+            {  
+                chromaticAberration.intensity.value -= Time.deltaTime*0.3f;
+                
             }
 
         }
-       public void test()
+       public void SetChromaticAberration(float _value)
         {
             if (chromaticAberration != null)
             {
-                chromaticAberration.intensity.value = 1f;
+                chromaticAberration.intensity.value = _value;
             }
         }
     }

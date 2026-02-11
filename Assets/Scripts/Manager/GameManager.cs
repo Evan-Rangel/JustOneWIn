@@ -14,9 +14,9 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region FPS Display
-    [SerializeField] TMPro.TMP_Text fpsText;
+   /* [SerializeField] TMPro.TMP_Text fpsText;
     [SerializeField] float maxFps = 0, minFps = 1000;
-
+   */
     void ShowFps()
     {
         /*
@@ -32,7 +32,6 @@ public class GameManager : MonoBehaviour
         fpsText.text = Mathf.RoundToInt(fps).ToString();
         Invoke("ShowFps", 0.1f);
         */
-
     }
     #endregion
     #region Local Game
@@ -103,6 +102,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
     [SerializeField] List<WeaponDataSO> weaponsInGame = new List<WeaponDataSO>();
     public GameObject windowSelector;
+
+    #region Boss Health Bar
+    [Header("Boss Health Bar")]
+    [SerializeField] GameObject bossHealthBarHolder;
+    [SerializeField] Animator bossHealthBarAnimator;
+    [SerializeField] Image bossHealthBar;
+    void DisabelHealthBar()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void UpdateBossHealthBar(float _value)
+    {
+        if (!bossHealthBarHolder.activeInHierarchy)bossHealthBarHolder.SetActive(true);
+        bossHealthBar.fillAmount = _value;
+    }
+
+    public void BossDeath()
+    {
+        DisabelHealthBar();
+        bossHealthBarAnimator.SetTrigger("BossDeath");
+    }
+    #endregion
+
     [Header("SpawnPoints")]
     [SerializeField] ShopManager[] allSavePoints;
     [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
@@ -168,13 +191,13 @@ public class GameManager : MonoBehaviour
     {
         foreach (WeaponDataSO weapon in weaponsData)
         {
-            if (SaveManager.IsWeaponSavedInPlayerPrefs(weapon))
+            if (SaveManager.IsWeaponSaved(weapon))
                 weaponUnlocked.Add(weapon);
         }
     }
     public void AddWeaponDataToInventory(WeaponDataSO _data)
     {
-        SaveManager.SaveWeaponInPlayerPrefs(_data);
+        SaveManager.SaveWeapon(_data);
         weaponUnlocked.Add(_data);
     }
     public void AddWeaponOnGame(WeaponDataSO _data)

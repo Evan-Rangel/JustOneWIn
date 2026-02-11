@@ -1,18 +1,27 @@
-using Mirror;
+//using Mirror;
 using UnityEngine;
 
-public class ShaderEffectCamera : NetworkBehaviour
+public class ShaderEffectCamera : MonoBehaviour
 {
     public EffectType effectType;
-    public float timeValue { private set;  get; }
+    public float timeValue;//{ private set;  get; }
     [SerializeField, Range(0, 20)] float timeMax;
     [SerializeField, Range(0, 5)] float effectSpeed;
     private void Start()
     {
+        
+       // transform.parent.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+    }
+    private void OnEnable()
+    {
+
         PlayerCamera_S.Instance.AddToPool(this);
         //timeMax = 1;
-        timeValue= 0;
-        transform.parent.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+        timeValue = 0;
+    }
+    private void OnDisable()
+    {
+        PlayerCamera_S.Instance.RemoveFromPool(this);
     }
     int i = 1;
 
@@ -23,7 +32,8 @@ public class ShaderEffectCamera : NetworkBehaviour
             case EffectType.Expansive:
                 if (timeValue >= timeMax)
                 {
-                    Destroy(transform.parent.gameObject);
+                   // Destroy(transform.parent.gameObject);
+                    gameObject.SetActive(false);    
                 }
                 timeValue += Time.deltaTime;
                 return;
@@ -44,8 +54,6 @@ public class ShaderEffectCamera : NetworkBehaviour
                 return;
         }
     }
-    private void OnDestroy()
-    {
-        PlayerCamera_S.Instance.RemoveFromPool(this);
-    }
+
+   
 }

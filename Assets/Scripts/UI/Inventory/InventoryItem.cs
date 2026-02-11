@@ -12,7 +12,7 @@ namespace Avocado
         private void OnEnable()
         {
             icon.SetActive(false);
-            if (PlayerPrefs.HasKey(playerPrefbs)&& PlayerPrefs.GetInt(playerPrefbs)==level)
+            if (PlayerPrefs.HasKey(playerPrefbs)&& PlayerPrefs.GetInt(playerPrefbs)>=level)
             {
                 icon.SetActive(true);
             }

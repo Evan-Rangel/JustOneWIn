@@ -16,8 +16,8 @@ namespace Avocado
         List<GameObject> fabricTorretBulletPool = new List<GameObject>();
 
 
-
-
+        [SerializeField] GameObject explosionEffectPefab;
+        List<GameObject> explosionEffectPool = new List<GameObject>();
 
 
 
@@ -93,6 +93,20 @@ namespace Avocado
             searcherPool.Add(newSearcher);
             return newSearcher;
         }
+        public GameObject GetExplosionEffect()
 
+        {
+            foreach (GameObject effect in explosionEffectPool)
+            {
+                if (!effect.activeInHierarchy)
+                {
+                    effect.SetActive(true);
+                    return effect;
+                }
+            }
+            GameObject newEffect = Instantiate(explosionEffectPefab);
+            explosionEffectPool.Add(newEffect);
+            return newEffect;
+        }
     }
 }

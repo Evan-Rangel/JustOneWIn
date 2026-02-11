@@ -23,7 +23,7 @@ namespace Avocado
             itemsToSell = new List<ScriptableObject>();
             foreach (var weapon in weaponsToSell)
             {
-                if (!SaveManager.IsWeaponSavedInPlayerPrefs(weapon))
+                if (!SaveManager.IsWeaponSaved(weapon))
                     itemsToSell.Add(weapon);
             }
             foreach (var buff in buffsToSell)
@@ -51,13 +51,13 @@ namespace Avocado
             }
             foreach (var item in itemsToSell)
             {
-                if (item is WeaponDataSO && !SaveManager.IsWeaponSavedInPlayerPrefs((WeaponDataSO)item))
+                if (item is WeaponDataSO && !SaveManager.IsWeaponSaved((WeaponDataSO)item))
                 {
                     shopItemHolders[shopIndex].SetItemData((WeaponDataSO)item);
                     shopItemHolders[shopIndex].button.onClick.AddListener(() => SpawnWeaponPickup((WeaponDataSO)item));
                     shopIndex++;
                 }
-                else if (item is BuffItemDataSO && !SaveManager.IsBuffPurchasedInPlayerPrefs(shopID.zoneName))
+                else if (item is BuffItemDataSO && !SaveManager.IsBuffPurchased(shopID.zoneName))
                 { 
                     shopItemHolders[shopIndex].SetItemData((BuffItemDataSO)item);
                     shopItemHolders[shopIndex].button.onClick.AddListener(() => ApplyBuffEffect((BuffItemDataSO)item));
