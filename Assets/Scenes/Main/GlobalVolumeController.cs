@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -28,7 +29,11 @@ namespace Avocado
             if (chromaticAberration != null&& chromaticAberration.intensity.value> chromaticAberrationMinValue)
             {  
                 chromaticAberration.intensity.value -= Time.deltaTime*0.3f;
-                
+                return;
+            }
+            if (chromaticAberration.intensity.value < chromaticAberrationMinValue)
+            {
+                chromaticAberration.intensity.value = chromaticAberrationMinValue;
             }
 
         }
