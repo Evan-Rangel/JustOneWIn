@@ -35,11 +35,18 @@ namespace Avocado.CoreSystem
         public override void LogicUpdate()
         {
             CheckKnockBack();
+           /* if (invulneravilityTime > 0)
+                invulneravilityTime -= Time.deltaTime;
+
+*/
         }
 
         // Recibe un golpe de retroceso (KnockBack) aplicando fuerza y deshabilitando el control de movimiento por un tiempo breve.
         public void KnockBack(KnockBackData data)
         {
+            if (core.invulneravilityTime > 0) return;
+             core.invulneravilityTime = 1;
+            
             data = Modifiers.ApplyAllModifiers(data);
 
             movement.SetVelocity(data.Strength, data.Angle, data.Direction);

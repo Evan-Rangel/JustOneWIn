@@ -20,6 +20,7 @@ namespace Avocado.CoreSystem
         public bool  dashUnlocked, grabUnlocked;
         // Lista que mantiene todos los CoreComponents registrados en este Core.
         private readonly List<CoreComponent> CoreComponents = new List<CoreComponent>();
+        public float invulneravilityTime = 0;
 
         private void Awake()
         {
@@ -38,6 +39,8 @@ namespace Avocado.CoreSystem
             {
                 component.LogicUpdate();
             }
+            if (invulneravilityTime > 0)
+                invulneravilityTime -= Time.deltaTime;
         }
 
         // Agrega un CoreComponent a la lista si aún no está agregado.

@@ -144,12 +144,13 @@ public class GameManager : MonoBehaviour
     public void TeleportPlayerToSavePoint(TpEntity target)
     { 
         SaveManager.SaveZoneSpawnName(target.zoneName);
-        SceneManager.LoadScene("TransitionScene");
-        //SceneManager.LoadScene("Main");
+        //SceneManager.LoadScene("TransitionScene");
+        SceneManager.LoadScene("Main");
     }
     public void ResetLevel()
     { 
-        SceneManager.LoadScene("TransitionScene");
+       // SceneManager.LoadScene("TransitionScene");
+        SceneManager.LoadScene("Main");
     }
     public Vector2 GetSavePositionBySavedZoneName()
     {
