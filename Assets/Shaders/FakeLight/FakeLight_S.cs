@@ -19,9 +19,10 @@ public class FakeLight_S : MonoBehaviour
     {
         spr.GetPropertyBlock(propertyBlock);
         propertyBlock.SetFloat("_DarknessStrength", 0);
-        propertyBlock.SetFloat("_RespawnEffect", 0);
+        propertyBlock.SetFloat("_RespawnEffect", 1);
         spr.SetPropertyBlock(propertyBlock);
-        UnShadeEffect();
+        Invoke("UnShadeEffect", 1);
+        //UnShadeEffect();
     }
     private void Update()
     {
@@ -32,7 +33,10 @@ public class FakeLight_S : MonoBehaviour
     }
     public void UnShadeEffect()
     {
+
+
         StartCoroutine(IUnShadeEffect());
+
     }
     IEnumerator IUnShadeEffect()
     {

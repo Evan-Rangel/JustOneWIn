@@ -132,8 +132,9 @@ namespace Avocado.Weapons
 
         private void OnDestroy()
         {
-            // Evitar memory leaks: desuscribirse del evento al destruirse
-            weaponInventory.OnWeaponDataChanged -= HandleWeaponDataChanged;
+            if (weaponInventory != null)
+                // Evitar memory leaks: desuscribirse del evento al destruirse
+                weaponInventory.OnWeaponDataChanged -= HandleWeaponDataChanged;
         }
     }
 }

@@ -33,13 +33,16 @@ namespace Avocado
             currentPointIndex= GameManager.instance.activeSavePoints.IndexOf(tp);
             selectButton.onClick.AddListener(() =>
             {
+                TeleportPlayerAnimController.instance.PlayTeleportEndAnim();
                 GameSaveCapsule capsule = GameManager.instance.currentSpawnPosition.pos.root.GetComponentInChildren<GameSaveCapsule>();
                 FakeLight_S.instance.ShadeEffect();
                 capsule.closeCapsuleAnimation = true;
                 GameManager.instance.ToggleMinimap(false);
                 capsule.OnCloseAnimationEnd += () =>
                 {
-                    GameManager.instance.TeleportPlayerToSavePoint(tp);
+
+                    SaveManager.SaveZoneSpawnName(tp.zoneName);
+                    //GameManager.instance.TeleportPlayerToSavePoint(tp);
                 };
             });
             if (Vector2.Distance(minimapCamera.transform.position, tp.pos.position)>10)

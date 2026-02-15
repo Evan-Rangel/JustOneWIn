@@ -141,11 +141,11 @@ public class GameManager : MonoBehaviour
         pauseHolder.SetActive(true);
         ChangeState(GameState.UI);
     }
-    public void TeleportPlayerToSavePoint(TpEntity target)
+    public void  TeleportPlayerToSavePoint(TpEntity target)
     { 
         SaveManager.SaveZoneSpawnName(target.zoneName);
         //SceneManager.LoadScene("TransitionScene");
-        SceneManager.LoadScene("Main");
+       // SceneManager.LoadScene("Main");
     }
     public void ResetLevel()
     { 
