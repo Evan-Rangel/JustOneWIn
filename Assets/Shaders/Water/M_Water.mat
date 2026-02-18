@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Water
-  m_Shader: {fileID: -6465566751694194690, guid: b142821eac64b8846a5671f2e8be4f7b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: bed6ea9e4c25c3d41bf5781d3552d1ab, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,11 +23,7 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 62d15850bbd664e499412ea9b6dfd87f, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_1e471949fcdc437b8c6fa7a82cc0e51e_Texture_1:
+    - _Texture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -44,11 +40,29 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _BodyTransparency: 1
+    - _CausticOffsetSpeed: 1
+    - _CausticPower: 9.5
+    - _CausticScale: 10
+    - _CausticStrength: 1
+    - _DisortionStrength: 0.0025
+    - _DistortionOffsetSpeed: 1.95
+    - _DistortionScale: 30
+    - _LineLength: 0.985
+    - _WaveCount: 0.75
+    - _WaveFlowDirection: 1
+    - _WaveSize: 0.16
+    - _WaveSpeed: 4
     m_Colors:
-    - _OffSet: {r: 0, g: 0.05, b: 0, a: 0}
+    - _BodyColor: {r: 1, g: 0.53187966, b: 0, a: 0}
+    - _CausticColor: {r: 1, g: 0.665265, b: 0, a: 0}
+    - _CausticScrollDir: {r: 0.045, g: 0, b: 0, a: 0}
+    - _CausticTiling: {r: 0.5, g: 1.5, b: 0, a: 0}
+    - _DistortionDir: {r: 0.05, g: 0, b: 0, a: 0}
+    - _LineColor: {r: 1, g: 0.9516334, b: 0.11792446, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &8922797222697174295
+--- !u!114 &4506951417581935870
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
