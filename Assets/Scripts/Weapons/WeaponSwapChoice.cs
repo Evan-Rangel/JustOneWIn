@@ -1,5 +1,4 @@
 ﻿using System;
-
 /*---------------------------------------------------------------------------------------------
 Este script define un sistema de intercambio de armas:
 -WeaponSwapChoiceRequest encapsula una solicitud de cambio de arma, incluyendo:

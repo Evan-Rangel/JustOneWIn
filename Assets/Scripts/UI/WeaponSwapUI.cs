@@ -33,6 +33,7 @@ namespace Avocado.UI
 
         // Delegado para almacenar el callback del intercambio
         private Action<WeaponSwapChoice> choiceSelectedCallback;
+        [SerializeField] OnEnableFirstButton onEnableFirstButton;
 
         // Método que se llama cuando el sistema de intercambio solicita una elección
         private void HandleChoiceRequested(WeaponSwapChoiceRequest choiceRequest)
@@ -52,6 +53,10 @@ namespace Avocado.UI
                 weaponSwapChoiceUi.TakeRelevantChoice(choiceRequest.Choices);
             }
 
+            foreach (var weaponSwapChoiceUi in weaponSwapChoiceUIs)
+            {
+                weaponSwapChoiceUi.gameObject.SetActive(true);
+            }
             // Activa la UI visualmente
             canvasGroup.alpha = 1f;
             canvasGroup.interactable = true;
@@ -69,6 +74,10 @@ namespace Avocado.UI
             // Oculta la UI
             canvasGroup.alpha = 0f;
             canvasGroup.interactable = false;
+            foreach (var weaponSwapChoiceUi in weaponSwapChoiceUIs)
+            {
+                weaponSwapChoiceUi.gameObject.SetActive(false);
+            }
         }
 
         // Se llama al iniciar el script
@@ -91,6 +100,7 @@ namespace Avocado.UI
             foreach (var weaponSwapChoiceUI in weaponSwapChoiceUIs)
             {
                 weaponSwapChoiceUI.OnChoiceSelected += HandleChoiceSelected;
+                weaponSwapChoiceUI.gameObject.SetActive(false);
             }
         }
 

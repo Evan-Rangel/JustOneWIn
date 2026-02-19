@@ -142,6 +142,8 @@ namespace Avocado
     [Serializable]
     public class SaveData
     {
+        public string firstWeaponName="";    
+        public string secondWeaponName="";    
         public List<string> unlockedWeapons = new List<string>();
         public string zoneSpawn = "";
         public List<string> unlockedZones = new List<string>();
@@ -183,6 +185,30 @@ namespace Avocado
         }
 
         #region weapon
+        public static string GetFirstWeaponName()
+        {
+            if (data == null) Load();
+
+            return data.firstWeaponName;
+        }
+        public static void SaveInitWeaponName(WeaponDataSO weaponData, int index)
+        {
+            if (data == null) Load();
+
+            if (index==0)
+                data.firstWeaponName= weaponData.Name;
+            if (index==1)
+                data.secondWeaponName = weaponData.Name;
+
+            Save();
+        }    
+        public static string GetSecondWeaponName()
+        {
+            if (data == null) Load();
+
+            return data.secondWeaponName;
+        }
+   
         public static void SaveWeapon(WeaponDataSO weaponData)
         {
             if (data == null) Load();

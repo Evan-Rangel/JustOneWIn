@@ -1,7 +1,9 @@
 ﻿using System;
+using Avocado.CoreSystem.Testers;
 using Avocado.Interaction;
 using Avocado.Interaction.Interactables;
 using Avocado.Weapons;
+using UnityEngine;
 
 /*---------------------------------------------------------------------------------------------
 Este script Gestionar el sistema de recolección e intercambio de armas cuando el personaje 
@@ -37,6 +39,7 @@ namespace Avocado.CoreSystem
 
         private WeaponPickup weaponPickup;
 
+        
         // Maneja el intento de interactuar con un objeto interactuable
         private void HandleTryInteract(IInteractable interactable)
         {
@@ -46,11 +49,12 @@ namespace Avocado.CoreSystem
 
             weaponPickup = pickup;
             newWeaponData = weaponPickup.GetContext(); // Obtener el arma del pickup
-
             // Si hay un espacio vacío en el inventario, ponerla directamente
             if (weaponInventory.TryGetEmptyIndex(out var index))
             {
                 weaponInventory.TrySetWeapon(newWeaponData, index, out _);
+                
+                SaveManager.SaveInitWeaponName(newWeaponData, index);
                 interactable.Interact();
                 newWeaponData = null;
                 return;
@@ -71,6 +75,7 @@ namespace Avocado.CoreSystem
             if (!weaponInventory.TrySetWeapon(newWeaponData, choice.Index, out var oldData))
                 return;
 
+            SaveManager.SaveInitWeaponName(newWeaponData, choice.Index);
             newWeaponData = null;
 
             // Disparar evento de que un arma fue descartada
@@ -96,6 +101,21 @@ namespace Avocado.CoreSystem
         private void OnEnable()
         {
             interactableDetector.OnTryInteract += HandleTryInteract;
+
+            newWeaponData = GameManager.instance.GetFirstInitWeapon();
+
+            if (newWeaponData != null)
+            {
+                weaponInventory.TrySetWeapon(newWeaponData, 0, out _);
+                newWeaponData = null;
+            }
+            newWeaponData = GameManager.instance.GetSecondInitWeapon();
+
+            if (newWeaponData != null)
+            {
+                weaponInventory.TrySetWeapon(newWeaponData, 1, out _);
+                newWeaponData = null;
+            }
         }
 
         // Desubscribirse al evento

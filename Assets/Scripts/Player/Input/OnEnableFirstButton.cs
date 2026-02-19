@@ -15,10 +15,14 @@ namespace Avocado
         }
         private void OnEnable()
         {
-            //button.Select();
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(gameObject); 
         }
        
+        public void SelectButton()
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(gameObject);
+        }
     }
 }

@@ -215,6 +215,33 @@ public class GameManager : MonoBehaviour
     {
         return weaponsInGame.Contains(_data);
     }
+
+    // Devuelve el arma inicial que el jugador tenía guardada, o null si no hay ninguna
+    public WeaponDataSO GetFirstInitWeapon()
+    {
+        string waeaponName = SaveManager.GetFirstWeaponName();
+
+        foreach (WeaponDataSO weapon in weaponsData)
+        {
+            if (weapon.Name != waeaponName) continue;
+            AddWeaponOnGame(weapon);
+            return weapon;
+        }
+        return null;
+    }
+    public WeaponDataSO GetSecondInitWeapon()
+    {
+        string waeaponName = SaveManager.GetSecondWeaponName();
+
+        foreach (WeaponDataSO weapon in weaponsData)
+        {
+            if (weapon.Name != waeaponName) continue;
+            AddWeaponOnGame(weapon);
+            return weapon;
+        }
+        return null;
+    }
+
     [Header("Abilities Unlock Holders")]
     [SerializeField] GameObject hookHolder;
     [SerializeField] GameObject dashHolder;
