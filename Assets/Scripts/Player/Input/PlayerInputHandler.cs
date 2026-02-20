@@ -22,6 +22,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action<bool> OnGrappleInputChanged;
     public event Action OnInteractEventInputChanged;
     public event Action<float> OnCameraTargetInputChanged;
+    public event Action onNextDialogueInput;
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
@@ -68,6 +69,14 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CheckJumpInputHoldTime();
         CheckDashInputHoldTime();
+    }
+
+
+    public void OnNextDialogueInput(InputAction.CallbackContext context)
+    {
+        if (DialogueUIController.instance && context.started)
+            DialogueUIController.instance.OnInputEnter();
+    
     }
     public void OnEscapeInput(InputAction.CallbackContext context)
     {
@@ -212,11 +221,11 @@ public class PlayerInputHandler : MonoBehaviour
         RawDashDirectionInput = context.ReadValue<Vector2>();
 
         // Si el esquema es teclado, convierte el input a dirección relativa al mundo
-        if (playerInput.currentControlScheme == "Keyboard")
+      /*  if (playerInput.currentControlScheme == "Keyboard")
         {
             RawDashDirectionInput = cam.ScreenToWorldPoint((Vector3)RawDashDirectionInput) - transform.position;
         }
-
+      */
         DashDirectionInput = Vector2Int.RoundToInt(RawDashDirectionInput.normalized);
     }
 

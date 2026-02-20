@@ -380,14 +380,24 @@ public class GameManager : MonoBehaviour
     }
 
 
+    #region Dialogue
+    [Header("Dialogue UI")]
+    [SerializeField] GameObject dialogueHolder;
+    public void ActiveDialogue( Dialogue_SO newDialogue)
+    {
+        dialogueHolder.SetActive(true);
+        DialogueUIController.instance.StartDialogue(newDialogue);
+    }
 
+
+    #endregion
 
 
 
 
 
     #endregion
- 
+
 
     public void LoadNextLevel()
     {
