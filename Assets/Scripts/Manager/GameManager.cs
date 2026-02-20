@@ -364,6 +364,28 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.UI);
         minimapHolder.SetActive(_active);
     }
+
+
+    OnEnableFirstButton[] onEnableFirstButtons; 
+    public void OnSelectedButtonDisabled()
+    {
+        onEnableFirstButtons = FindObjectsOfType<OnEnableFirstButton>();
+
+        foreach (OnEnableFirstButton button in onEnableFirstButtons)
+        {
+            if (button.gameObject.activeSelf)
+                button.SelectButton();
+        }
+
+    }
+
+
+
+
+
+
+
+
     #endregion
  
 
@@ -437,6 +459,8 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+
+    #region Online
 
     LevelData levelData;
     [SerializeField] Image loadImage;
@@ -552,7 +576,10 @@ public class GameManager : MonoBehaviour
             loadImage.fillClockwise = !loadImage.fillClockwise;
         }
     }
+#endregion
+
 }
+#region Interfaces
 public interface ItemAction
 {
     public void Action(PlayerItemManager _playerItemManager);
@@ -562,12 +589,12 @@ public interface ICollidable
 {
     void OnCollision();
 }
-public enum CHARACTERS
-{
-    Blue
-}
+#endregion
+#region enums
+
 public enum STAT
 {
     Health,
     Stamina
 }
+#endregion

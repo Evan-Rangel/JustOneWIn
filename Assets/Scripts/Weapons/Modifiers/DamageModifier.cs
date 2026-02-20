@@ -36,9 +36,11 @@ namespace Avocado.Weapons.Modifiers
         // Si el ataque es bloqueado, reduce el daño usando el valor de absorción definido.
         public override DamageData ModifyValue(DamageData value)
         {
+
             // Verifica si el ataque fue bloqueado usando el delegado
             if (isBlocked(value.Source.transform, out var blockDirectionInformation))
             {
+
                 // Reduce el daño basado en el porcentaje de absorción
                 value.SetAmount(value.Amount * (1 - blockDirectionInformation.DamageAbsorption));
 

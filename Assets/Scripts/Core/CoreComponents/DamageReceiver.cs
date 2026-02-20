@@ -34,19 +34,19 @@ namespace Avocado.CoreSystem
         {
             if (core.invulneravilityTime > 0) return;
 
-           // core.invulneravilityTime = 1;
+            // core.invulneravilityTime = 1;
 
             // Mostrar el daño antes de aplicar modificadores
             //print($"Damage Amount Before Modifiers: {data.Amount}");
-            GlobalVolumeController.instance.SetChromaticAberration(1);
+            //GlobalVolumeController.instance.SetChromaticAberration(1);
             // Aplicar todos los modificadores activos al daño
             data = Modifiers.ApplyAllModifiers(data);
 
             // Mostrar el daño después de modificadores
             //print($"Damage Amount After Modifiers: {data.Amount}");
-
             // Si después de modificar el daño es 0 o menor, no hacer nada
-            if (data.Amount <= 0f)
+            //if ( data.Amount <= 0f)
+            if ( Mathf.Approximately( data.Amount, 0f)|| data.Amount<=0f)
                 return;
             if (soundReproductor==null)
                 soundReproductor = core.Root.GetComponent<SoundReproductor>();
@@ -55,7 +55,9 @@ namespace Avocado.CoreSystem
 
             // Disminuir salud
             stats.Health.Decrease(data.Amount);
-           // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
+            GlobalVolumeController.instance.SetChromaticAberration(1);
+
+            // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
 
             // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);

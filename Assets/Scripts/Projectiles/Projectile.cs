@@ -99,7 +99,7 @@ namespace Avocado.Projectiles
                     IDamageable damageable = damageHit.transform.root.GetComponentInChildren<IDamageable>();//GetComponent<IDamageable>();
                     if (damageable != null)
                     {
-                        DamageData damageData = new DamageData(damage, null); // Ejemplo de daño
+                        DamageData damageData = new DamageData(damage, gameObject); // Ejemplo de daño
                         damageable.Damage(damageData);
                     }
                     IKnockBackable knockBackable = damageHit.transform.root.GetComponentInChildren<IKnockBackable>();
@@ -107,12 +107,15 @@ namespace Avocado.Projectiles
                     {
                         int direction = transform.position.x - damageHit.transform.position.x >= 0 ? -1 : 1;
                         //knockBackable.KnockBack(new KnockBackData(Vector2.one, 10*knockbackForce, transform.right.x >= 0 ? 1 : -1, null));
-                        knockBackable.KnockBack(new KnockBackData(Vector2.one, 10*knockbackForce, direction, null));
+                        knockBackable.KnockBack(new KnockBackData(Vector2.one, 10*knockbackForce, direction, gameObject));
                     }
 
-                    if (anim)
-                        Invoke("DelayPlayerStop", 0.05f);
-                    else gameObject.SetActive(false);
+
+
+                    //if (anim)
+                    //  Invoke("DelayPlayerStop", 0.05f);
+                    // else
+                    DelayPlayerStop();
                     //Destroy(gameObject);
                 }
 

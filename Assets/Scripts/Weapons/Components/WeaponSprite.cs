@@ -41,6 +41,7 @@ namespace Avocado.Weapons.Components
 
             // Obtiene los sprites correspondientes a la fase actual
             currentPhaseSprites = currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Sprites;
+            //Debug.Log(currentAttackData.PhaseSprites.FirstOrDefault(data => data.Phase == phase).Phase);
         }
 
         // Se llama cuando cambia el sprite base. Se sincroniza el sprite del arma con el correspondiente en la fase.
@@ -52,6 +53,8 @@ namespace Avocado.Weapons.Components
                 weaponSpriteRenderer.sprite = null;
                 return;
             }
+
+
 
             // Si el índice sobrepasa la cantidad de sprites disponibles
             if (currentWeaponSpriteIndex >= currentPhaseSprites.Length)

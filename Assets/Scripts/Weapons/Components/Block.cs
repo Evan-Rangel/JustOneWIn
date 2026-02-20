@@ -63,7 +63,6 @@ namespace Avocado.Weapons.Components
             shouldUpdate = false;
 
             damageModifier.OnModified -= HandleModified;
-
             damageReceiver.Modifiers.RemoveModifier(damageModifier);
             knockBackReceiver.Modifiers.RemoveModifier(knockBackModifier);
             poiseDamageReceiver.Modifiers.RemoveModifier(poiseDamageModifier);

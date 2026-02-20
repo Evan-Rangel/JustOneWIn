@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Avocado.Weapons.Modifiers;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 /*---------------------------------------------------------------------------------------------
 Este script gestionar un grupo de modificadores y aplicar su efecto acumulado a un valor.
@@ -31,6 +33,7 @@ namespace Avocado.ModifierSystem
 
             foreach (var modifier in modifierList)
             {
+            // UnityEngine.Debug.Log(modifier.GetType());
                 modifiedValue = modifier.ModifyValue(modifiedValue);
             }
 

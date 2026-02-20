@@ -38,12 +38,7 @@ namespace Avocado
         {
             base.OnInteractEvent();
             gameManager.ActiveShop(shopID);
-            /*
-            gameManager.shopHolder.SetActive(true);
-            gameManager.windowSelector.SetActive(true);
-            gameManager.SetInfoMenuComputer("Shop");
-            SaveManager.SavePlayerPositionInPlayerPrefs(gameManager.currentSpawnPosition.position);
-            */
+ 
             int shopIndex = 0;
             foreach (var holder in shopItemHolders)
             {
@@ -71,12 +66,11 @@ namespace Avocado
                 if (i>=shopIndex)
                    shopItemHolders[i].gameObject.SetActive(false);
             }
-           // gameManager.ChangeState(GameManager.GameState.UI);
         }
         public void ApplyBuffEffect(BuffItemDataSO _data)
         {
             _data.ApllyBuff(shopID.zoneName);
-            
+            gameManager.OnSelectedButtonDisabled();    
             OnInteractEvent();
         }
         public void SpawnWeaponPickup(WeaponDataSO _data)
@@ -84,6 +78,8 @@ namespace Avocado
             if (!gameManager.SubstractCoin(_data.PriceOnShop))
                 return;
             gameManager.AddWeaponDataToInventory(_data);
+            gameManager.OnSelectedButtonDisabled();
+
             WeaponPickup weapon = Instantiate(weaponPickupPrefab, gameManager.currentSpawnPosition.pos.position, Quaternion.identity).GetComponent<WeaponPickup>();
             weapon.weaponIcon.enabled = false;
             weapon.SetContext(_data);

@@ -48,11 +48,12 @@ namespace Avocado.Weapons.Components
             shouldUpdate = false;
 
             damageModifier.OnModified += HandleParry;
-
+            /*
             damageReceiver.Modifiers.AddModifier(damageModifier);
             knockBackReceiver.Modifiers.AddModifier(knockBackModifier);
             poiseDamageReceiver.Modifiers.AddModifier(poiseDamageModifier);
-        }
+        */
+            }
 
         // Finaliza la ventana de parry, removiendo los modificadores.
         private void StopParryWindow()
@@ -61,11 +62,12 @@ namespace Avocado.Weapons.Components
             shouldUpdate = false;
 
             damageModifier.OnModified += HandleParry;
-
+            /*
             damageReceiver.Modifiers.RemoveModifier(damageModifier);
             knockBackReceiver.Modifiers.RemoveModifier(knockBackModifier);
             poiseDamageReceiver.Modifiers.RemoveModifier(poiseDamageModifier);
-        }
+        */
+            }
 
         // Asegura que al salir del ataque se limpien los modificadores.
         protected override void HandleExit()

@@ -1,33 +1,51 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Avocado
 {
-    public class InventoryItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class InventoryItem : MonoBehaviour
     {
         [SerializeField]GameObject description;
         [SerializeField] GameObject icon;
-        [SerializeField] string playerPrefbs;
+        [SerializeField] string itemName;
         [SerializeField] int level;
+       [SerializeField]GameObject buttonObject;
+        private void Awake()
+        {
+            buttonObject = GetComponentInChildren<Button>().gameObject;
+         
+        }
+      
+        private void Update()
+        {
+            if (!IsUnlocked()) return;
+            description.SetActive(EventSystem.current.currentSelectedGameObject == buttonObject);
+        }
+       
         private void OnEnable()
         {
             icon.SetActive(false);
-            if (PlayerPrefs.HasKey(playerPrefbs)&& PlayerPrefs.GetInt(playerPrefbs)>=level)
+
+            if (IsUnlocked())
             {
                 icon.SetActive(true);
             }
+
             description.SetActive(false);
         }
-        public void OnPointerEnter(PointerEventData eventData)
+        bool IsUnlocked()
         {
-            if (icon.activeSelf)
-                description.SetActive(true);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (icon.activeSelf)
-                description.SetActive(false);
+            switch (itemName)
+            {
+                case "Dash":
+                    return SaveManager.GetDashUnlocked();
+                case "Grapple":return SaveManager.GetGrappleUnlocked();
+                case "Grab": return SaveManager.GetGrabUnlocked();
+                case "Stamina": return SaveManager.GetStaminaLevel()>=level;
+                case "Health": return SaveManager.GetHealthLevel() >= level;
+                default: return false;
+            }
         }
     }
 }
