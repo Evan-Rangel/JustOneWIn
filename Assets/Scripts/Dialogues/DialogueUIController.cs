@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 namespace Avocado
@@ -11,6 +9,7 @@ namespace Avocado
         int currentDialogueIndex;
         string currentText;
         int currentIndex;
+        bool saveCurrentDialogue;
         [SerializeField] float textSpeed = 0.05f;
 
         public static DialogueUIController instance;
@@ -24,45 +23,45 @@ namespace Avocado
             {
                 Destroy(gameObject);
             }
+            saveCurrentDialogue = false;
             dialogueTxt= GetComponentInChildren<TMP_Text>();
         }
 
         public void OnInputEnter()
         {
             CancelInvoke(nameof(WriteDialogue));
+
             if (currentIndex < currentText.Length - 1)
             {
                 dialogueTxt.text = currentText;
                 currentIndex = currentText.Length;
+                return;
             }
-            else
+
+            if (saveCurrentDialogue)
+                SaveManager.SaveDialogueKey(currentDialogue.dialogueKey);
+
+            currentDialogueIndex++;
+            dialogueTxt.text = "";
+            currentIndex = 0;
+            
+            if (currentDialogueIndex< currentDialogue.dialogue.Length)
             {
-                currentDialogueIndex++;
-                dialogueTxt.text = "";
-
-                if (currentDialogueIndex< currentDialogue.dialogue.Length)
-                {
-                    currentText = currentDialogue.dialogue[currentDialogueIndex];
-                    currentIndex = 0;
-                    InvokeRepeating(nameof(WriteDialogue), 0f, textSpeed);
-                    return;
-                }
-
-                else
-                {
-                    currentDialogueIndex = 0;
-                    currentIndex = 0;
-                    currentDialogue = null;
-                    gameObject.SetActive(false);
-                    return;
-                }
-
+                currentText = currentDialogue.dialogue[currentDialogueIndex];
+                InvokeRepeating(nameof(WriteDialogue), 0f, textSpeed);
+                return;
             }
+
+            currentDialogueIndex = 0;
+            currentDialogue = null;
+            gameObject.SetActive(false);
+            return;
         }
 
-        public void StartDialogue(Dialogue_SO dialogue)
+        public void StartDialogue(DialogueInstance dialogue)
         {
-            currentDialogue= dialogue;
+            saveCurrentDialogue = dialogue.saveDialogue;
+            currentDialogue= dialogue.dialogueData;
             currentIndex = 0;
             currentDialogueIndex = 0;
             currentText = currentDialogue.dialogue[0];

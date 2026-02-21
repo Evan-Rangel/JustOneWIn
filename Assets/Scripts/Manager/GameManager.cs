@@ -356,7 +356,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     [Header("Minimap")]
     [SerializeField] GameObject minimapHolder;
     public void ToggleMinimap(bool _active)
@@ -365,28 +364,23 @@ public class GameManager : MonoBehaviour
         minimapHolder.SetActive(_active);
     }
 
-
     OnEnableFirstButton[] onEnableFirstButtons; 
     public void OnSelectedButtonDisabled()
     {
         onEnableFirstButtons = FindObjectsOfType<OnEnableFirstButton>();
-
         foreach (OnEnableFirstButton button in onEnableFirstButtons)
         {
             if (button.gameObject.activeSelf)
                 button.SelectButton();
         }
-
     }
-
 
     #region Dialogue
     [Header("Dialogue UI")]
     [SerializeField] GameObject dialogueHolder;
-    public void ActiveDialogue( Dialogue_SO newDialogue)
+    public void ActiveDialogueWindow( )
     {
         dialogueHolder.SetActive(true);
-        DialogueUIController.instance.StartDialogue(newDialogue);
     }
 
 

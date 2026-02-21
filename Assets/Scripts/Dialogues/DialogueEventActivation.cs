@@ -1,32 +1,33 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avocado
 {
     public class DialogueEventActivation : MonoBehaviour
     {
-        public event Action<Dialogue_SO> onDialogueStart;
-        [SerializeField] Dialogue_SO dialogue;
+        [SerializeField] DialogueInstance[] dialogue;
+        int currentDialogueIndex;
 
-        private void Start()
+        private void Awake()
         {
-            Invoke(nameof(ActivateDialogueEvent), 3);
+            currentDialogueIndex = 0;
         }
-
-       /* private void OnEnable()
+        public void StartDialogueInIndex(int idx)
         {
-            onDialogueStart +=GameManager.instance.ActiveDialogue;
+            currentDialogueIndex = idx;
+            GameManager.instance.ActiveDialogueWindow();
+            DialogueUIController.instance.StartDialogue(dialogue[idx]);
         }
-        private void OnDisable()
+        public void RequestDialogue()
         {
-            onDialogueStart -= GameManager.instance.ActiveDialogue;
-        }*/
-        public void ActivateDialogueEvent()
-        {
-            GameManager.instance.ActiveDialogue(dialogue);
-            //onDialogueStart?.Invoke(dialogue);
+            if (currentDialogueIndex == dialogue.Length)
+                return;
+            if (SaveManager.IsDialogueKeySaved(dialogue[currentDialogueIndex].dialogueData.dialogueKey))
+            {
+                currentDialogueIndex++;
+                RequestDialogue();
+                return;
+            }
+            StartDialogueInIndex(currentDialogueIndex);
         }
-    }
+    }   
 }

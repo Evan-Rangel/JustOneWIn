@@ -142,6 +142,7 @@ namespace Avocado
     [Serializable]
     public class SaveData
     {
+        public List<string> dialoguesKey = new List<string>();
         public string firstWeaponName="";    
         public string secondWeaponName="";    
         public List<string> unlockedWeapons = new List<string>();
@@ -183,6 +184,29 @@ namespace Avocado
             bf.Serialize(file, data);
             file.Close();
         }
+
+
+
+        #region Dialogues
+
+        public static void SaveDialogueKey(string dialogueKey)
+        {
+            if (data == null) Load();
+            if (!data.dialoguesKey.Contains(dialogueKey))
+            {
+                data.dialoguesKey.Add(dialogueKey);
+                Save();
+            }
+        }
+
+        public static bool IsDialogueKeySaved(string dialogueKey)
+        {
+            if (data == null) Load();
+            return data.dialoguesKey.Contains(dialogueKey);
+        }
+
+        #endregion
+
 
         #region weapon
         public static string GetFirstWeaponName()

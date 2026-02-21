@@ -9,6 +9,9 @@ namespace Avocado
 {
     public class FabricDronController : MonoBehaviour, IDamageable
     {
+
+        [SerializeField] float shootingTime;   
+
         FabricEnemyCollision fabricCollision;
         Rigidbody2D rb;
         [SerializeField] LayerMask playerLayer;
@@ -31,7 +34,7 @@ namespace Avocado
         float currentHorizontalVelocity;
         bool verticalCheck;
         bool horizontalCheck;
-       [SerializeField] float followToPlayerSpeed;
+        [SerializeField] float followToPlayerSpeed;
         Vector2 randomTargetPosition ;
 
 
@@ -170,7 +173,6 @@ namespace Avocado
                 randomTargetPosition += (Vector2)player.position;
              }
 
-            Debug.DrawLine(transform.position, randomTargetPosition, Color.red);    
             Vector2 dir = ((Vector2)randomTargetPosition - (Vector2)transform.position).normalized;
 
             if (Vector2.Distance(transform.position, randomTargetPosition)<0.1f)
@@ -187,7 +189,7 @@ namespace Avocado
             while (canFollowPlayer)
             {
                 Shoot();
-                yield return Helpers.GetWait(2f);
+                yield return Helpers.GetWait(shootingTime);
             }
             StartCoroutine(Shooting());
         }
