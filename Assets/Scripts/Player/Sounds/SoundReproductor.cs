@@ -12,33 +12,47 @@ public class SoundReproductor : MonoBehaviour
     [SerializeField] private AudioClip[] climbSound;
     [SerializeField] private AudioClip[] deathSound;
     [SerializeField] private AudioClip[] damageSound;
+
     public void PlayJumpSound()
     {
-        AudioManager.instance.PlayOneShotSFX(jumpSound[Random.Range(0, jumpSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Jump", transform.position);
+        // AudioManager.instance.PlayOneShotSFX(jumpSound[Random.Range(0, jumpSound.Length)]);
     }
     public void PlayLandSound()
     {
-        AudioManager.instance.PlayOneShotSFX(landSound[Random.Range(0,landSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Land", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(landSound[Random.Range(0,landSound.Length)]);
     }
     public void PlayDashSound()
     {
-        AudioManager.instance.PlayOneShotSFX(dashSound[Random.Range(0, dashSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Dash", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(dashSound[Random.Range(0, dashSound.Length)]);
     }
     public void PlayWalkSound()
     {
-        AudioManager.instance.PlayOneShotSFX(walkSound[Random.Range(0, walkSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Walk", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(walkSound[Random.Range(0, walkSound.Length)]);
     }
-  
+
     public void PlayClimbSound()
     {
-        AudioManager.instance.PlayOneShotSFX(climbSound[Random.Range(0, climbSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Climb", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(climbSound[Random.Range(0, climbSound.Length)]);
     }
     public void PlayDeathSound()
     {
-        AudioManager.instance.PlayOneShotSFX(deathSound[Random.Range(0, deathSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Death", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(deathSound[Random.Range(0, deathSound.Length)]);
     }
     public void PlayDamageSound()
     {
-        AudioManager.instance.PlayOneShotSFX(damageSound[Random.Range(0, damageSound.Length)]);
+        AudioManager.instance.PlaySFXSound("Player_Damage", transform.position);
+
+        // AudioManager.instance.PlayOneShotSFX(damageSound[Random.Range(0, damageSound.Length)]);
     }
 }
