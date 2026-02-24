@@ -21,8 +21,12 @@ namespace Avocado
         IEnumerator damageEffect;
         Transform playerPos;
         bool onGround;
+        bool jumping;
+        [SerializeField] float jumpDuration = 2f;
+        FabricEnemySoundReproductor soundReproductor;
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>();
             sprite = GetComponent<SpriteRenderer>(); 
             fabricCollision = GetComponentInChildren<FabricEnemyCollision>();
             anim = GetComponent<Animator>();
@@ -32,6 +36,7 @@ namespace Avocado
         {
             currentHealth = maxtHealth;
             onGround = true;
+            jumping = false;
             fabricCollision.OnPlayerEnter += OnPayerEnterCollision;
             fabricCollision.OnPlayerExit += OnPayerExitCollision;
             rb.constraints = RigidbodyConstraints2D.None| RigidbodyConstraints2D.FreezeRotation;
@@ -42,17 +47,17 @@ namespace Avocado
            fabricCollision.OnPlayerEnter -= OnPayerEnterCollision;
             fabricCollision.OnPlayerExit -= OnPayerExitCollision;
             anim.SetBool("startDeath", false);
+            CancelInvoke(nameof(ActivateJumping));
 
         }
         private void Update()
         {
             if (currentHealth <= 0)
                 return;
-            if (playerPos != null && Vector2.Distance(playerPos.position, transform.position)<playerDistanceToJump)
+            if (playerPos != null && Vector2.Distance(playerPos.position, transform.position)<playerDistanceToJump && !jumping)
             {
                 Jump();
             }
-            if (onGround) return;
             Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackData.attackRadius, attackData.whatIsPlayer);
 
             foreach (Collider2D collider in detectedObjects)
@@ -75,13 +80,22 @@ namespace Avocado
         void Jump()
         {
             if (!onGround) return;
+            soundReproductor.PlayAttackSound();
+            jumping = true;
             onGround = false;
             anim.SetBool("preJump", false);
             anim.SetBool("jump", true);
-            int direction = (transform.position.x-playerPos.position.x>0)? -1: 1;
+            int direction =(int)transform.localScale.x;//(transform.position.x-playerPos.position.x>0)? -1: 1;
             rb.AddForce(new Vector2(direction * playerForceJump.x, playerForceJump.y), ForceMode2D.Impulse);
+
+            Invoke(nameof(ActivateJumping), jumpDuration);
+
         }
-        
+        void ActivateJumping()
+        {
+ 
+            jumping = false;
+        }
         
         void OnPayerEnterCollision(Collider2D coll)
         {
@@ -167,7 +181,6 @@ namespace Avocado
         public void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(attackPoint.position, attackData.attackRadius);
-            Gizmos.DrawWireSphere((Vector2)transform.position+Vector2.right*playerDistanceToJump, attackData.attackRadius);
         }
     }
 }

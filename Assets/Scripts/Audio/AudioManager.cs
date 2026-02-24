@@ -19,7 +19,6 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-
         if (instance == null)
         {
             instance = this;
@@ -35,7 +34,6 @@ public class AudioManager : MonoBehaviour
 
     void InitPool()
     {
-
         for (int i = 0; i < 20; i++)
         {
             pool.Enqueue(CreateSource());
@@ -43,7 +41,6 @@ public class AudioManager : MonoBehaviour
     }
     void LoadSounds()
     {
-
         AudioData[] allAudios = Resources.LoadAll<AudioData>("");
         foreach (var item in allAudios)
         {

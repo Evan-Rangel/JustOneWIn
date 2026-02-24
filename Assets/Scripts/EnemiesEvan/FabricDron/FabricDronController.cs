@@ -1,14 +1,21 @@
 using Avocado.Combat.Damage;
-using Avocado.CoreSystem;
-using Org.BouncyCastle.Math;
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 
 namespace Avocado
 {
     public class FabricDronController : MonoBehaviour, IDamageable
     {
+        FabricEnemySoundReproductor soundReproductor;
+        [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
+        void IdleSound()
+        { 
+            soundReproductor.PlayIdleSound();
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+        }
+
+
+
 
         [SerializeField] float shootingTime;   
 
@@ -45,7 +52,8 @@ namespace Avocado
         Animator anim;
         private void Awake()
         {
-            fabricCollision=GetComponentInChildren<FabricEnemyCollision>();
+            soundReproductor=GetComponent<FabricEnemySoundReproductor>();
+            fabricCollision =GetComponentInChildren<FabricEnemyCollision>();
             sprite = GetComponent<SpriteRenderer>();
             anim =GetComponent<Animator>();
             rb = GetComponent<Rigidbody2D>();
@@ -53,6 +61,7 @@ namespace Avocado
         
         private void OnEnable()
         {
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
             verticalDirection = 1;
             horizontalDirection = 1;
             currentHealht = maxHealth;
@@ -67,6 +76,7 @@ namespace Avocado
         }
         private void OnDisable()
         {
+            CancelInvoke(nameof(IdleSound));
             player = null;
             canFollowPlayer = false;
             fabricCollision.OnPlayerEnter -= TargetFinded;
@@ -133,7 +143,7 @@ namespace Avocado
             Vector2 direction = (player.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion quaternion = Quaternion.Euler(0, 0, angle-angleOfBullets);
-
+            soundReproductor.PlayAttackSound();
             for (int i = 0; i < numberOfBullets; i++)
             {
                 //GameObject bullet = Instantiate(rangedAttackData.projectile, bulletSpawn.position, quaternion);
@@ -246,7 +256,8 @@ namespace Avocado
         }
         public void TargetFinded(Collider2D _player)
         {
-           //Shoot();
+            soundReproductor.PlayTargetFindSound();
+            //Shoot();
             player = _player.transform;
             StopAllCoroutines();
             randomTargetPosition = Vector2.zero;
@@ -256,6 +267,7 @@ namespace Avocado
         }
         public void TargetLost(Collider2D coll)
         {
+           // soundReproductor.PlayTargetLostSound();
             StopAllCoroutines();
 
             anim.SetBool("Attack", false);
@@ -294,9 +306,13 @@ namespace Avocado
                 anim.SetBool("Death", true);
                 canFollowPlayer = false;
                 player = null;
+                soundReproductor.PlayDeathSound();
                 StopAllCoroutines();
                 return;
+            
             }
+            soundReproductor.PlayDamageSound();
+
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();
