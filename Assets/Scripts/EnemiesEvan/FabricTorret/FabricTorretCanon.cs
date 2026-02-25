@@ -87,7 +87,7 @@ namespace Avocado
                     GameObject bullet = FabricEnemiesPool.Instance.GetFabricTorretBullet();
                     bullet.transform.position = bulletSpawn.position;
                     bullet.transform.rotation = bulletRotation; 
-                    bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+                    bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage, rangedAttackData.initSound, rangedAttackData.hitSound);
                 }
                 yield return Helpers.GetWait(0.2f);
             }

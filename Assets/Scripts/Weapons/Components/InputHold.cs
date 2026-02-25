@@ -21,6 +21,7 @@ namespace Avocado.Weapons.Components
         protected override void HandleEnter()
         {
             base.HandleEnter();
+            AudioManager.instance.PlaySFXSound(weapon.Data.ActionSound, transform.position);
             minHoldPassed = false;
         }
 

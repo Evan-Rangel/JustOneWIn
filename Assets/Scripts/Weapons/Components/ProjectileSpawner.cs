@@ -40,6 +40,7 @@ namespace Avocado.Weapons.Components
         // Manejador que se llama durante el ataque para generar los proyectiles.
         private void HandleAttackAction()
         {
+            AudioManager.instance.PlaySFXSound(weapon.Data.ReleaseActionSound, transform.position);
             foreach (var projectileSpawnInfo in currentAttackData.SpawnInfos)
             {
                 // Ejecuta la estrategia actual con los datos de spawn

@@ -1,6 +1,7 @@
 ﻿using System;
 using Avocado.ProjectileSystem.DataPackages;
 using UnityEngine;
+using UnityEngine.Events;
 
 /*---------------------------------------------------------------------------------------------
 Este script representa un sistema de proyectil modular en el que se pueden conectar distintos 
@@ -15,6 +16,8 @@ namespace Avocado.ProjectileSystem
 {
     public class Projectile : MonoBehaviour
     {
+        public UnityEvent OnDespawnByTime;
+
         // Evento que notifica a todos los componentes del proyectil que se ha llamado a Init
         public event Action OnInit;
 
@@ -31,6 +34,7 @@ namespace Avocado.ProjectileSystem
         public void Init()
         {
             OnInit?.Invoke();
+            OnDespawnByTime?.Invoke();
         }
 
         // Resetea el proyectil (por ejemplo, al ser reciclado)

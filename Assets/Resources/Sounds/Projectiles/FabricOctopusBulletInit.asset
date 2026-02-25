@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd60ccf92cf061e4893ddf02feac4fab, type: 3}
+  m_Name: FabricOctopusBulletInit
+  m_EditorClassIdentifier: 
+  clips:
+  - clip: {fileID: 8300000, guid: 7895362e0bc2d0e48bbed545bdcbf4fc, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 1ff9c0035264ae44caed4ead92b88618, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: a58828db33952a049ab81812aeb03a1b, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 60750eca1ab8bae41b82c806ccd24e43, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 9a13eebc86005c24bb073fa04f54cf7d, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 7f8a64675a1d5c249bb5a9cd9c5728b5, type: 3}
+    volume: 1
+  pitchMin: 0.9
+  pitchMax: 1.1
+  mixerGroup: {fileID: -2797973446235110932, guid: eba657f3258920d40a4f36674e17d8ce, type: 2}
+  loop: 0

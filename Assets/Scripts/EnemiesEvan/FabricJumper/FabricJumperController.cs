@@ -118,6 +118,7 @@ namespace Avocado
             currentHealth -= data.Amount;
             if (currentHealth <= 0)
             {
+                soundReproductor.PlayDeathSound();
                 rb.velocity = Vector2.zero;
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 anim.SetBool("startDeath", true);
@@ -126,6 +127,7 @@ namespace Avocado
                 anim.SetBool("preJump", false);
                 return;
             }
+            soundReproductor.PlayDamageSound();
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();
@@ -166,7 +168,7 @@ namespace Avocado
                 rb.velocity = Vector2.zero;
                 onGround = true;
                 anim.SetBool("jump", false);
-
+                soundReproductor.PlaylandSound();
             }
         }
         private void OnCollisionExit2D(Collision2D collision)

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd60ccf92cf061e4893ddf02feac4fab, type: 3}
+  m_Name: MagicSpellDamage
+  m_EditorClassIdentifier: 
+  clips:
+  - clip: {fileID: 8300000, guid: 1930ecbceece2ca42a232d0c872e035d, type: 3}
+    volume: 0.2
+  - clip: {fileID: 8300000, guid: 5a8b83f677ecbcf46adf5c68045a5061, type: 3}
+    volume: 0.2
+  - clip: {fileID: 8300000, guid: 9e8ebe8b9da636a4b93938319df5a7fc, type: 3}
+    volume: 0.2
+  pitchMin: 0.9
+  pitchMax: 1.1
+  mixerGroup: {fileID: -2797973446235110932, guid: eba657f3258920d40a4f36674e17d8ce, type: 2}
+  loop: 0

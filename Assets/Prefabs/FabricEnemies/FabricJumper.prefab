@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 4930822792927666544}
   - component: {fileID: 4930822792927666547}
   - component: {fileID: 4930822792927666546}
+  - component: {fileID: 8107285646979855898}
   m_Layer: 9
   m_Name: FabricJumper
   m_TagString: Untagged
@@ -187,6 +188,7 @@ MonoBehaviour:
     m_Bits: 256
   attackPoint: {fileID: 4930822792744820850}
   maxtHealth: 40
+  jumpDuration: 2
 --- !u!50 &4930822792927666546
 Rigidbody2D:
   serializedVersion: 4
@@ -208,6 +210,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8107285646979855898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4930822792927666572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452449121dc5e8a478ef0baa64df0d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fabricEnemyName: Jumper
 --- !u!1 &4930822793201274273
 GameObject:
   m_ObjectHideFlags: 0

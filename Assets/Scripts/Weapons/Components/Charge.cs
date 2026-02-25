@@ -50,7 +50,7 @@ namespace Avocado.Weapons.Components
         private void HandleNotify()
         {
             currentCharge++;
-
+            AudioManager.instance.PlaySFXSound(weapon.Data.HoldActionSound, transform.position);
             // Si alcanzamos el máximo de cargas
             if (currentCharge >= currentAttackData.NumberOfCharges)
             {

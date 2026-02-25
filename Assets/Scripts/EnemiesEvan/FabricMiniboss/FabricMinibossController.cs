@@ -53,7 +53,7 @@ namespace Avocado
             bullet.transform.position = attackPoint.position;
             bullet.transform.localScale = transform.localScale*6;
             int direction = (transform.lossyScale.x > 0) ? 1 : -1;
-            bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithDirection(rangedAttackData.projectileSpeed * direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+            bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithDirection(rangedAttackData.projectileSpeed * direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage, rangedAttackData.initSound, rangedAttackData.hitSound);
         }
         void IDamageable.Damage(DamageData data)
         {

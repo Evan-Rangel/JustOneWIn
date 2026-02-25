@@ -150,7 +150,7 @@ namespace Avocado
                 GameObject bullet = FabricEnemiesPool.Instance.GetOctopusBullet();
                 bullet.transform.position = bulletSpawn.position;
                 bullet.transform.rotation = quaternion;
-                bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage);
+                bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithAngle(rangedAttackData.projectileSpeed, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage, rangedAttackData.initSound, rangedAttackData.hitSound);
                 quaternion *= Quaternion.Euler(0, 0, angleOfBullets);
             }
         }

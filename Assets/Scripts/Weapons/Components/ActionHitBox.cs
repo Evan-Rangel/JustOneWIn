@@ -41,6 +41,7 @@ namespace Avocado.Weapons.Components
                 transform.position.x + (currentAttackData.HitBox.center.x * movement.Comp.FacingDirection),
                 transform.position.y + currentAttackData.HitBox.center.y
             );
+            AudioManager.instance.PlaySFXSound(weapon.Data.ActionSound, transform.position);
 
             // Detecta todas las colisiones dentro del área del hitbox
             detected = Physics2D.OverlapBoxAll(offset, currentAttackData.HitBox.size, 0f, data.DetectableLayers);
@@ -48,6 +49,7 @@ namespace Avocado.Weapons.Components
             if (detected.Length == 0)
                 return;
 
+            AudioManager.instance.PlaySFXSound(weapon.Data.HitSound, transform.position);
             // Lanza el evento para comunicar que se detectaron colisiones
             OnDetectedCollider2D?.Invoke(detected);
         }

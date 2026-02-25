@@ -16,6 +16,7 @@ namespace Avocado.ProjectileSystem.Components
 {
     public class Damage : ProjectileComponent
     {
+        [SerializeField] string hitSound, initSound, DamageSound;
         // Evento que se dispara cuando se daña a un objeto que implementa IDamageable
         public UnityEvent<IDamageable> OnDamage;
         // Evento que se dispara cuando ocurre un impacto de raycast válido
@@ -37,6 +38,8 @@ namespace Avocado.ProjectileSystem.Components
         {
             base.Init();
             lastDamageTime = Mathf.NegativeInfinity; // Permite daño inmediato
+            AudioManager.instance.PlaySFXSound(initSound, transform.position);
+
         }
 
         // Lógica para procesar impactos detectados por el HitBox
@@ -47,7 +50,7 @@ namespace Avocado.ProjectileSystem.Components
 
             if (Time.time < lastDamageTime + Cooldown)
                 return;
-
+            AudioManager.instance.PlaySFXSound(hitSound, transform.position);
             foreach (var hit in hits)
             {
                 // Verifica si el objeto golpeado está en una capa válida para recibir daño
@@ -72,6 +75,7 @@ namespace Avocado.ProjectileSystem.Components
                 {
                     SetActive(false);
                 }
+                AudioManager.instance.PlaySFXSound(DamageSound, transform.position);
 
                 return; // Aplica daño solo al primer objetivo válido
             }

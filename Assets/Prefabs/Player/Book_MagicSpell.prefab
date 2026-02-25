@@ -77,6 +77,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d9d1e9a5534836af705566aa7382b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDespawnByTime:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7473774155926503612}
+        m_TargetAssemblyTypeName: Avocado.ObjectPoolSystem.ObjectPoolItem, Assembly-CSharp
+        m_MethodName: ReturnItem
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 15
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1775009464070235411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b9f3ef0ae346529c840fbac25e3cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitSound: 
+  initSound: MagicSpellInit
+  DamageSound: MagicSpellDamage
   OnDamage:
     m_PersistentCalls:
       m_Calls:
@@ -322,7 +340,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1024171033
-  m_SortingLayer: 9
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 398887673, guid: dd9c93c673e5e164686171e344bd447a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

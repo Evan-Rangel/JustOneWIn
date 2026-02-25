@@ -39,7 +39,6 @@ namespace Avocado
         }
         public void PlayJumpSound()
         {
-            Debug.Log("PlayJumpSound called");
             playSound?.Invoke(fabricEnemyName + "Jump", transform.position);
         }
         public void PlaylandSound()

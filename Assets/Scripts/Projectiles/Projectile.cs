@@ -20,7 +20,8 @@ namespace Avocado.Projectiles
         private float xStartPos;      // Posición inicial en X
         private float damage;
         //KnockBackData knockbackData;
-
+        string initSound;
+        string hitSound;
         [SerializeField] private float gravity;         
         [SerializeField] private float damageRadius;
         [SerializeField] float knockbackForce = 1;
@@ -121,6 +122,7 @@ namespace Avocado.Projectiles
 
                 if (groundHit)
                 {
+                    AudioManager.instance.PlaySFXSound(hitSound, transform.position);
                     if (anim)
                     {
                         anim.SetTrigger("Hit");
@@ -155,25 +157,31 @@ namespace Avocado.Projectiles
         }
 
         // Inicializa los parámetros del proyectil desde fuera
-        public void FireProjectile(float speed, float travelDistance, float damage)
+        public void FireProjectile(float speed, float travelDistance, float damage, string _initSound,string _hitSound)
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
             this.damage = damage;
+            this.initSound = _initSound;
+            this.hitSound = _hitSound;
             rb.velocity = transform.right * speed;
         }
-         public void FireProjectileWithAngle(float speed, float travelDistance, float damage)
+         public void FireProjectileWithAngle(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
             this.damage = damage;
+            this.initSound = _initSound;
+            this.hitSound = _hitSound;
             rb.velocity = transform.right * speed;
         }
-         public void FireProjectileWithDirection(float speed, float travelDistance, float damage)
+         public void FireProjectileWithDirection(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
             this.damage = damage;
+            this.initSound = _initSound;
+            this.hitSound = _hitSound;
             rb.velocity = Vector2.right * speed;
             if (gravity!=0)
             {

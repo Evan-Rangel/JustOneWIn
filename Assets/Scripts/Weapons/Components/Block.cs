@@ -49,6 +49,7 @@ namespace Avocado.Weapons.Components
             isBlockWindowActive = true;
             shouldUpdate = false;
 
+            //AudioManager.instance.PlaySFXSound(weapon.Data.ActionSound, transform.position);
             damageModifier.OnModified += HandleModified;
 
             damageReceiver.Modifiers.AddModifier(damageModifier);
@@ -81,6 +82,7 @@ namespace Avocado.Weapons.Components
         // Lanza partículas y emite el evento OnBlock.
         private void HandleModified(GameObject source)
         {
+            AudioManager.instance.PlaySFXSound(weapon.Data.HitSound, transform.position);
             particleManager.StartWithRandomRotation(currentAttackData.Particles, currentAttackData.ParticlesOffset);
             OnBlock?.Invoke(source);
         }

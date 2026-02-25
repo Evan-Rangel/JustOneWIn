@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd60ccf92cf061e4893ddf02feac4fab, type: 3}
+  m_Name: FabricTorretBulletHit
+  m_EditorClassIdentifier: 
+  clips:
+  - clip: {fileID: 8300000, guid: a5ffb78e8d1e8ff48b4f36ea75856253, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: ea98a1bfbc6b4ba44a84c275e2f0e4cc, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: fd0352fbf10d1fa44b5bc064b6255fca, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 69d359c86a3559b4e859c795bebf39bb, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 4417b66d137600544bdaf12287181d20, type: 3}
+    volume: 1
+  - clip: {fileID: 8300000, guid: 4eb7b2bb8f82e8548b6ee44351162785, type: 3}
+    volume: 1
+  pitchMin: 0.9
+  pitchMax: 1.1
+  mixerGroup: {fileID: -2797973446235110932, guid: eba657f3258920d40a4f36674e17d8ce, type: 2}
+  loop: 0

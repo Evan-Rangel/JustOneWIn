@@ -18,6 +18,11 @@ namespace Avocado.Weapons
     [CreateAssetMenu(fileName = "newWeaponData", menuName = "Data/Weapon Data/Basic Weapon Data", order = 0)]
     public class WeaponDataSO : ScriptableObject
     {
+        [field: SerializeField] public string ActionSound { get; private set; }
+        [field: SerializeField] public string HoldActionSound { get; private set; }
+        [field: SerializeField] public string ReleaseActionSound { get; private set; }
+        [field: SerializeField] public string HitSound { get; private set; }
+        [field: SerializeField] public string ParrySound { get; private set; }
         [field: SerializeField] public int PriceOnShop { get; private set; }
 
         // Sprite del ícono del arma
