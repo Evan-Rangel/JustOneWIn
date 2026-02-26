@@ -82,7 +82,7 @@ namespace Avocado.Weapons.Components
         // Lanza partículas y emite el evento OnBlock.
         private void HandleModified(GameObject source)
         {
-            AudioManager.instance.PlaySFXSound(weapon.Data.HitSound, transform.position);
+            AudioManager.instance.PlaySFXSound(weapon.Data.HitSound, transform);
             particleManager.StartWithRandomRotation(currentAttackData.Particles, currentAttackData.ParticlesOffset);
             OnBlock?.Invoke(source);
         }

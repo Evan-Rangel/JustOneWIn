@@ -38,7 +38,7 @@ namespace Avocado.ProjectileSystem.Components
         {
             base.Init();
             lastDamageTime = Mathf.NegativeInfinity; // Permite daño inmediato
-            AudioManager.instance.PlaySFXSound(initSound, transform.position);
+            AudioManager.instance.PlaySFXSound(initSound, transform);
 
         }
 
@@ -50,7 +50,7 @@ namespace Avocado.ProjectileSystem.Components
 
             if (Time.time < lastDamageTime + Cooldown)
                 return;
-            AudioManager.instance.PlaySFXSound(hitSound, transform.position);
+            AudioManager.instance.PlaySFXSound(hitSound, transform);
             foreach (var hit in hits)
             {
                 // Verifica si el objeto golpeado está en una capa válida para recibir daño
@@ -75,7 +75,7 @@ namespace Avocado.ProjectileSystem.Components
                 {
                     SetActive(false);
                 }
-                AudioManager.instance.PlaySFXSound(DamageSound, transform.position);
+                AudioManager.instance.PlaySFXSound(DamageSound, transform);
 
                 return; // Aplica daño solo al primer objetivo válido
             }

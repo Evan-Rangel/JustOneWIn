@@ -122,7 +122,7 @@ namespace Avocado.Projectiles
 
                 if (groundHit)
                 {
-                    AudioManager.instance.PlaySFXSound(hitSound, transform.position);
+                    AudioManager.instance.PlaySFXSound(hitSound, transform);
                     if (anim)
                     {
                         anim.SetTrigger("Hit");

@@ -25,11 +25,11 @@ namespace Avocado
         {
             if (!collision.gameObject.CompareTag("Player"))
             {
-                AudioManager.instance.PlaySFXSound("CoinHitFloor", transform.position);
+                AudioManager.instance.PlaySFXSound("CoinHitFloor", transform);
                 return;
             }
             GameManager.instance.AddCoin(value);
-                AudioManager.instance.PlaySFXSound("CoinSound", transform.position);
+                AudioManager.instance.PlaySFXSound("CoinSound", transform);
 
             transform.root.gameObject.SetActive(false);
         }

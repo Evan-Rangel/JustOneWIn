@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SoundReproductor : MonoBehaviour
 {
-    event Action<string, Vector3> playSound;
+    event Action<string, Transform> playSound;
 
     private void OnEnable()
     {
@@ -18,36 +18,36 @@ public class SoundReproductor : MonoBehaviour
     }
     public void PlayJumpSound()
     {
-        playSound?.Invoke("Player_Jump", transform.position);
+        playSound?.Invoke("Player_Jump", transform);
     }
     public void PlayLandSound()
     {
-        playSound?.Invoke("Player_Land", transform.position);
+        playSound?.Invoke("Player_Land", transform);
     }
     public void PlayDashSound()
     {
-        playSound?.Invoke("Player_Dash", transform.position);
+        playSound?.Invoke("Player_Dash", transform);
 
     }
     public void PlayWalkSound()
     {
-        playSound?.Invoke("Player_Walk", transform.position);
+        playSound?.Invoke("Player_Walk", transform);
 
     }
 
     public void PlayClimbSound()
     {
-        playSound?.Invoke("Player_Climb", transform.position);
-
+        playSound?.Invoke("Player_Climb", transform);
+            
     }
     public void PlayDeathSound()
     {
-        playSound?.Invoke("Player_Death", transform.position);
+        playSound?.Invoke("Player_Death", transform);
 
     }
     public void PlayDamageSound()
     {
-        playSound?.Invoke("Player_Damage", transform.position);
+        playSound?.Invoke("Player_Damage", transform);
 
     }
 }

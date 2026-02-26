@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -47,7 +48,7 @@ public class AudioManager : MonoBehaviour
             sounds[item.name] = item;
         }
     }
-    public void PlaySFXSound(string soundName, Vector3 position=default)
+    public void PlaySFXSound(string soundName, Transform position=null)
     {
         if (!sounds.TryGetValue(soundName, out AudioData sound))
             return;
@@ -59,22 +60,23 @@ public class AudioManager : MonoBehaviour
         source.outputAudioMixerGroup = sound.mixerGroup;
         source.loop = sound.loop;
         source.Play();
-        if (position == Vector3.zero)
-        { 
+        StartCoroutine(StopSfxSound(clipToPlay.clip.length / source.pitch, source));
+        if (position == null)
+        {
+            source.transform.parent = transform;
             source.transform.position = transform.position;
             source.spatialBlend = 0;
-        }
-        else
-        { 
-            source.spatialBlend = 1;
-            source.transform.position = position;
-        }
-        StartCoroutine(StopSfxSound(clipToPlay.clip.length/ source.pitch, source));
+            return;
+        } 
+        source.spatialBlend = 1;
+        source.transform.position = position.position;
+        source.transform.parent = position;
     }
     IEnumerator StopSfxSound(float time, AudioSource source)
     { 
         yield return Helpers.GetWait(time);
         pool.Enqueue(source);
+        source.transform.parent = transform;
         source.Stop();
         source.clip = null;
     }
@@ -83,6 +85,8 @@ public class AudioManager : MonoBehaviour
         GameObject sfxSourceObject = Instantiate(sfxSourcePrefab, transform);
         AudioSource src = sfxSourceObject.AddComponent<AudioSource>();
         src.playOnAwake = false;
+        src.maxDistance = 20;
+        src.rolloffMode = AudioRolloffMode.Linear;
         return src;
     }
     private void Start()
