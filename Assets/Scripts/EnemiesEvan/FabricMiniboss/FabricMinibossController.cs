@@ -6,6 +6,18 @@ namespace Avocado
 {
     public class FabricMinibossController : MonoBehaviour,IDamageable
     {
+
+
+        FabricEnemySoundReproductor soundReproductor;
+        [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
+        void IdleSound()
+        {
+            soundReproductor.PlayIdleSound();
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+        }
+
+
+
         [SerializeField] D_RangedAttackState rangedAttackData;
 
         [SerializeField] Transform attackPoint;
@@ -17,6 +29,7 @@ namespace Avocado
         IEnumerator damageEffect;
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>();
             sprite = GetComponent<SpriteRenderer>();
             fabricCollision = GetComponentInChildren<FabricEnemyCollision>();
             anim = GetComponent<Animator>();
@@ -24,6 +37,7 @@ namespace Avocado
         private void OnEnable()
         {
             anim.SetBool("idle", true);
+            CancelInvoke(nameof(IdleSound));
             currentHealth = maxtHealth;
             fabricCollision.OnPlayerEnter += OnPlayerEnterCollision;
             fabricCollision.OnPlayerExit += OnPlayerExitCollision;
@@ -32,18 +46,22 @@ namespace Avocado
         private void OnDisable()
         {
             anim.SetBool("startDeath", false);
-
             fabricCollision.OnPlayerEnter -= OnPlayerEnterCollision;
             fabricCollision.OnPlayerExit -= OnPlayerExitCollision;
         }
         void OnPlayerEnterCollision(Collider2D coll)
-        { 
-        
+        {
+            soundReproductor.PlayTargetFindSound();
+
+            CancelInvoke(nameof(IdleSound));
+
             anim.SetBool("attack", true);
             anim.SetBool("idle", false);
         }
         void OnPlayerExitCollision(Collider2D coll)
-        { 
+        {
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+
             anim.SetBool("attack", false);
             anim.SetBool("idle", true);
         }
@@ -60,12 +78,16 @@ namespace Avocado
             currentHealth -= data.Amount;
             if (currentHealth <= 0)
             {
+                soundReproductor.PlayDeathSound();
+
                 anim.SetBool("startDeath", true);
                 anim.SetBool("attack", false);
                 anim.SetBool("idle", false);
 
                 return;
             }
+            soundReproductor.PlayDamageSound();
+
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();
@@ -89,7 +111,7 @@ namespace Avocado
         }
         void DestroyEnemy()
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i <  15; i++)
             {
                 GameObject coin = GameManager.instance.RequestCoin();
                 coin.transform.position = transform.position;

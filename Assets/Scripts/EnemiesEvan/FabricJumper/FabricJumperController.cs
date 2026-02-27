@@ -7,6 +7,20 @@ namespace Avocado
 {
     public class FabricJumperController : MonoBehaviour, IDamageable
     {
+
+        FabricEnemySoundReproductor soundReproductor;
+        [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
+
+        void IdleSound()
+        {
+            soundReproductor.PlayIdleSound();
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+        }
+
+
+
+
+
         [SerializeField] D_MeleeAttack attackData;
         [SerializeField] float playerDistanceToJump = 5f;  
         [SerializeField] Vector2 playerForceJump;
@@ -23,7 +37,6 @@ namespace Avocado
         bool onGround;
         bool jumping;
         [SerializeField] float jumpDuration = 2f;
-        FabricEnemySoundReproductor soundReproductor;
         private void Awake()
         {
             soundReproductor = GetComponent<FabricEnemySoundReproductor>();
@@ -44,7 +57,9 @@ namespace Avocado
         }
         private void OnDisable()
         {
-           fabricCollision.OnPlayerEnter -= OnPayerEnterCollision;
+            CancelInvoke(nameof(IdleSound));
+
+            fabricCollision.OnPlayerEnter -= OnPayerEnterCollision;
             fabricCollision.OnPlayerExit -= OnPayerExitCollision;
             anim.SetBool("startDeath", false);
             CancelInvoke(nameof(ActivateJumping));

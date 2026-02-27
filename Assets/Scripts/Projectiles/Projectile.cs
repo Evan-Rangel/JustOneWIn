@@ -77,7 +77,6 @@ namespace Avocado.Projectiles
                     else
                         angle -= Time.deltaTime * rotationSpeed;
 
-                    Debug.Log("Angle: " + angle);
                     transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 }
             }
@@ -165,8 +164,10 @@ namespace Avocado.Projectiles
             this.initSound = _initSound;
             this.hitSound = _hitSound;
             rb.velocity = transform.right * speed;
+            AudioManager.instance.PlaySFXSound(initSound, transform);
+
         }
-         public void FireProjectileWithAngle(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
+        public void FireProjectileWithAngle(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
@@ -174,8 +175,10 @@ namespace Avocado.Projectiles
             this.initSound = _initSound;
             this.hitSound = _hitSound;
             rb.velocity = transform.right * speed;
+            AudioManager.instance.PlaySFXSound(initSound, transform);
+
         }
-         public void FireProjectileWithDirection(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
+        public void FireProjectileWithDirection(float speed, float travelDistance, float damage, string _initSound, string _hitSound)
         {
             this.speed = speed;
             this.travelDistance = travelDistance;
@@ -183,6 +186,8 @@ namespace Avocado.Projectiles
             this.initSound = _initSound;
             this.hitSound = _hitSound;
             rb.velocity = Vector2.right * speed;
+            AudioManager.instance.PlaySFXSound(initSound, transform);
+
             if (gravity!=0)
             {
                 rb.gravityScale = gravity;

@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 6020405890860225925}
   - component: {fileID: 6020405890860225922}
   - component: {fileID: 6020405890860225923}
+  - component: {fileID: 1813743129141673370}
   m_Layer: 9
   m_Name: FabricTorret
   m_TagString: Untagged
@@ -106,7 +107,7 @@ Transform:
   - {fileID: 6020405890498533927}
   - {fileID: 6020405892455172531}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6020405890860225927
 SpriteRenderer:
@@ -224,6 +225,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1813743129141673370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020405890860225926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452449121dc5e8a478ef0baa64df0d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fabricEnemyName: Torret
 --- !u!1 &6020405892028875548
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6020405892455172531}
   - component: {fileID: 6020405892455172528}
+  - component: {fileID: 6775314084978231338}
   m_Layer: 0
   m_Name: Pivot
   m_TagString: Untagged
@@ -395,3 +410,16 @@ MonoBehaviour:
   rangedAttackData: {fileID: 11400000, guid: e9ddaaf254c3ecd4587a41c1431352db, type: 2}
   bulletSpawn: {fileID: 6020405892409958365}
   shootTime: 0.5
+--- !u!114 &6775314084978231338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020405892455172530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452449121dc5e8a478ef0baa64df0d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fabricEnemyName: Torret

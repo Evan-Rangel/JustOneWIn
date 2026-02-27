@@ -53,6 +53,7 @@ public class AudioManager : MonoBehaviour
         if (!sounds.TryGetValue(soundName, out AudioData sound))
             return;
         AudioSource source = pool.Count > 0 ? pool.Dequeue() : CreateSource();
+        source.gameObject.SetActive(true);
         SoundCustomVolume clipToPlay = sound.clips[Random.Range(0, sound.clips.Length)];
         source.clip = clipToPlay.clip;
         source.volume = clipToPlay.volume;
@@ -79,6 +80,7 @@ public class AudioManager : MonoBehaviour
         source.transform.parent = transform;
         source.Stop();
         source.clip = null;
+        source.gameObject.SetActive(false);
     }
     AudioSource CreateSource()
     {
@@ -87,6 +89,7 @@ public class AudioManager : MonoBehaviour
         src.playOnAwake = false;
         src.maxDistance = 20;
         src.rolloffMode = AudioRolloffMode.Linear;
+        sfxSourceObject.SetActive(false);
         return src;
     }
     private void Start()

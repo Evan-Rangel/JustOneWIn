@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: FabricTargetFind
   m_EditorClassIdentifier: 
   clips:
-  - clip: {fileID: 8300000, guid: c30f899ee91264b45b21e943de3c2188, type: 3}
+  - clip: {fileID: 8300000, guid: 5143c4f6e60e5bb45b7814d0005de8c3, type: 3}
     volume: 0.3
-  pitchMin: 0.9
-  pitchMax: 1.1
+  - clip: {fileID: 8300000, guid: 3e9dd19448f2bd640a70618c5ec95b8b, type: 3}
+    volume: 0.3
+  - clip: {fileID: 8300000, guid: d554cf09cddb7f242ae2d21076c350e1, type: 3}
+    volume: 0.3
+  pitchMin: 0.95
+  pitchMax: 1.05
   mixerGroup: {fileID: -2797973446235110932, guid: eba657f3258920d40a4f36674e17d8ce, type: 2}
   loop: 0

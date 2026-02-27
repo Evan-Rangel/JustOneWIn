@@ -7,6 +7,8 @@ namespace Avocado
 {
     public class FabricTorretCanon : MonoBehaviour
     {
+        FabricEnemySoundReproductor soundReproductor;
+
         Transform target;
         bool aiming = false;
         bool stop=false;
@@ -25,6 +27,7 @@ namespace Avocado
         [SerializeField, Range(0, 5)] float shootTime;
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>();
             fabricCollision =transform.root.GetComponentInChildren<FabricEnemyCollision>();
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
@@ -105,6 +108,7 @@ namespace Avocado
         }
         public void Aiming(Collider2D _target)
         {
+            soundReproductor.PlayTargetFindSound();
             target = _target.transform;
             aiming = true;
         }  

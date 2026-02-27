@@ -9,6 +9,8 @@ namespace Avocado
 
     public class FabricTorretController : MonoBehaviour, IDamageable
     {
+        FabricEnemySoundReproductor soundReproductor;
+
         Animator anim;
         [SerializeField] GameObject canon;
         [SerializeField] GameObject coll;
@@ -18,6 +20,7 @@ namespace Avocado
         float currentHealth;
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>();
             currentHealth = maxHealth;
             anim = GetComponent<Animator>();
         }
@@ -75,9 +78,11 @@ namespace Avocado
             currentHealth -= data.Amount;
             if (currentHealth <= 0)
             {
+                soundReproductor.PlayDeathSound();
                 DestroyTorret();
                 return;
             }
+            soundReproductor.PlayDamageSound();
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();

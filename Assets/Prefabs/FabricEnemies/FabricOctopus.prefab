@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5397798953955451371}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.8, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 1}
+  m_LocalPosition: {x: 5.5, y: 1.5, z: 0}
+  m_LocalScale: {x: 10, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5397798954664713117}
@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 5397798954664713118}
   - component: {fileID: 5397798954664713112}
   - component: {fileID: 5397798954664713113}
+  - component: {fileID: 7705363688474470002}
   m_Layer: 9
   m_Name: FabricOctopus
   m_TagString: Untagged
@@ -129,7 +130,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5397798954664713116}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.68, y: -3.95, z: 0.3903001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -223,6 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5427395052a23fc4fafcefd48b35e9a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minRandomTimeLapseIdleSound: 5
+  maxRandomTimeLapseIdleSound: 10
   maxShoots: 3
   bulletSpawn: {fileID: 5397798954591740818}
   movePositions:
@@ -258,3 +261,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &7705363688474470002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397798954664713116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452449121dc5e8a478ef0baa64df0d85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fabricEnemyName: Octopus

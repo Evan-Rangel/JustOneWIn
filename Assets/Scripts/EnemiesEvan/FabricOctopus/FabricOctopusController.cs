@@ -7,6 +7,19 @@ namespace Avocado
 {
     public class FabricOctopusController : MonoBehaviour, IDamageable
     {
+
+
+        FabricEnemySoundReproductor soundReproductor;
+        [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
+        void IdleSound()
+        {
+            soundReproductor.PlayIdleSound();
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+        }
+        public void WalkSound()
+        {
+            soundReproductor.PlayWalkSound();
+        }
         FabricEnemyCollision fabricCollision;
         Animator animator;
         [SerializeField] int maxShoots;
@@ -27,11 +40,10 @@ namespace Avocado
         IEnumerator damageEffect;
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>();
             sprite = GetComponentInChildren<SpriteRenderer>();
             fabricCollision= GetComponentInChildren<FabricEnemyCollision>();
-            
             animator = GetComponent<Animator>();
-           
         }
 
         private void OnEnable()
@@ -54,6 +66,7 @@ namespace Avocado
         }
         private void OnDisable()
         {
+            CancelInvoke(nameof(IdleSound));
             fabricCollision.OnPlayerEnter -= TargetFinded;
             fabricCollision.OnPlayerExit -= TargetLost;
         }
@@ -138,6 +151,8 @@ namespace Avocado
         }
         public void TargetFinded(Collider2D coll)
         {
+            soundReproductor.PlayTargetFindSound();
+
             shooting = true;
             animator.SetBool("Idle", false);
             animator.SetBool("Move", false);
@@ -175,9 +190,13 @@ namespace Avocado
             currentHealth -= data.Amount;
             if (currentHealth <= 0)
             {
+                soundReproductor.PlayDeathSound();
+
                 animator.SetBool("Death", true);
                 return;
             }
+            soundReproductor.PlayDamageSound();
+
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();

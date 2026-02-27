@@ -7,6 +7,21 @@ namespace Avocado
 {
     public class FabricSearcherController : MonoBehaviour, IDamageable
     {
+
+
+        FabricEnemySoundReproductor soundReproductor;
+        [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
+        void IdleSound()
+        {
+            soundReproductor.PlayIdleSound();
+            Invoke(nameof(IdleSound), Random.Range(minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound));
+        }
+
+        public void PlayWalkSound()
+        {
+            soundReproductor.PlayWalkSound();
+
+        }
         Animator anim;
         Rigidbody2D rb;
         SpriteRenderer sprite;
@@ -26,11 +41,13 @@ namespace Avocado
             currentHealth -= data.Amount;
             if (currentHealth <= 0)
             {
+                soundReproductor.PlayDeathSound();
                 rb.velocity = Vector2.zero;
                 anim.SetBool("run", false);
                 anim.SetBool("StartDeath", true);
                 return;
             }
+            soundReproductor.PlayDamageSound();
             if (damageEffect != null)
                 StopCoroutine(damageEffect);
             damageEffect = DamageEffect();
@@ -49,6 +66,7 @@ namespace Avocado
         }
         private void Awake()
         {
+            soundReproductor = GetComponent<FabricEnemySoundReproductor>(); 
             sprite = GetComponentInChildren<SpriteRenderer>();
             anim = GetComponent<Animator>();
              rb = GetComponent<Rigidbody2D>();
@@ -111,8 +129,9 @@ namespace Avocado
         {
             if (collision.CompareTag("SearcherJump"))
             {
+                soundReproductor.PlayJumpSound();
                 rb.velocity = Vector2.zero;
-                rb.AddForce(new Vector2(direction.y, jumpForce), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(direction.x, jumpForce), ForceMode2D.Impulse);
             } 
             if (collision.CompareTag("SearcherDespawner"))
             {
