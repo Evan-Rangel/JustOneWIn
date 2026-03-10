@@ -8,6 +8,18 @@ namespace Avocado
     {
         [SerializeField] D_MeleeAttack damageData;
         [SerializeField] Transform damagePoint;
+        [SerializeField] string sound;
+        AudioSource audioSource;
+        private void OnEnable()
+        {
+            AudioManager.instance.PlaySFXSound(sound, transform);
+           TryGetComponent<AudioSource>(out audioSource);
+        }
+        private void OnDisable()
+        {
+            if (audioSource)
+               AudioManager.instance.StopSfxSoundLooping(audioSource);
+        }
         private void Update()
         {
             Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(damagePoint.position, damageData.attackRadius, damageData.whatIsPlayer);
@@ -31,6 +43,8 @@ namespace Avocado
                 }
             }
         }
+       
+        
         private void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(damagePoint.position, damageData.attackRadius);

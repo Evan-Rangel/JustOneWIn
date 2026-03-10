@@ -142,6 +142,7 @@ namespace Avocado
     [Serializable]
     public class SaveData
     {
+        public List<string> unlockedTutorials = new List<string>();
         public List<string> dialoguesKey = new List<string>();
         public string firstWeaponName="";    
         public string secondWeaponName="";    
@@ -185,7 +186,24 @@ namespace Avocado
             file.Close();
         }
 
+        #region Tutorials
 
+        public static void SaveTutorialKey(string tutorialKey)
+        {
+            if (data == null) Load();
+            if (!data.unlockedTutorials.Contains(tutorialKey))
+            {
+                data.unlockedTutorials.Add(tutorialKey);
+                Save();
+            }
+        }
+        public static bool IsTutorialKeySaved(string tutorialKey)
+        {
+            if (data == null) Load();
+            return data.unlockedTutorials.Contains(tutorialKey);
+        }
+
+        #endregion
 
         #region Dialogues
 

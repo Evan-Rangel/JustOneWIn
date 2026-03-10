@@ -86,7 +86,12 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region UI
+    #region Sounds
+    public void PlayButtonSelectSound() => AudioManager.instance.PlaySFXSound("ButtonSelect");
+    public void PlayButtonSubmitSound() => AudioManager.instance.PlaySFXSound("ButtonSubmit");
 
+
+    #endregion
     [Header("User Interface")]
     [SerializeField] GameObject statsHolder;
     [SerializeField] GameObject pauseHolder;

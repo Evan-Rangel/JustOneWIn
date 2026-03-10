@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avocado
@@ -13,11 +11,32 @@ namespace Avocado
         int currentIndex;
         [SerializeField]float maxTimer;  
         float timer;
-        public bool spawnWeaponAnimation;
-        public bool closeCapsuleAnimation;
+       bool spawnWeaponAnimation;
+        bool closeCapsuleAnimation;
         int spawnWeaponDirection=1;
         public event Action OnSpawnWeaponAnimationEnd;
         public event Action OnCloseAnimationEnd;
+        event Action<string, Transform> OnPlaySound;
+
+        private void OnEnable()
+        {
+            OnPlaySound += AudioManager.instance.PlaySFXSound;
+        }
+        private void OnDisable()
+        {
+            OnPlaySound -= AudioManager.instance.PlaySFXSound;
+        }
+        public void StartCloseCapsuleAnimation()
+        {
+            OnPlaySound?.Invoke("CapsuleOpen", transform);
+            closeCapsuleAnimation = true;
+        }
+        public void StartWeaponAnimation()
+        { 
+            OnPlaySound?.Invoke("CapsuleOpen", transform);
+            spawnWeaponAnimation = true;
+        }
+
         private void Update()
         {
             timer -= Time.deltaTime;    
@@ -37,6 +56,8 @@ namespace Avocado
 
                 if (currentIndex == 0)
                 {
+                    OnPlaySound?.Invoke("CapsuleClose", transform);
+
                     spawnWeaponDirection = 1;
                     closeCapsuleAnimation = false;
                     OnCloseAnimationEnd?.Invoke();
@@ -60,6 +81,7 @@ namespace Avocado
 
                 if (currentIndex == 0)
                 {
+                    OnPlaySound?.Invoke("CapsuleClose", transform);
                     spawnWeaponAnimation = false;
                     spawnWeaponDirection = 1;
                     OnSpawnWeaponAnimationEnd?.Invoke();
@@ -91,6 +113,7 @@ namespace Avocado
         {
             if (collision.CompareTag("Player"))
             {
+                OnPlaySound?.Invoke("CapsuleOpen", transform);
                 isOpen = true;
             }
         }

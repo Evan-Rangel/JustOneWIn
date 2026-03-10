@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class AudioManager : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class AudioManager : MonoBehaviour
         InitPool();
     }
 
+    
+
     void InitPool()
     {
         for (int i = 0; i < 20; i++)
@@ -51,7 +54,7 @@ public class AudioManager : MonoBehaviour
     public void PlaySFXSound(string soundName, Transform position=null)
     {
         if (!sounds.TryGetValue(soundName, out AudioData sound))
-            return;
+            return ;
         AudioSource source = pool.Count > 0 ? pool.Dequeue() : CreateSource();
         source.gameObject.SetActive(true);
         SoundCustomVolume clipToPlay = sound.clips[Random.Range(0, sound.clips.Length)];
@@ -61,17 +64,26 @@ public class AudioManager : MonoBehaviour
         source.outputAudioMixerGroup = sound.mixerGroup;
         source.loop = sound.loop;
         source.Play();
-        StartCoroutine(StopSfxSound(clipToPlay.clip.length / source.pitch, source));
+        if (!sound.loop)
+            StartCoroutine(StopSfxSound(clipToPlay.clip.length / source.pitch, source));
         if (position == null)
         {
             source.transform.parent = transform;
             source.transform.position = transform.position;
             source.spatialBlend = 0;
-            return;
-        } 
+            return ;
+        }
         source.spatialBlend = 1;
         source.transform.position = position.position;
         source.transform.parent = position;
+    }
+   
+    public void StopSfxSoundLooping(AudioSource source)
+    {
+        source.transform.parent = transform;
+        source.Stop();
+        source.clip = null;
+        source.gameObject.SetActive(false);
     }
     IEnumerator StopSfxSound(float time, AudioSource source)
     { 
@@ -111,10 +123,6 @@ public class AudioManager : MonoBehaviour
     public void PlayOneShotSFX(AudioClip _clip)
     {
         sfxSource.PlayOneShot(_clip);
-    }
-    public void PlayClipAtPointSFX(AudioClip _clip, Vector2 _position)
-    {
-        AudioSource.PlayClipAtPoint(_clip, _position);
     }
     public void PlayMusic(AudioClip _clip)
     {

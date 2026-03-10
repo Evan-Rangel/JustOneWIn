@@ -34,7 +34,7 @@ namespace Avocado
             weapon.SetContext(_data);
             GameSaveCapsule capsule = GameManager.instance.currentSpawnPosition.pos.root.GetComponentInChildren<GameSaveCapsule>();
 
-            capsule.spawnWeaponAnimation = true;
+            capsule.StartWeaponAnimation();
             capsule.OnSpawnWeaponAnimationEnd += () =>
             {
                 weapon.weaponIcon.enabled = true;

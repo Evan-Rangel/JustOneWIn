@@ -1,4 +1,5 @@
 using Avocado.Combat.Damage;
+using System;
 using UnityEngine;
 
 namespace Avocado
@@ -7,7 +8,9 @@ namespace Avocado
     {
         Animator anim;
         [SerializeField] int maxHealth = 3;
-         int currentHealth;
+        [SerializeField] string hitSound, breakingSound;  
+        event Action<string, Transform> OnPlaySound;
+        int currentHealth;
         private void Awake()
         {
             anim = GetComponent<Animator>();
@@ -15,17 +18,18 @@ namespace Avocado
 
         private void OnEnable()
         {
+            OnPlaySound += AudioManager.instance.PlaySFXSound;
             currentHealth = maxHealth;
-            
         }
         private void OnDisable()
         {
-            
+            OnPlaySound -= AudioManager.instance.PlaySFXSound;
         }
         void CheckForHealth()
         {
-            if (currentHealth<=0)
-                anim.SetTrigger("Break");
+            if (currentHealth > 0) return;
+            OnPlaySound?.Invoke(breakingSound, transform);
+            anim.SetTrigger("Break");
 
         }
         void DisableWall()
@@ -35,6 +39,7 @@ namespace Avocado
 
         void IDamageable.Damage(DamageData data)
         {
+            OnPlaySound?.Invoke (hitSound, transform);
             currentHealth--;
             anim.SetTrigger("Hit");
         }

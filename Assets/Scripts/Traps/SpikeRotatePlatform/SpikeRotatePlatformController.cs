@@ -1,5 +1,6 @@
 using Avocado.Combat.Damage;
 using Avocado.Combat.KnockBack;
+using System;
 using UnityEngine;
 
 namespace Avocado
@@ -15,6 +16,9 @@ namespace Avocado
         SpikeRotatePlatformAnimationEvent animationEvent;
         Transform currentActivePoint;
         bool activePlatform;
+        [SerializeField] string collisionSound, activeSound;
+        event Action<string, Transform> OnPlaySound;
+
         private void Awake()
         {
             anim = GetComponentInChildren<Animator>();
@@ -49,6 +53,7 @@ namespace Avocado
         }
         private void OnEnable()
         {
+            OnPlaySound += AudioManager.instance.PlaySFXSound;
             activePlatform = false;
             anim.SetBool("Active", false);
             currentActivePoint = damagePointDown;
@@ -59,6 +64,7 @@ namespace Avocado
         }
         void OnDisable() 
         {
+            OnPlaySound -= AudioManager.instance.PlaySFXSound;
             fabricCollision.OnPlayerEnter -= OnPlayerEnter;
             fabricCollision.OnPlayerExit -= OnPlayerExit;
             animationEvent.onActivePlatform -= SetPlatformUpAsCurrent;
@@ -76,15 +82,23 @@ namespace Avocado
         {
             if (activePlatform) return;
             activePlatform = true;
-            Invoke("ActivatePlatform", timeToActive);
+            Invoke(nameof(ActivatePlatform), timeToActive);
         }
         void OnPlayerExit(Collider2D collision)
         {
         }
+        void RotationSound()
+        {
+            OnPlaySound?.Invoke(activeSound, transform);
+        }
+        void CollisionSound()
+        { 
+            OnPlaySound?.Invoke(collisionSound, transform);
+        }
         void ActivatePlatform()
         {
             anim.SetBool("Active", true);
-            Invoke("InactivePlatform", ActiveTime);
+            Invoke(nameof(InactivePlatform), ActiveTime);
         }
         void InactivePlatform()
         {

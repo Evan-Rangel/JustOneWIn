@@ -1,11 +1,16 @@
 using Avocado.Combat.Damage;
 using Avocado.Combat.KnockBack;
+using System;
 using UnityEngine;
 
 namespace Avocado
 {
     public class CellingTrapController : MonoBehaviour
     {
+        [SerializeField] string activationSound, retractionSound, inpactSound;
+        event Action<string, Transform> OnPlaySound;
+
+
         [SerializeField] D_MeleeAttack damageData;
         [SerializeField] float activationDelay;
         Animator anim;
@@ -16,12 +21,26 @@ namespace Avocado
       
         private void OnEnable()
         {
-            InvokeRepeating("ActivateTrap", activationDelay, activationDelay);
+            OnPlaySound += AudioManager.instance.PlaySFXSound;
+            InvokeRepeating(nameof(ActivateTrap), activationDelay, activationDelay);
         }
        
         private void OnDisable()
         {
-            CancelInvoke("ActivateTrap");
+            OnPlaySound -= AudioManager.instance.PlaySFXSound;
+            CancelInvoke(nameof(ActivateTrap));
+        }
+        void ActivationSound()
+        { 
+            OnPlaySound?.Invoke(activationSound, transform);
+        }
+        void RetractionSound()
+        { 
+            OnPlaySound?.Invoke(retractionSound, transform);
+        }
+        void InpactSound()
+        { 
+            OnPlaySound?.Invoke(inpactSound, transform);    
         }
         void ActivateTrap()
         {

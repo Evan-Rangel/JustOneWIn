@@ -31,12 +31,10 @@ namespace Avocado
                 Instance = this;
             }
             tutorialUIHolder.SetActive(false);
-           // Invoke("TempTest", 2);
         }
         void TempTest()
         {
             ShowTutorialItem(tutorialItem);
-
         }
         private void Update()
         {
@@ -49,7 +47,6 @@ namespace Avocado
                 
             activeTutorial=false;
             tutorialUIHolder.SetActive(false);
-
         }
         public void ShowTutorialItem(TutorialSO _tutorialItem)
         {
@@ -73,7 +70,6 @@ namespace Avocado
         {
             while (activeTutorial)
             {
-                
                 yield return Helpers.GetWait(.3f);
                 inputOffImage.gameObject.SetActive(!inputOffImage.gameObject.activeSelf);
                 inputOnImage.gameObject.SetActive(!inputOnImage.gameObject.activeSelf);
@@ -84,7 +80,6 @@ namespace Avocado
         {
             while (activeTutorial)
             {
-
                 yield return Helpers.GetWait(0.1f);
                 currentIconSprite++;
                 if (currentIconSprite >= maxIconSprite)
