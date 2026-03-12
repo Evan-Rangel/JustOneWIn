@@ -35,17 +35,24 @@ namespace Avocado
             activatePlat = false;
             activePlatforms = new List<PlatformMovement>();
             platformsPool = new List<GameObject>();
-            spawnPlatform = SpawnPlatform();
-            platformsStop = PlatformsStop();
+            // spawnPlatform =
+       // SpawnPlatform();
+            // StartCoroutine(spawnPlatform);
             FillPool();
+        }
+        private void Start()
+        {
+          SpawnPlatform();
+
         }
         public void DisablePlatforms()
         {
         }
         public void ActivatePlatforms()
         {
-            spawnPlatform = SpawnPlatform();
-            StartCoroutine(spawnPlatform);
+            // spawnPlatform =
+            SpawnPlatform();
+            // StartCoroutine(spawnPlatform);
         }
         private void Update()
         {
@@ -83,8 +90,9 @@ namespace Avocado
                     }
                     if (currentPoint.spawnPlatformOnPoint)
                     {
-                        spawnPlatform = SpawnPlatform();
-                        StartCoroutine(spawnPlatform);
+                       // spawnPlatform =
+                        SpawnPlatform();
+                       // StartCoroutine(spawnPlatform);
                     } 
                     if (currentPoint.stopPlatformOnPoint)
                     {
@@ -103,14 +111,15 @@ namespace Avocado
                 }
             }
         }
-        IEnumerator SpawnPlatform()
+        void SpawnPlatform()
         {
-            
-            platformsStop = PlatformsStop();
-            StartCoroutine(platformsStop);
+            inMovement = true;  
 
-            yield return new WaitUntil(()=>inMovement);
-                
+            //platformsStop = PlatformsStop();
+            //StartCoroutine(platformsStop);
+
+            //yield return new WaitUntil(()=>inMovement);
+
             PlatformMovement platform = GetPlatform(points[0].transform.position, Quaternion.identity);
             platform.InitMovement(points[1], platformSpeed,platformAcceleration, distanceToDeath);
                 

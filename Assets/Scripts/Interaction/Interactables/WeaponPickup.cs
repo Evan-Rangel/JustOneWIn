@@ -2,6 +2,7 @@
 using Avocado.Weapons;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 /*---------------------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ namespace Avocado.Interaction.Interactables
     [RequireComponent(typeof(Rigidbody2D))]
     public class WeaponPickup : MonoBehaviour, IInteractable<WeaponDataSO>
     {
+        public UnityEvent onWeaponPickup;
         [field: SerializeField] public Rigidbody2D Rigidbody2D { get; private set; }
 
         [field:SerializeField] public SpriteRenderer weaponIcon { get; private set; }// Icono visual del arma

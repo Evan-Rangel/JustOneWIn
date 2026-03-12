@@ -33,11 +33,9 @@ namespace Avocado
         }
         public void ActiveDeathZone(int deathZoneIndex)
         {
-            Debug.Log("aaaa");
 
             if (deathZones.Length > deathZoneIndex)
             {
-                Debug.Log("Active death zone");
                 deathZones[deathZoneIndex].SetActive(true);
             }
         }

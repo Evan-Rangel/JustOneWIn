@@ -13,24 +13,24 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region FPS Display
-   /* [SerializeField] TMPro.TMP_Text fpsText;
+    [SerializeField] TMPro.TMP_Text fpsText;
     [SerializeField] float maxFps = 0, minFps = 1000;
-   */
+   
     void ShowFps()
     {
-        /*
+        
         float fps = 1f / Time.unscaledDeltaTime;
         if (fps < minFps)
         {
             minFps = fps;
-            Debug.Log(minFps);
+            //Debug.Log(minFps);
         }
         if (fps > maxFps)
             maxFps = fps;
 
         fpsText.text = Mathf.RoundToInt(fps).ToString();
         Invoke("ShowFps", 0.1f);
-        */
+        
     }
     #endregion
     #region Local Game

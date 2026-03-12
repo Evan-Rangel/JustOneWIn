@@ -28,7 +28,7 @@ namespace Avocado
         private void Awake()
         {
             soundReproductor = GetComponent<FabricEnemySoundReproductor>();
-            fabricCollision =transform.root.GetComponentInChildren<FabricEnemyCollision>();
+            fabricCollision =transform.parent.GetComponentInChildren<FabricEnemyCollision>();
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         }
@@ -108,6 +108,7 @@ namespace Avocado
         }
         public void Aiming(Collider2D _target)
         {
+            Debug.Log("Player finded");
             soundReproductor.PlayTargetFindSound();
             target = _target.transform;
             aiming = true;

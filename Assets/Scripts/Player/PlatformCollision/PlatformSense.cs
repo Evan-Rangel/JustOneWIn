@@ -34,7 +34,6 @@ namespace Avocado
                     wallGrabState.releaseGrabWall = true;
                     ledgeClimbState.platformFalling = true;
 
-                    Debug.Log("Disable");
                 }
             }
         }
@@ -46,6 +45,19 @@ namespace Avocado
                 platformPrevPosition = platform.position;
             }
             else if (platform!=null )
+            {
+                ledgeClimbState.platformClimbing = true;
+                wallGrabState.releaseGrabWall = true;
+            }
+        }
+        private void OnTriggerStay2D(Collider2D collision)
+        {
+            if (collision.transform.CompareTag("MovePlatform") && platform!=collision.transform)
+            {
+                platform = collision.transform;
+                platformPrevPosition = platform.position;
+            }
+            else if (platform != null)
             {
                 ledgeClimbState.platformClimbing = true;
                 wallGrabState.releaseGrabWall = true;
