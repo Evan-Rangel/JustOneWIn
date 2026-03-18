@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
         if (yOfFsetPosition == 0)
         {
             StopAllCoroutines();
-            camTarget.localPosition = new Vector3(camTarget.localPosition.x, yOfFsetPosition, camTarget.localPosition.z);
+            camTarget.localPosition = new Vector3(camTarget.localPosition.x, 3, camTarget.localPosition.z);
             return;
         }
         currentYOffset = yOfFsetPosition;
@@ -146,6 +146,8 @@ public class Player : MonoBehaviour
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
         transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
+        camTarget.localPosition = new Vector3(camTarget.localPosition.x, 3, camTarget.localPosition.z);
+
     }
     private void HandlePoiseCurrentValueZero()
     {

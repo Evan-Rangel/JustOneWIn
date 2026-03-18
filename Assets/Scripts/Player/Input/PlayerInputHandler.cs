@@ -159,7 +159,7 @@ public class PlayerInputHandler : MonoBehaviour
        // if (DashInput || GrabInput || JumpInput) return;
         
         if (context.started)
-            OnCameraTargetInputChanged?.Invoke(-5);
+            OnCameraTargetInputChanged?.Invoke(-3);
         if (context.canceled)
             OnCameraTargetInputChanged?.Invoke(0);
 
