@@ -25,6 +25,7 @@ public class PlayerWallJumpState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
+        player.DashState.ResetCanDash();
 
         // Consume el input de salto para evitar múltiples registros del mismo salto
         player.InputHandler.UseJumpInput();

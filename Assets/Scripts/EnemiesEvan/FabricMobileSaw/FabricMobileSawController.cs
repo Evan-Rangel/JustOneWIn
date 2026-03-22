@@ -31,6 +31,8 @@ namespace Avocado
         }
         private void OnEnable()
         {
+            fabricCollision.transform.position = transform.position;    
+            fabricCollision.transform.parent = transform.parent;
             currentHealth = maxtHealth;
             fabricCollision.OnPlayerEnter += MaxVelocity;
             fabricCollision.OnPlayerExit += MinVelocity;
@@ -64,7 +66,9 @@ namespace Avocado
 
                 if (knockBackable != null)
                 {
-                    knockBackable.KnockBack(new KnockBackData(attackData.knockbackAngle, attackData.knockbackStrength, -(int)transform.localScale.x, gameObject));
+                    int direction = (transform.position.x - collider.transform.position.x > 0) ? -1 : 1;
+
+                    knockBackable.KnockBack(new KnockBackData(attackData.knockbackAngle, attackData.knockbackStrength, direction, gameObject));
                 }
             }
 

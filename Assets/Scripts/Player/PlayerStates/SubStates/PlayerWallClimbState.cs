@@ -25,6 +25,8 @@ public class PlayerWallClimbState : PlayerTouchingWallState
     public override void Enter()
     {
         base.Enter();
+        player.DashState.ResetCanDash();
+
         playerStats = core.GetCoreComponent<Stats>();
         currentTime = 0;
     }

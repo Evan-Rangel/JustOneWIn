@@ -60,7 +60,7 @@ public class PlayerLedgeClimbState : PlayerState
     public override void Enter()
     {
         base.Enter();
-
+        //Debug.Log("Entered Ledge Climb State");
         Movement?.SetVelocityZero();              // Detiene el movimiento
         player.transform.position = detectedPos;  // Coloca al jugador donde se detectó el borde
         cornerPos = DetermineCornerPosition();    // Calcula la esquina del borde
@@ -77,6 +77,7 @@ public class PlayerLedgeClimbState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        //Debug.Log("Exit Ledge Climb State");
 
         isHanging = false;
         player.SoundReproductor.PlayWalkSound();

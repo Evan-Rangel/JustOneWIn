@@ -44,6 +44,7 @@ public class PlayerWallGrabState : PlayerTouchingWallState
     public override void Enter()
     {
         base.Enter();
+        player.DashState.ResetCanDash();
 
         // Guarda la posición actual del jugador
         holdPosition = player.transform.position;

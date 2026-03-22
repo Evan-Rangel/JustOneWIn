@@ -55,7 +55,6 @@ public class PlayerInAirState : PlayerState
         // Guardar estados anteriores de contacto con la pared
         oldIsTouchingWall = isTouchingWall;
         oldIsTouchingWallBack = isTouchingWallBack;
-
         // Verificar colisiones si el componente existe
         if (CollisionSenses)
         {

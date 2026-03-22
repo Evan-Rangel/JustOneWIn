@@ -30,8 +30,9 @@ public class PlayerDashState : PlayerAbilityState {
 		base.Enter();
 
 		//player.SoundReproductor.PlayDashSound();
+		player.RB.gravityScale = 2.5f; // Anula la gravedad durante el dash
 
-		CanDash = false;
+        CanDash = false;
 		player.InputHandler.UseDashInput(); // Marca el input de dash como usado
 
         isHolding = true;
@@ -48,7 +49,7 @@ public class PlayerDashState : PlayerAbilityState {
 
 	public override void Exit() {
 		base.Exit();
-
+        player.RB.gravityScale = 5f;
         // Si va hacia arriba, reduce su velocidad vertical para suavizar la transición
         if (Movement?.CurrentVelocity.y > 0) 
 		{

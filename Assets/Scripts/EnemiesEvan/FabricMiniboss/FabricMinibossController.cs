@@ -1,10 +1,11 @@
 using Avocado.Combat.Damage;
+using Avocado.Weapons.Components;
 using System.Collections;
 using UnityEngine;
 
 namespace Avocado
 {
-    public class FabricMinibossController : MonoBehaviour,IDamageable
+    public class FabricMinibossController : MonoBehaviour, IDamageable
     {
 
 
@@ -19,6 +20,8 @@ namespace Avocado
 
 
         [SerializeField] D_RangedAttackState rangedAttackData;
+        [SerializeField] D_MeleeAttack meleeAttackData;
+        [SerializeField] Transform meleeAttackPoint;
 
         [SerializeField] Transform attackPoint;
         FabricEnemyCollision fabricCollision;
@@ -42,6 +45,25 @@ namespace Avocado
             fabricCollision.OnPlayerEnter += OnPlayerEnterCollision;
             fabricCollision.OnPlayerExit += OnPlayerExitCollision;
 
+        }
+        private void Update()
+        {
+            Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(meleeAttackPoint.position, meleeAttackData.attackRadius, meleeAttackData.whatIsPlayer);
+            foreach (Collider2D collider in detectedObjects)
+            {
+                IDamageable damageable = collider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    damageable.Damage(new DamageData(meleeAttackData.attackDamage, gameObject));
+                }
+                IKnockBackable knockBackable = collider.GetComponent<IKnockBackable>();
+                if (knockBackable != null)
+                {
+                    int direction = (transform.position.x - collider.transform.position.x > 0) ? -1 : 1;
+                    knockBackable.KnockBack(new Combat.KnockBack.KnockBackData(meleeAttackData.knockbackAngle, meleeAttackData.knockbackStrength, direction, gameObject));
+                }
+
+            }
         }
         private void OnDisable()
         {
@@ -119,6 +141,10 @@ namespace Avocado
             }
             anim.SetBool("startDeath", false);
             gameObject.SetActive(false);
+        }
+        public void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(meleeAttackPoint.position, meleeAttackData.attackRadius);
         }
 
     }

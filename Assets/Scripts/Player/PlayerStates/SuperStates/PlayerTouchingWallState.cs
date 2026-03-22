@@ -102,6 +102,7 @@ public class PlayerTouchingWallState : PlayerState
         // Si está tocando la pared pero no la repisa, cambia a trepar repisa
         else if (isTouchingWall && !isTouchingLedge)
         {
+            Debug.Log("TouchingWall");
             stateMachine.ChangeState(player.LedgeClimbState);
         }
     }

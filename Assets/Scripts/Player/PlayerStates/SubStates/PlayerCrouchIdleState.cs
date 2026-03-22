@@ -21,7 +21,7 @@ public class PlayerCrouchIdleState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
-
+        core.GetCoreComponent<Avocado.CoreSystem.DamageReceiver>().CrouchCollider(); // Ajusta el collider para agacharse
         Movement?.SetVelocityZero();                             // Se detiene el movimiento
         player.SetColliderHeight(playerData.crouchColliderHeight); // Se cambia el tamaño del collider al de agachado
     }
@@ -30,6 +30,7 @@ public class PlayerCrouchIdleState : PlayerGroundedState
     public override void Exit()
     {
         base.Exit();
+        core.GetCoreComponent<Avocado.CoreSystem.DamageReceiver>().UnCrouchCollider(); // Restaura el collider al tamaño original
         player.SetColliderHeight(playerData.standColliderHeight); // Se restaura la altura normal del collider
     }
 

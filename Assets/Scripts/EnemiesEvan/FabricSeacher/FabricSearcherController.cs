@@ -127,7 +127,7 @@ namespace Avocado
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.CompareTag("SearcherJump"))
+            if (collision.CompareTag("EnemyJump"))
             {
                 soundReproductor.PlayJumpSound();
                 rb.velocity = Vector2.zero;

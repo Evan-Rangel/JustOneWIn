@@ -10,9 +10,13 @@ namespace Avocado.CoreSystem
 {
     public class DamageReceiver : CoreComponent, IDamageable
     {
+        BoxCollider2D boxCollider;
+        Vector2 colliderCrouchSize, colliderCrouchOffset, colliderOriginalSize, colliderOriginalOffset;
+
+
         [SerializeField] private GameObject damageParticles;
         SoundReproductor soundReproductor;
-
+        Player player;
         // Sistema de modificadores que permiten alterar el daño recibido antes de aplicarlo.
         // Ejemplo: Un escudo puede reducir el daño recibido.
         public Modifiers<Modifier<DamageData>, DamageData> Modifiers { get; } = new();
@@ -20,6 +24,16 @@ namespace Avocado.CoreSystem
         private Stats stats;
         private ParticleManager particleManager;
         RespawnController respawnController;
+        public void CrouchCollider()
+        { 
+            boxCollider.size = colliderCrouchSize;
+            boxCollider.offset = colliderCrouchOffset;
+        }
+        public void UnCrouchCollider()
+        {
+            boxCollider.size = colliderOriginalSize;
+            boxCollider.offset = colliderOriginalOffset;
+        }
         public override void LogicUpdate()
         {
             base.LogicUpdate();
@@ -54,7 +68,7 @@ namespace Avocado.CoreSystem
             soundReproductor.PlayDamageSound();
 
             // Disminuir salud
-            stats.Health.Decrease(data.Amount);
+            //stats.Health.Decrease(data.Amount);
             GlobalVolumeController.instance.SetChromaticAberration(1);
 
             // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
@@ -62,6 +76,7 @@ namespace Avocado.CoreSystem
             // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);
         }
+     
 
         // Inicialización del componente, buscando las dependencias necesarias.
         protected override void Awake()
@@ -72,6 +87,12 @@ namespace Avocado.CoreSystem
             stats = core.GetCoreComponent<Stats>();
             particleManager = core.GetCoreComponent<ParticleManager>();
             respawnController = transform.root.GetComponent<RespawnController>();
+            player = transform.root.GetComponent<Player>();
+            boxCollider=GetComponent<BoxCollider2D>();
+            colliderOriginalOffset = boxCollider.offset;
+            colliderOriginalSize = boxCollider.size;
+            colliderCrouchSize = new Vector2(boxCollider.size.x, boxCollider.size.y / 2);
+            colliderCrouchOffset = new Vector2(boxCollider.offset.x, boxCollider.offset.y - boxCollider.size.y / 4);
         }
     }
 }
