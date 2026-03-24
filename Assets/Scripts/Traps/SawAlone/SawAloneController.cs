@@ -9,6 +9,7 @@ namespace Avocado
         [SerializeField] D_MeleeAttack damageData;
         [SerializeField] Transform damagePoint;
         [SerializeField] string sound;
+        [SerializeField] float radius;
         AudioSource audioSource;
         private void OnEnable()
         {
@@ -22,7 +23,7 @@ namespace Avocado
         }
         private void Update()
         {
-            Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(damagePoint.position, damageData.attackRadius, damageData.whatIsPlayer);
+            Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(damagePoint.position, radius, damageData.whatIsPlayer);
 
             foreach (Collider2D collider in detectedObjects)
             {
@@ -47,7 +48,7 @@ namespace Avocado
         
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireSphere(damagePoint.position, damageData.attackRadius);
+            Gizmos.DrawWireSphere(damagePoint.position, radius);
         }
     }
 }

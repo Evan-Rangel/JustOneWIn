@@ -25,7 +25,7 @@ namespace Avocado
             fabricCollision = GetComponentInChildren<FabricEnemyCollision>();
             animationEvent = GetComponentInChildren<SpikeRotatePlatformAnimationEvent>();
         }
-        private void Update()
+      /*  private void Update()
         {
             Collider2D[] detectedObjects = Physics2D.OverlapBoxAll(currentActivePoint.position, new Vector2(1, 0.2f)* attackData.attackRadius,0, attackData.whatIsPlayer);
 
@@ -50,13 +50,14 @@ namespace Avocado
                         knockBackable.KnockBack(new KnockBackData(new Vector2(attackData.knockbackAngle.x, 0), attackData.knockbackStrength, direction, gameObject));
                 }
             }
-        }
+        }*/
         private void OnEnable()
         {
             OnPlaySound += AudioManager.instance.PlaySFXSound;
             activePlatform = false;
             anim.SetBool("Active", false);
             currentActivePoint = damagePointDown;
+            SetPlatformDownAsCurrent();
             fabricCollision.OnPlayerEnter += OnPlayerEnter;
             fabricCollision.OnPlayerExit += OnPlayerExit;
             animationEvent.onActivePlatform += SetPlatformUpAsCurrent;
@@ -72,10 +73,14 @@ namespace Avocado
         }
         void SetPlatformUpAsCurrent()
         { 
+            damagePointUp.gameObject.SetActive(true);
+            damagePointDown.gameObject.SetActive(false);
             currentActivePoint = damagePointUp;
         }
         void SetPlatformDownAsCurrent()
-        { 
+        {
+            damagePointUp.gameObject.SetActive(false);
+            damagePointDown.gameObject.SetActive(true);
             currentActivePoint = damagePointDown;
         }
         void OnPlayerEnter(Collider2D collider)
@@ -107,9 +112,10 @@ namespace Avocado
         }
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+           /* Gizmos.color = Color.red;
             Gizmos.DrawWireCube(damagePointUp.position, new Vector3(1, 0.2f, 1) * attackData.attackRadius );
             Gizmos.DrawWireCube(damagePointDown.position, new Vector3(1, 0.2f, 1) * attackData.attackRadius );
-        }
+        
+            */}
     }
 }

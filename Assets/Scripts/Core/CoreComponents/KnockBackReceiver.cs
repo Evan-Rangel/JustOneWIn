@@ -45,7 +45,7 @@ namespace Avocado.CoreSystem
         public void KnockBack(KnockBackData data)
         {
             if (core.invulneravilityTime > 0) return;
-             core.invulneravilityTime = 0.75f;
+             core.invulneravilityTime = 0.5f;
             
             data = Modifiers.ApplyAllModifiers(data);
 
