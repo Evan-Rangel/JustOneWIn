@@ -55,6 +55,6 @@ namespace Avocado.CoreSystem.StatsSystem
         public void Increase(float amount) => CurrentValue += amount;
 
         // Disminuye el valor actual en una cantidad dada
-        public void Decrease(float amount) { CurrentValue -= amount; OnCurrentValueDecrease?.Invoke(); }
+        public void Decrease(float amount)  { CurrentValue -= amount; OnCurrentValueDecrease?.Invoke(); }
     }
 }
