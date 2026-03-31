@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8940787219624084575}
   - component: {fileID: 8940787219624084569}
   - component: {fileID: 8940787219624084574}
+  - component: {fileID: 4680079431094260487}
   - component: {fileID: 8940787219624084568}
-  - component: {fileID: 8940787219624084571}
   m_Layer: 16
   m_Name: CellingTrapClose
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8940787219624084572}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8940787220206472303}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1986226669
-  m_SortingLayer: 8
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 477080941, guid: 5473532e4f85ad94882a022ed260d6ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -109,6 +109,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!61 &4680079431094260487
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8940787219624084572}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.21}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.72, y: 0.64}
+    newSize: {x: 0.72, y: 0.64}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.15, y: 0.25}
+  m_EdgeRadius: 0
 --- !u!114 &8940787219624084568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,22 +152,6 @@ MonoBehaviour:
   inpactSound: CellingTrapCloseInpact
   damageData: {fileID: 11400000, guid: e99c06e5e1e9c4340af9731580bd01a0, type: 2}
   activationDelay: 4
---- !u!70 &8940787219624084571
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8940787219624084572}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.175}
-  m_Size: {x: 0.15, y: 0.3}
-  m_Direction: 0
 --- !u!1 &8940787220206472300
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +282,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1986226669
-  m_SortingLayer: 8
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: -1311111136, guid: 3ddcdc96aa2c2ba409d7c5c3c805f5bd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
