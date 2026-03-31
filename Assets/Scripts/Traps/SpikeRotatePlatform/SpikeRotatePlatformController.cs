@@ -8,13 +8,9 @@ namespace Avocado
     public class SpikeRotatePlatformController : MonoBehaviour
     {
         Animator anim;
-        [SerializeField] Transform damagePointUp;
-        [SerializeField] Transform damagePointDown;
         [SerializeField] D_MeleeAttack attackData;
         [SerializeField] float timeToActive, ActiveTime;
         FabricEnemyCollision fabricCollision;
-        SpikeRotatePlatformAnimationEvent animationEvent;
-        Transform currentActivePoint;
         bool activePlatform;
         [SerializeField] string collisionSound, activeSound;
         event Action<string, Transform> OnPlaySound;
@@ -23,7 +19,6 @@ namespace Avocado
         {
             anim = GetComponentInChildren<Animator>();
             fabricCollision = GetComponentInChildren<FabricEnemyCollision>();
-            animationEvent = GetComponentInChildren<SpikeRotatePlatformAnimationEvent>();
         }
       /*  private void Update()
         {
@@ -56,33 +51,17 @@ namespace Avocado
             OnPlaySound += AudioManager.instance.PlaySFXSound;
             activePlatform = false;
             anim.SetBool("Active", false);
-            currentActivePoint = damagePointDown;
-            SetPlatformDownAsCurrent();
             fabricCollision.OnPlayerEnter += OnPlayerEnter;
             fabricCollision.OnPlayerExit += OnPlayerExit;
-            animationEvent.onActivePlatform += SetPlatformUpAsCurrent;
-            animationEvent.onDeactivatePlatform += SetPlatformDownAsCurrent;
         }
         void OnDisable() 
         {
             OnPlaySound -= AudioManager.instance.PlaySFXSound;
             fabricCollision.OnPlayerEnter -= OnPlayerEnter;
             fabricCollision.OnPlayerExit -= OnPlayerExit;
-            animationEvent.onActivePlatform -= SetPlatformUpAsCurrent;
-            animationEvent.onDeactivatePlatform -= SetPlatformDownAsCurrent;
+            
         }
-        void SetPlatformUpAsCurrent()
-        { 
-            damagePointUp.gameObject.SetActive(true);
-            damagePointDown.gameObject.SetActive(false);
-            currentActivePoint = damagePointUp;
-        }
-        void SetPlatformDownAsCurrent()
-        {
-            damagePointUp.gameObject.SetActive(false);
-            damagePointDown.gameObject.SetActive(true);
-            currentActivePoint = damagePointDown;
-        }
+        
         void OnPlayerEnter(Collider2D collider)
         {
             if (activePlatform) return;
@@ -110,12 +89,6 @@ namespace Avocado
             activePlatform = false;
             anim.SetBool("Active", false);
         }
-        private void OnDrawGizmos()
-        {
-           /* Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(damagePointUp.position, new Vector3(1, 0.2f, 1) * attackData.attackRadius );
-            Gizmos.DrawWireCube(damagePointDown.position, new Vector3(1, 0.2f, 1) * attackData.attackRadius );
-        
-            */}
+       
     }
 }
