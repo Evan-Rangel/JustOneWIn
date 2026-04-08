@@ -108,13 +108,13 @@ namespace Avocado
         }
         public void Aiming(Collider2D _target)
         {
-            Debug.Log("Player finded");
             soundReproductor.PlayTargetFindSound();
             target = _target.transform;
             aiming = true;
         }  
         public void StopAiming(Collider2D _target)
         {
+
             target = null;
             aiming = false;
         }
