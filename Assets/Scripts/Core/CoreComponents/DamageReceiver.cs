@@ -69,7 +69,7 @@ namespace Avocado.CoreSystem
 
             // Disminuir salud
             //stats.Health.Decrease(data.Amount);
-            GlobalVolumeController.instance.SetChromaticAberration(1);
+            //GlobalVolumeController.instance.SetChromaticAberration(1);
 
             // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
 

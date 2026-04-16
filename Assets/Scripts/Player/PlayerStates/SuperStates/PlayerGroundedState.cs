@@ -106,6 +106,7 @@ public class PlayerGroundedState : PlayerState
         // Agarre de pared (solo si está tocando la pared y la repisa)
         else if (isTouchingWall && grabInput && isTouchingLedge && core.grabUnlocked)
         {
+
             stateMachine.ChangeState(player.WallGrabState);
         }
         // Dash

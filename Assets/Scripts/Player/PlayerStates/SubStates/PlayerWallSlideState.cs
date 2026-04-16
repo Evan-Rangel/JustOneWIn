@@ -32,6 +32,7 @@ public class PlayerWallSlideState : PlayerTouchingWallState
             // entonces cambia al estado de agarre en pared
             if (grabInput && yInput == 0 && core.grabUnlocked)
             {
+
                 stateMachine.ChangeState(player.WallGrabState);
             }
         }

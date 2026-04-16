@@ -20,7 +20,6 @@ namespace Avocado
         {
             if (collision.CompareTag("Player"))
             {
-                Debug.Log("Player exited collision");
                 OnPlayerExit?.Invoke(collision);
             }
         }

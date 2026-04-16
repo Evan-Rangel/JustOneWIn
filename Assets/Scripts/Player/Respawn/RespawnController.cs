@@ -18,7 +18,6 @@ namespace Avocado
         bool respawning = false;
         private void OnTriggerEnter2D(Collider2D collision)
         {
-
             if (collision.transform.name == "Respawn" || collision.CompareTag("Respawn"))
             {
                 respawn = collision.transform;
@@ -28,6 +27,10 @@ namespace Avocado
                 if (collision.transform.root.TryGetComponent<PlatformMovement>(out PlatformMovement _platform))
                 {
                     _platform.DisableCollider();
+                }
+                if (collision.transform.TryGetComponent<LavaLevelController>(out LavaLevelController _controller))
+                {
+                    _controller.ResetPosition(respawn.position);
                 }
                 respawning = true;
                 StartCoroutine(RespawnPlayer());

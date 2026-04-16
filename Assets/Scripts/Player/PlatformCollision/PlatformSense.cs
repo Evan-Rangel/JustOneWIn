@@ -46,6 +46,7 @@ namespace Avocado
             }
             else if (platform!=null )
             {
+
                 ledgeClimbState.platformClimbing = true;
                 wallGrabState.releaseGrabWall = true;
             }
@@ -57,11 +58,12 @@ namespace Avocado
                 platform = collision.transform;
                 platformPrevPosition = platform.position;
             }
-            else if (platform != null)
+            /*else if (platform != null)
             {
+                Debug.Log("c");
                 ledgeClimbState.platformClimbing = true;
                 wallGrabState.releaseGrabWall = true;
-            }
+            }*/
         }
         private void OnTriggerExit2D(Collider2D collision)
         {

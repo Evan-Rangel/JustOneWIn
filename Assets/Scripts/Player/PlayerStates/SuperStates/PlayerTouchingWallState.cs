@@ -97,12 +97,12 @@ public class PlayerTouchingWallState : PlayerState
         // Si ya no está tocando la pared o se aleja de ella, va al estado en el aire
         else if (!isTouchingWall || (xInput != Movement?.FacingDirection && !grabInput)|| releaseGrabWall)
         {
+
             stateMachine.ChangeState(player.InAirState);
         }
         // Si está tocando la pared pero no la repisa, cambia a trepar repisa
         else if (isTouchingWall && !isTouchingLedge)
         {
-            Debug.Log("TouchingWall");
             stateMachine.ChangeState(player.LedgeClimbState);
         }
     }
