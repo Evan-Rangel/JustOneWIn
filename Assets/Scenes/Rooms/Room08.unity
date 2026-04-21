@@ -47937,7 +47937,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 7.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -58969,7 +58969,11 @@ MonoBehaviour:
   <currentSpawnPosition>k__BackingField:
     pos: {fileID: 0}
     zoneName: 
+    sceneName: 
   <activeSavePoints>k__BackingField: []
+  doors: []
+  currentSceneName: Room08
+  playerSavePosition: {fileID: 0}
   hookHolder: {fileID: 72619500}
   dashHolder: {fileID: 1857897525}
   climbHolder: {fileID: 698491535}
@@ -67651,6 +67655,7 @@ MonoBehaviour:
   <shopID>k__BackingField:
     pos: {fileID: 1469927607}
     zoneName: Zone 02
+    sceneName: 
   weaponsToSell:
   - {fileID: 11400000, guid: 43b039c21d2d00440b417aca5ffe1566, type: 2}
   - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}
@@ -107670,7 +107675,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 68
-      m_TileSpriteIndex: 81
+      m_TileSpriteIndex: 99
       m_TileMatrixIndex: 4
       m_TileColorIndex: 2
       m_TileObjectToInstantiateIndex: 65535
@@ -109990,7 +109995,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 77
-      m_TileSpriteIndex: 77
+      m_TileSpriteIndex: 97
       m_TileMatrixIndex: 4
       m_TileColorIndex: 2
       m_TileObjectToInstantiateIndex: 65535
@@ -118880,7 +118885,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 80
-      m_TileSpriteIndex: 80
+      m_TileSpriteIndex: 96
       m_TileMatrixIndex: 4
       m_TileColorIndex: 2
       m_TileObjectToInstantiateIndex: 65535
@@ -141380,7 +141385,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 61
-      m_TileSpriteIndex: 61
+      m_TileSpriteIndex: 95
       m_TileMatrixIndex: 4
       m_TileColorIndex: 2
       m_TileObjectToInstantiateIndex: 65535
@@ -208701,8 +208706,8 @@ Tilemap:
     m_Data: {fileID: -1685200906, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -188884993, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 63917488, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 5
     m_Data: {fileID: 793554640, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 2
@@ -208733,16 +208738,16 @@ Tilemap:
     m_Data: {fileID: 372005255, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -936487645, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 1343752239, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 1991475788, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 547858547, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 1427517042, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: -1082027486, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
   - m_RefCount: 4
@@ -208769,16 +208774,16 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 63917488, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 1427517042, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 1343752239, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 29
     m_Data: {fileID: 2103822993, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -1082027486, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:

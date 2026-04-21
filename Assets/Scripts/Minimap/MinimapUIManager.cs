@@ -7,7 +7,7 @@ namespace Avocado
     public class MinimapUIManager : MonoBehaviour
     {
         [SerializeField] GameObject minimapCamera;
-
+        [SerializeField]TeleportController[] teleportControllers;
         [SerializeField] TMP_Text zoneNameText;
         [SerializeField] Button selectButton;
         public event Action<TpEntity> onNextPoint;
@@ -30,26 +30,22 @@ namespace Avocado
         public void ShowInfo(TpEntity tp)
         {
             zoneNameText.text = tp.zoneName;
-            currentPointIndex= GameManager.instance.activeSavePoints.IndexOf(tp);
+            currentPointIndex = GameManager.instance.GetTeleportIndexByName(tp.zoneName);
+            selectButton.onClick.RemoveAllListeners();
             selectButton.onClick.AddListener(() =>
             {
                 TeleportPlayerAnimController.instance.PlayTeleportEndAnim();
-                GameSaveCapsule capsule = GameManager.instance.currentSpawnPosition.pos.root.GetComponentInChildren<GameSaveCapsule>();
-                FakeLight_S.instance.ShadeEffect();
-                capsule.StartCloseCapsuleAnimation();
                 GameManager.instance.ToggleMinimap(false);
+                FakeLight_S.instance.ShadeEffect();
+                GameSaveCapsule capsule = GameManager.instance.playerSavePosition.root.GetComponentInChildren<GameSaveCapsule>();
+                capsule.StartCloseCapsuleAnimation();
                 capsule.OnCloseAnimationEnd += () =>
                 {
-
-                    SaveManager.SaveZoneSpawnName(tp.zoneName);
-                    //GameManager.instance.TeleportPlayerToSavePoint(tp);
+                    GameManager.instance.TeleportPlayerTo(tp.sceneName);
                 };
             });
-            if (Vector2.Distance(minimapCamera.transform.position, tp.pos.position)>10)
-            {
-                minimapCamera.transform.position = tp.pos.position;
-            }
         }
+       
         public void HideInfo()
         { 
             zoneNameText.text = "";
@@ -59,17 +55,26 @@ namespace Avocado
             currentPointIndex++;
             if (currentPointIndex >= GameManager.instance.activeSavePoints.Count)
                 currentPointIndex=0;
-            onNextPoint?.Invoke(GameManager.instance.activeSavePoints[currentPointIndex]);
+
+            TpEntity tp = GameManager.instance.activeSavePoints[currentPointIndex];
+            minimapCamera.transform.position = GameManager.instance.GetTeleportPositionByName(tp.zoneName);
+            onNextPoint?.Invoke(tp);
         }
         public void PrevPoint()
         {
             currentPointIndex--;
             if (currentPointIndex < 0)
                 currentPointIndex = GameManager.instance.activeSavePoints.Count - 1;
-            onPrevPoint?.Invoke(GameManager.instance.activeSavePoints[currentPointIndex]);
+            TpEntity tp = GameManager.instance.activeSavePoints[currentPointIndex];
+            minimapCamera.transform.position = GameManager.instance.GetTeleportPositionByName(tp.zoneName);
+            onPrevPoint?.Invoke(tp);
         }
         private void OnEnable()
         {
+            for (int i = 0; i < teleportControllers.Length; i++)
+            {
+                teleportControllers[i].CheckForVisibility();
+            }
             minimapCamera.SetActive(true);
             onNextPoint += ShowInfo;
             onPrevPoint += ShowInfo;

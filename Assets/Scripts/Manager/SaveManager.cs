@@ -147,7 +147,7 @@ namespace Avocado
         public string firstWeaponName="";    
         public string secondWeaponName="";    
         public List<string> unlockedWeapons = new List<string>();
-        public string zoneSpawn = "";
+        public string sceneSpawn = "";
         public List<string> unlockedZones = new List<string>();
         public bool dashUnlocked = false;
         public bool grabUnlocked = false;
@@ -272,14 +272,26 @@ namespace Avocado
         public static void SaveZoneSpawnName(string _zoneName)
         {
             if (data == null) Load();
-            data.zoneSpawn = _zoneName;
+            //data.sceneSpawn = _zoneName;
             Save();
         }
-
         public static string GetZoneSpawnName()
         {
             if (data == null) Load();
-            return data.zoneSpawn;
+            return data.sceneSpawn;
+        }
+
+
+        public static void SaveSceneSpawnName(string _sceneName)
+        {
+            if (data == null) Load();
+            data.sceneSpawn = _sceneName;
+            Save();
+        }
+        public static string GetSceneSpawnName()
+        {
+            if (data == null) Load();
+            return data.sceneSpawn;
         }
         #endregion
 

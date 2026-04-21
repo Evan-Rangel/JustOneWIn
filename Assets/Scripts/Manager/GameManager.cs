@@ -131,10 +131,30 @@ public class GameManager : MonoBehaviour
     #endregion
 
     [Header("SpawnPoints")]
-    [SerializeField] ShopManager[] allSavePoints;
+    [SerializeField] TeleportController[] allSavePoints;
+    public Vector2 GetTeleportPositionByName(string _zoneName)
+    {
+        for (int i = 0; i < allSavePoints.Length; i++)
+        {
+            if (allSavePoints[i].shopID.zoneName == _zoneName)
+                return allSavePoints[i].transform.position;
+        }
+        return Vector2.zero;
+    }public int GetTeleportIndexByName(string _zoneName)
+    {
+        for (int i = 0; i < allSavePoints.Length; i++)
+        {
+            if (allSavePoints[i].shopID.zoneName == _zoneName)
+                return i;
+        }
+        return 0;
+    }
     [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
 
     [field: SerializeField] public List<TpEntity> activeSavePoints { get; private set; } = new List<TpEntity>();
+    [SerializeField] Door[] doors;
+    [SerializeField] string currentSceneName;
+    [field: SerializeField] public Transform playerSavePosition { get; private set; }
     public void HideInfoMinimap(TpEntity _entity)
     {
         MinimapUIManager.instance.ShowInfo(_entity);
@@ -145,32 +165,55 @@ public class GameManager : MonoBehaviour
         pauseHolder.SetActive(true);
         ChangeState(GameState.UI);
     }
-    public void  TeleportPlayerToSavePoint(TpEntity target)
+    public void  TeleportPlayerTo(string _sceneName)
     { 
-        SaveManager.SaveZoneSpawnName(target.zoneName);
-        //SceneManager.LoadScene("TransitionScene");
+        
+        //SaveManager.SaveZoneSpawnName(target.sceneName);
+        SceneManager.LoadScene(_sceneName);
        // SceneManager.LoadScene("Main");
     }
     public void ResetLevel()
     { 
        // SceneManager.LoadScene("TransitionScene");
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(currentSceneName);
     }
     public Vector2 GetSavePositionBySavedZoneName()
     {
+        if (PlayerPrefs.HasKey("DoorName"))
+        {
+            for (int i = 0; i < doors.Length; i++)
+            {
+                if (doors[i].doorName != PlayerPrefs.GetString("DoorName")) 
+                    continue;
+                PlayerPrefs.DeleteKey("DoorName");
+                return (Vector2)doors[i].pos.position;
+            }
+        }
+        TeleportPlayerAnimController.instance.PlayTeleportAnim();
+        if (playerSavePosition != null)
+            return playerSavePosition.position;
+
+        /*
         string _zoneName = SaveManager.GetZoneSpawnName();
         for (int i = 0; i < allSavePoints.Length; i++)
         {
             if (allSavePoints[i].shopID.zoneName == _zoneName)
                 return allSavePoints[i].shopID.pos.position;
         }
+        */
         return newGameStartPosition.position;
     }
     public void AddSavePoint(TpEntity _point)
     {
-        SaveManager.SaveZoneSpawnName(_point.zoneName);
-        currentSpawnPosition = _point;
-        if (activeSavePoints.Contains(_point)) return;
+        SaveManager.SaveSceneSpawnName(_point.sceneName);
+        //currentSpawnPosition = _point;
+
+        for (int i = 0; i < activeSavePoints.Count; i++)
+        {
+            if (activeSavePoints[i].zoneName == _point.zoneName)
+                return;
+        }
+        //if (activeSavePoints.Contains(_point)) return;
         SaveManager.SaveZoneUnlocked(_point.zoneName);
         activeSavePoints.Add(_point);   
     }
@@ -586,6 +629,12 @@ public class GameManager : MonoBehaviour
     }
 #endregion
 
+}
+[Serializable]
+public struct Door
+{
+    public string doorName;
+    public Transform pos;
 }
 #region Interfaces
 public interface ItemAction

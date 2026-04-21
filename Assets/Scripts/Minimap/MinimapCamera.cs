@@ -8,6 +8,7 @@ namespace Avocado
     {
         public Transform pos;
         public string zoneName;
+        public string sceneName;
     }
     public class MinimapCamera : MonoBehaviour
     {

@@ -16,12 +16,12 @@ namespace Avocado
         public override void Start()
         {
             base.Start();
-            minimapPoint.SetActive(true);
+            //minimapPoint.SetActive(true);
             minimapCamera = MinimapCamera.Instance;
             shopManager = transform.root.GetComponentInChildren<ShopManager>();
             shopID = shopManager.shopID;    
         }
-        private void Update()
+     /*   private void Update()
         {
             if (!minimapCamera.isActiveAndEnabled)
                 return;
@@ -38,11 +38,13 @@ namespace Avocado
         {
             //onSavePointDisabled += MinimapUIManager.instance.HideInfo;
             onSavePointActivated += GameManager.instance.HideInfoMinimap;
+            //onSavePointActivated += MinimapUIManager.instance.ShowInfo;
         }
         private void OnDisable()
         {
             //onSavePointDisabled -= MinimapUIManager.instance.HideInfo;
             onSavePointActivated -= GameManager.instance.HideInfoMinimap;
+            //onSavePointActivated -= MinimapUIManager.instance.ShowInfo;
 
         }
         void ActivePointOnMap()
@@ -56,13 +58,14 @@ namespace Avocado
             minimapPoint.transform.localScale = new Vector3(5, 5, 1);
             isHighlightedOnMap = false;
             //onSavePointDisabled?.Invoke();
-        }
+        }*/
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
             GameManager.instance.ToggleMinimap(true);
             GameManager.instance.AddSavePoint(shopID);
-            minimapCamera.transform.position= shopID.pos.position;
+            minimapCamera.enabled = true;
+            minimapCamera.transform.position= transform.position;
         }
     }
 }

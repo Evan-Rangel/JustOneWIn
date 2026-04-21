@@ -115,7 +115,8 @@ public class Player : MonoBehaviour
         if (yOfFsetPosition == 0)
         {
             StopAllCoroutines();
-            camTarget.localPosition = new Vector3(camTarget.localPosition.x, 3, camTarget.localPosition.z);
+            if (modifyCameraPosition==null)
+                camTarget.localPosition = new Vector3(0, 3, 0);
             return;
         }
         currentYOffset = yOfFsetPosition;
@@ -124,7 +125,7 @@ public class Player : MonoBehaviour
     IEnumerator DelayTargetCameraMove()
     {
         yield return Helpers.GetWait(1);
-        camTarget.localPosition = new Vector3(camTarget.localPosition.x, currentYOffset, camTarget.localPosition.z);
+        camTarget.localPosition = new Vector3(0, currentYOffset, 0);
     }
     private void Start()
     {
@@ -145,7 +146,7 @@ public class Player : MonoBehaviour
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
         transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
-        camTarget.localPosition = new Vector3(camTarget.localPosition.x, 3, camTarget.localPosition.z);
+        camTarget.localPosition = new Vector3(0, 3, 0);
 
     }
     private void HandlePoiseCurrentValueZero()
@@ -159,6 +160,10 @@ public class Player : MonoBehaviour
         // Actualización lógica del sistema central y del estado actual
         Core.LogicUpdate();
         StateMachine.CurrentState.LogicUpdate();
+
+
+       
+    
     }
 
     private void FixedUpdate()
@@ -172,7 +177,35 @@ public class Player : MonoBehaviour
         // Limpia el evento al destruir el jugador
         Stats.Poise.OnCurrentValueZero -= HandlePoiseCurrentValueZero;
     }
- 
+
+
+    //Temporal, no se si meterlo todavia, camaras
+    #region CameraModify
+    CamPositionController camController;
+    Transform modifyCameraPosition;
+    Vector2 activeDirection= Vector2.one;
+   /* private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ModifyCam"))
+        {
+            camController=collision.transform.GetComponent<CamPositionController>();
+            modifyCameraPosition = camController.newPosition;
+            activeDirection = camController.activeDirection;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("ModifyCam"))
+        {
+            camController = null;
+            modifyCameraPosition = null;
+            activeDirection = Vector2.one;
+            camTarget.localPosition = new Vector3(0, 3, 0);
+        }
+    }*/
+
+    #endregion
+
     #endregion
 
     #region Set Functions

@@ -29,7 +29,7 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(this);
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         LoadSounds();
         InitPool();
     }

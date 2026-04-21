@@ -50762,7 +50762,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 7.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -61545,7 +61545,11 @@ MonoBehaviour:
   <currentSpawnPosition>k__BackingField:
     pos: {fileID: 0}
     zoneName: 
+    sceneName: 
   <activeSavePoints>k__BackingField: []
+  doors: []
+  currentSceneName: Room12
+  playerSavePosition: {fileID: 0}
   hookHolder: {fileID: 72619500}
   dashHolder: {fileID: 1857897525}
   climbHolder: {fileID: 698491535}
@@ -70036,6 +70040,7 @@ MonoBehaviour:
   <shopID>k__BackingField:
     pos: {fileID: 1469927607}
     zoneName: Zone 02
+    sceneName: 
   weaponsToSell:
   - {fileID: 11400000, guid: 43b039c21d2d00440b417aca5ffe1566, type: 2}
   - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}

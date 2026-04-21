@@ -257876,7 +257876,11 @@ MonoBehaviour:
   <currentSpawnPosition>k__BackingField:
     pos: {fileID: 0}
     zoneName: 
+    sceneName: 
   <activeSavePoints>k__BackingField: []
+  doors: []
+  currentSceneName: Room19
+  <playerSavePosition>k__BackingField: {fileID: 0}
   hookHolder: {fileID: 72619500}
   dashHolder: {fileID: 1857897525}
   climbHolder: {fileID: 698491535}
@@ -264201,7 +264205,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1275532785}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.7, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -269323,7 +269327,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1557208747}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -269340,7 +269344,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &1557208750
 MonoBehaviour:
@@ -269358,7 +269362,8 @@ MonoBehaviour:
   textToShow: Press Q To Interact
   <shopID>k__BackingField:
     pos: {fileID: 1275532786}
-    zoneName: Room01
+    zoneName: Room19
+    sceneName: Room19
   weaponsToSell:
   - {fileID: 11400000, guid: 43b039c21d2d00440b417aca5ffe1566, type: 2}
   - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}

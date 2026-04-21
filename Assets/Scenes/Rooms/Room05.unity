@@ -62329,7 +62329,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 44
-      m_TileSpriteIndex: 44
+      m_TileSpriteIndex: 46
       m_TileMatrixIndex: 7
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -113778,12 +113778,12 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 1362255323, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: -835526608, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: -1471011973, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -1471011973, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: -835526608, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 1194184227, guid: 4de603670f45c57409cb7d6503bfbd46, type: 3}
   - m_RefCount: 1
@@ -115003,7 +115003,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 7.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -125107,7 +125107,11 @@ MonoBehaviour:
   <currentSpawnPosition>k__BackingField:
     pos: {fileID: 0}
     zoneName: 
+    sceneName: 
   <activeSavePoints>k__BackingField: []
+  doors: []
+  currentSceneName: Room05
+  playerSavePosition: {fileID: 0}
   hookHolder: {fileID: 72619500}
   dashHolder: {fileID: 1857897525}
   climbHolder: {fileID: 698491535}
@@ -127217,7 +127221,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1070363914}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -15.7, y: -49, z: 0}
+  m_LocalPosition: {x: -47.88, y: -7.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132880,6 +132884,7 @@ MonoBehaviour:
   <shopID>k__BackingField:
     pos: {fileID: 1469927607}
     zoneName: Zone 02
+    sceneName: 
   weaponsToSell:
   - {fileID: 11400000, guid: 43b039c21d2d00440b417aca5ffe1566, type: 2}
   - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}
