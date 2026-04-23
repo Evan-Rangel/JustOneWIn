@@ -11,7 +11,8 @@ namespace Avocado
         [SerializeField] string textToShow;
         private void Awake()
         {
-            textHolder = GameObject.FindGameObjectWithTag("PopOutCanvas");
+            if (textHolder == null)
+                textHolder = GameObject.FindGameObjectWithTag("PopOutCanvas");
         }
         public virtual void Start()
         {
