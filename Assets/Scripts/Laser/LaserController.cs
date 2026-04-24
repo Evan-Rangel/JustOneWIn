@@ -27,9 +27,9 @@ namespace Avocado
         }
         private void Start()
         {
-            InvokeRepeating("ActiveLaser", activationDelay, activationDelay);
+            //InvokeRepeating("ActiveLaser", activationDelay, activationDelay);
         }
-        void ActiveLaser()
+       public  void ActiveLaser()
         { 
             anim.SetTrigger("Active");
         }

@@ -104,6 +104,16 @@ public class PlayerInputHandler : MonoBehaviour
             MinimapCamera.Instance.ZoomOut();
     }
 
+    public void OnMinimapActive(InputAction.CallbackContext context)
+    {
+        if (MinimapActivation.Instance == null)
+            return;
+        if (context.started)
+            MinimapActivation.Instance.ActivateMinimap(true);
+        if (context.canceled)
+        
+            MinimapActivation.Instance.ActivateMinimap(false);
+    }
 
     public void OnInteractEvent(InputAction.CallbackContext context)
     { 

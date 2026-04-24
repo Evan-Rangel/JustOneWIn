@@ -31,7 +31,7 @@ namespace Avocado
         // Update is called once per frame
         void Update()
         {
-            if (!minimapCamera.isActiveAndEnabled)
+            if (!minimapCamera.isActiveAndEnabled|| GameManager.instance.GetCurrentGameState== GameManager.GameState.Gameplay)
                 return;
             if (Vector2.Distance(transform.position, minimapCamera.transform.position) < 10 && !isHighlightedOnMap)
                 ActivePointOnMap();

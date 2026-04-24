@@ -14,6 +14,7 @@ namespace Avocado
     {
         Camera cam;
         public static MinimapCamera Instance;
+        public bool onMinimap;
         Vector2 currentDirection;
        // [SerializeField] MinimapUIManager minimapUIManager;
         private void Awake()
@@ -23,6 +24,7 @@ namespace Avocado
             else
                 Destroy(gameObject);
             cam=GetComponentInChildren<Camera>();
+            onMinimap = false;
         }
         private void Update()
         {
@@ -41,6 +43,10 @@ namespace Avocado
         {
             if (cam.fieldOfView<175)
                 cam.fieldOfView += 1;
+        }
+        public void SetFieldOfView(int _fieldOfView)
+        { 
+        cam.fieldOfView = _fieldOfView;
         }
     }
 }

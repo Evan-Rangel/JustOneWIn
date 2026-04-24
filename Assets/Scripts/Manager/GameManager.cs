@@ -455,6 +455,7 @@ public class GameManager : MonoBehaviour
 
     // Estado actual del juego, inicializado en Gameplay
     private GameState currentGameState = GameState.Gameplay;
+    public GameState GetCurrentGameState=> currentGameState;
     // Método para cambiar de estado
     public void ChangeState(GameState state)
     {
