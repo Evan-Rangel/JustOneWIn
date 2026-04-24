@@ -49,6 +49,7 @@ namespace Avocado.Interaction.Interactables
         // Lógica cuando el jugador interactúa con el objeto (lo recoge)
         public void Interact()
         {
+            onWeaponPickup?.Invoke();
             Destroy(gameObject);
         }
 

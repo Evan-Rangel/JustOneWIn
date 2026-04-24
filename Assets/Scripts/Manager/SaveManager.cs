@@ -142,6 +142,7 @@ namespace Avocado
     [Serializable]
     public class SaveData
     {
+        public List<string> eventsUnlocked = new List<string>();
         public List<string> unlockedTutorials = new List<string>();
         public List<string> dialoguesKey = new List<string>();
         public string firstWeaponName="";    
@@ -185,6 +186,25 @@ namespace Avocado
             bf.Serialize(file, data);
             file.Close();
         }
+
+        #region Events
+        public static void SaveEventKey(string eventKey)
+        {
+            if (data == null) Load();
+            if (!data.eventsUnlocked.Contains(eventKey))
+            {
+                data.eventsUnlocked.Add(eventKey);
+                Save();
+            }
+        }
+        public static bool IsEventKeySaved(string eventKey)
+        {
+            if (data == null) Load();
+            return data.eventsUnlocked.Contains(eventKey);
+        }
+
+
+        #endregion
 
         #region Tutorials
 
