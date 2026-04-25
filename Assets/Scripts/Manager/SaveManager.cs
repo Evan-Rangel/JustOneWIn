@@ -280,7 +280,7 @@ namespace Avocado
                 Save();
             }
         }
-
+      
         public static bool IsWeaponSaved(WeaponDataSO weaponData)
         {
             if (data == null) Load();

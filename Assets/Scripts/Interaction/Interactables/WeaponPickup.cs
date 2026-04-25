@@ -30,7 +30,7 @@ namespace Avocado.Interaction.Interactables
 
         [SerializeField] private WeaponDataSO weaponData;   // Datos del arma que este pickup contiene
 
-
+        [SerializeField] string eventName; // Nombre del evento para guardar si el arma ya fue recogida
         bool canDestroy;
         // Implementación de IInteractable<WeaponDataSO>
 
@@ -49,6 +49,7 @@ namespace Avocado.Interaction.Interactables
         // Lógica cuando el jugador interactúa con el objeto (lo recoge)
         public void Interact()
         {
+            GameManager.instance.AddWeaponDataToInventory(weaponData);
             onWeaponPickup?.Invoke();
             Destroy(gameObject);
         }
@@ -65,10 +66,12 @@ namespace Avocado.Interaction.Interactables
         {
             bobber.StopBobbing();
             canDestroy = true;
-            Invoke("DestroyGameObject", 5);
+            Invoke(nameof(DestroyGameObject), 5);
         }
         void DestroyGameObject()
         {
+            if (!SaveManager.IsWeaponSaved(weaponData))
+                return;
             GameManager.instance.RemoveWeaponOnGame(weaponData);
             if (canDestroy)
                 Destroy(gameObject);
@@ -82,6 +85,8 @@ namespace Avocado.Interaction.Interactables
 
         private void Awake()
         {
+            if (SaveManager.IsEventKeySaved(eventName))
+                gameObject.SetActive(false);
             // Asegura que Rigidbody2D y weaponIcon están asignados (si no se asignaron manualmente en el editor)
             Rigidbody2D ??= GetComponent<Rigidbody2D>();
             weaponIcon ??= GetComponentInChildren<SpriteRenderer>();
@@ -91,6 +96,8 @@ namespace Avocado.Interaction.Interactables
                 return;
 
             weaponIcon.sprite = weaponData.Icon;
+            
         }
+        
     }
 }

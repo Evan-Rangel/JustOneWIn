@@ -26,6 +26,8 @@ namespace Avocado
         }
         private void Start()
         {
+            if (SaveManager.IsEventKeySaved(eventName))
+                gameObject.SetActive(false);
             currentWave = 0;
             enemiesAlive = 0;
         }

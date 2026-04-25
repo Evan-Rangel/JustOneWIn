@@ -135,8 +135,7 @@ namespace Avocado
             } 
             if (collision.CompareTag("SearcherDespawner"))
             {
-                rb.velocity = Vector2.zero;
-                gameObject.SetActive(false);
+                collision.GetComponent<FabricSearcherDespawner>().SearcherReachedDespawner(gameObject);
             }
         }
         void DestroyEnemy()

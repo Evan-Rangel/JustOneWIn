@@ -17,13 +17,20 @@ namespace Avocado
         }
         public void Spawn()
         {
-            currentEnemy=Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+            if (currentEnemy != null)
+            { 
+                currentEnemy.SetActive(true);
+                currentEnemy.transform.position = spawnPoint.position;
+            }
+            else
+                currentEnemy=Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
             StartCoroutine(EnemyDisableDetector());
         }
 
         IEnumerator EnemyDisableDetector()
         { 
             yield return new WaitUntil(() => !currentEnemy.activeSelf);
+            gameObject.SetActive(false);
             wavesManager.EnemyDie();
         }
     }

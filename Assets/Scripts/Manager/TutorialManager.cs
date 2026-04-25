@@ -84,7 +84,6 @@ namespace Avocado
                 currentIconSprite++;
                 if (currentIconSprite >= maxIconSprite)
                     currentIconSprite = 0;
-                Debug.Log("Icon Sprite Changed to: " + currentIconSprite);
                 iconImage.sprite = tutorialItem.iconSprite[currentIconSprite];
 
             }

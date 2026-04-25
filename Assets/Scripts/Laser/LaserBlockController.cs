@@ -2,6 +2,7 @@ using Avocado.Combat.Damage;
 using System;
 using Avocado.Combat.KnockBack;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Avocado
 {
@@ -14,7 +15,7 @@ namespace Avocado
         FabricEnemyCollision activateCollision;
         event Action<string, Transform> OnPlaySound;
         [SerializeField]bool startActivated;
-
+        //public UnityEvent 
         private void Awake()
         {
             animator = GetComponent<Animator>();
@@ -56,11 +57,18 @@ namespace Avocado
         { 
             animator.SetTrigger("Activate");
         }
-
+        public void DeactivateBlockAndSaveEvent()
+        {
+            DeactivateBlock();
+            if (eventName == "" || eventName == string.Empty || eventName == null)
+                return;
+            SaveManager.SaveEventKey(eventName);
+        }
         public void DeactivateBlock()
         {
             animator.SetTrigger("Deactivate");
         }
+       
         private void OnTriggerEnter2D(Collider2D collision)
         {
             IDamageable damageable = collision.GetComponent<IDamageable>();

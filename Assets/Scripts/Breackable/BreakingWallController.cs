@@ -8,14 +8,21 @@ namespace Avocado
     {
         Animator anim;
         [SerializeField] int maxHealth = 3;
-        [SerializeField] string hitSound, breakingSound;  
+        [SerializeField] string hitSound, breakingSound, eventName;
+        [SerializeField] bool saveEvent;
         event Action<string, Transform> OnPlaySound;
         int currentHealth;
         private void Awake()
         {
             anim = GetComponent<Animator>();
         }
-
+        private void Start()
+        {
+            if (eventName == "" || eventName == string.Empty || eventName == null)
+                return;
+            if (SaveManager.IsEventKeySaved(eventName)&&saveEvent)
+                gameObject.SetActive(false);
+        }
         private void OnEnable()
         {
             OnPlaySound += AudioManager.instance.PlaySFXSound;
@@ -33,7 +40,9 @@ namespace Avocado
 
         }
         void DisableWall()
-        { 
+        {
+            if (saveEvent)
+                SaveManager.SaveEventKey(eventName);
             gameObject.SetActive(false);
         }
 

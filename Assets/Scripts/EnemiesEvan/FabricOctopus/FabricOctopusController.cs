@@ -44,6 +44,12 @@ namespace Avocado
             sprite = GetComponentInChildren<SpriteRenderer>();
             fabricCollision= GetComponentInChildren<FabricEnemyCollision>();
             animator = GetComponent<Animator>();
+            targetPos = new List<Vector2>();
+            for (int i = 0; i < movePositions.Count; i++)
+            {
+                targetPos.Add(movePositions[i] + (Vector2)transform.position);
+            }
+
         }
 
         private void OnEnable()
@@ -51,11 +57,7 @@ namespace Avocado
             isIdle = false;
             currentShoots = 0;
             currentHealth = maxtHealth;
-            targetPos = new List<Vector2>();
-            for (int i = 0; i < movePositions.Count; i++)
-            {
-                targetPos.Add(movePositions[i] + (Vector2)transform.position);
-            }
+            
             currentIndexPoint = 0;
 
             transform.position = targetPos[currentIndexPoint];
