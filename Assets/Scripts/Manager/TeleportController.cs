@@ -26,7 +26,6 @@ namespace Avocado
         {
             if (SaveManager.IsZoneUnlocked(shopID.zoneName))
                 spr.enabled = true;
-
         }
         // Update is called once per frame
         void Update()

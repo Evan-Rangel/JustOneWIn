@@ -3884,7 +3884,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
   m_PrefabInstance: {fileID: 8707362839247415369}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8707362839247415370}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c35944cc75915049a9df8dc9969debc, type: 3}
@@ -110602,6 +110602,7 @@ MonoBehaviour:
   - {fileID: 9154820}
   - {fileID: 1109946170}
   - {fileID: 655703362}
+  objectsToDelayActivation: []
   <shopHolder>k__BackingField: {fileID: 962513919}
   healthAnimator: {fileID: 1859183158}
   staminaAnimator: {fileID: 686085073}
@@ -120639,7 +120640,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcdd6333b7d2af944a0c1920d2f46aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textHolder: {fileID: 0}
+  interactEvent:
+    m_PersistentCalls:
+      m_Calls: []
   textToShow: Press Q To Interact
   <shopID>k__BackingField:
     pos: {fileID: 1469927607}
@@ -123415,7 +123418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32e1922c014b7374382e3445c979a8f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textHolder: {fileID: 0}
+  interactEvent:
+    m_PersistentCalls:
+      m_Calls: []
   textToShow: Press Q To Interact
   minimapPoint: {fileID: 311647363}
   savePointPosition: {fileID: 1469927607}
@@ -164283,6 +164288,10 @@ PrefabInstance:
       propertyPath: eventName
       value: Fight01
       objectReference: {fileID: 0}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: activatedOnTrigger
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
@@ -166972,10 +166981,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45683c286451ea4c8438b0beee62afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgrounImage:
-  - {fileID: 630127477}
-  - {fileID: 1069893371}
-  text: {fileID: 1029636674}
+  dialogueHolder: {fileID: 0}
+  iconHolder: {fileID: 0}
+  inputOnImage: {fileID: 0}
+  inputOffImage: {fileID: 0}
+  dialogueText: {fileID: 0}
 --- !u!1001 &1929374153
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -215307,6 +215317,31 @@ PrefabInstance:
       propertyPath: eventName
       value: Sword01
       objectReference: {fileID: 0}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: activatedOnTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: onTriggerIsActivated.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: onTriggerIsActivated.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: onTriggerIsActivated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8707362839247415370}
+    - target: {fileID: 8707362839420307495, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+      propertyPath: onTriggerIsActivated.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+--- !u!1 &8707362839247415370 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8707362839420307493, guid: 9d73bc50deee8244da64e2777227d800, type: 3}
+  m_PrefabInstance: {fileID: 8707362839247415369}
+  m_PrefabAsset: {fileID: 0}

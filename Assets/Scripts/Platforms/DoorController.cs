@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Avocado
 {
@@ -12,7 +13,8 @@ namespace Avocado
         FabricEnemyCollision activateCollision;
         event Action<string, Transform> OnPlaySound;
         [SerializeField] bool startActivated;
-        //public UnityEvent 
+        [SerializeField] bool activatedOnTrigger;
+        public UnityEvent onTriggerIsActivated, onTriggerIsDeactivated;
         private void Awake()
         {
             animator = GetComponent<Animator>();
@@ -27,7 +29,12 @@ namespace Avocado
             if (eventName == "" || eventName == string.Empty || eventName == null)
                 return;
             if (SaveManager.IsEventKeySaved(eventName))
-                DeactivateBlock();
+            {
+                if (!activatedOnTrigger)
+                    DeactivateBlock();
+                else ActivateBlock();
+            
+            }
             
             if (startActivated)
                 ActivateBlock();
@@ -48,9 +55,18 @@ namespace Avocado
         }
         void PlayerCollisionEnter(Collider2D _player)
         {
-            ActivateBlock();
+            if (activatedOnTrigger) onTriggerIsActivated?.Invoke();
+            //ActivateBlock();
+            else onTriggerIsDeactivated?.Invoke();
+                //DeactivateBlock();
         }
-
+        public void ActivateBlockAndSaveEvent()
+        {
+            ActivateBlock();
+            if (eventName == "" || eventName == string.Empty || eventName == null)
+                return;
+            SaveManager.SaveEventKey(eventName);
+        }
         public void ActivateBlock()
         {
             animator.SetTrigger("Activate");

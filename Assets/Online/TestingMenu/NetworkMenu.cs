@@ -7,7 +7,6 @@ namespace Avocado
 {
     public class NetworkMenu : MonoBehaviour
     {
-        [SerializeField] string[] sceneNames;
         public void SinglePlayer()
         {
             if (SaveManager.GetSceneSpawnName() == "" || SaveManager.GetSceneSpawnName() == null)
@@ -18,8 +17,6 @@ namespace Avocado
            
             SceneManager.LoadScene(SaveManager.GetSceneSpawnName());
             return;
-            
-            //SceneManager.LoadScene("main");
         }
         public void Host()
         {

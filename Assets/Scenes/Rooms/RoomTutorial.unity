@@ -77413,6 +77413,7 @@ MonoBehaviour:
   <activeSavePoints>k__BackingField: []
   doors: []
   currentSceneName: RoomTutorial
+  <playerSavePosition>k__BackingField: {fileID: 0}
   hookHolder: {fileID: 72619500}
   dashHolder: {fileID: 1857897525}
   climbHolder: {fileID: 698491535}
@@ -84311,6 +84312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimapCamera: {fileID: 1387915915}
+  teleportControllers: []
   zoneNameText: {fileID: 1389302756}
   selectButton: {fileID: 1976333240}
 --- !u!1 &1243270409
@@ -86389,6 +86391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0d501ad78e12cb41abd31901bcc7778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onMinimap: 0
 --- !u!1 &1389302754
 GameObject:
   m_ObjectHideFlags: 0
@@ -92454,6 +92457,10 @@ PrefabInstance:
     - target: {fileID: 6853976413428451520, guid: 80317c2e94b909040a54d9ae0ec43269, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6853976413428451522, guid: 80317c2e94b909040a54d9ae0ec43269, type: 3}
+      propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnMinimapActive
       objectReference: {fileID: 0}
     - target: {fileID: 6853976413428451523, guid: 80317c2e94b909040a54d9ae0ec43269, type: 3}
       propertyPath: cam

@@ -50,6 +50,8 @@ namespace Avocado
         }
         public void ShowTutorialItem(TutorialSO _tutorialItem)
         {
+
+            Debug.Log("StartTut");
             tutorialItem = _tutorialItem;
             activeTutorial = true;
             timer = 0;
@@ -58,13 +60,16 @@ namespace Avocado
             inputOffImage.sprite = _tutorialItem.keyboardKey.OffKeySprite;
             inputOffImage.gameObject.SetActive(false);
             inputOnImage.gameObject.SetActive(true);
+
             currentIconSprite = 0;
-            iconImage.sprite = _tutorialItem.iconSprite[currentIconSprite];
-            maxIconSprite = _tutorialItem.iconSprite.Length;
             descriptionText.text = _tutorialItem.description;
             descriptionHolder.SetActive(true);
             StartCoroutine(InputAnimation());
+                
+            iconImage.sprite = _tutorialItem.iconSprite[currentIconSprite];
+            maxIconSprite = _tutorialItem.iconSprite.Length;
             StartCoroutine(ActionAnimation());
+
         }
         IEnumerator InputAnimation()
         {
@@ -78,6 +83,7 @@ namespace Avocado
         
         IEnumerator ActionAnimation()
         {
+            
             while (activeTutorial)
             {
                 yield return Helpers.GetWait(0.1f);

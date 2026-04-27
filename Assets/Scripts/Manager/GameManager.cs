@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
     #region FPS Display
     [SerializeField] TMPro.TMP_Text fpsText;
     [SerializeField] float maxFps = 0, minFps = 1000;
-   
+
     void ShowFps()
     {
-        
+
         float fps = 1f / Time.unscaledDeltaTime;
         if (fps < minFps)
         {
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
         fpsText.text = Mathf.RoundToInt(fps).ToString();
         Invoke("ShowFps", 0.1f);
-        
+
     }
     #endregion
     #region Local Game
@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject pauseHolder;
     [SerializeField] GameObject pausePrincipalHolder;
     [SerializeField] GameObject[] holderToHideWithEsc;
+    [SerializeField] GameObject[] objectsToDelayActivation;
     [field: SerializeField] public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
     [SerializeField] Image healthBar, staminaBar;
@@ -556,6 +557,12 @@ public class GameManager : MonoBehaviour
         InitStatsWithPlayerPrefs();
         CkeckForAvailableWepons();
         CheckForSavePoints();
+
+        foreach (GameObject obj in objectsToDelayActivation)
+        {
+            obj.SetActive(true);
+        }
+
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());
