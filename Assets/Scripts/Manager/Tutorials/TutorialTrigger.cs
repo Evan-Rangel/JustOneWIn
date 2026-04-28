@@ -7,7 +7,7 @@ namespace Avocado
         [SerializeField] TutorialSO TutorialData;
         [SerializeField] KeyboardKeySO keyboardKey;
         event Action<TutorialSO> showTutorial;
-         event Action<KeyboardKeySO, Vector2> shortTutorial;
+        event Action<KeyboardKeySO, Vector2> shortTutorial;
         [SerializeField] bool isShortTutorial;
         private void Start()
         {
@@ -33,7 +33,7 @@ namespace Avocado
             if (collision.gameObject.CompareTag("Player"))
             {
                 if (isShortTutorial)
-                    shortTutorial?.Invoke (keyboardKey, (Vector2)transform.position+Vector2.up*5);
+                    shortTutorial?.Invoke (keyboardKey, (Vector2)transform.position+Vector2.up*2.5f);
                 else
                     ShowTutorial();
             }

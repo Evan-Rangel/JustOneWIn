@@ -31,11 +31,36 @@ namespace Avocado
             dialogueHolder.SetActive(false);
             iconHolder.SetActive(false);
         }
-      
+        public void ShowText(string _text, Vector2 _position)
+        { 
+            transform.position = _position;
+            StopAllCoroutines();
+            gameObject.SetActive(true);
+            iconHolder.SetActive(false);
+            dialogueHolder.SetActive(true);
+            StartCoroutine(TextAnimation(_text));
+        }
+        IEnumerator TextAnimation(string _text)
+        {
+            while (dialogueText.text!=_text)
+            {
+                yield return Helpers.GetWait(.1f);
+                dialogueText.text = _text.Substring(0, Mathf.Min(dialogueText.text.Length + 1, _text.Length));
+            }
+            StartCoroutine(TimerText());
+        }
+        IEnumerator TimerText()
+        {
+            yield return Helpers.GetWait(maxTime);
+            dialogueHolder.SetActive(false);
+            activeTutorial = false;
+        }
+
         public void ShowIcon(KeyboardKeySO _keyToShow, Vector2 _position)
         {
             transform.position = _position;
-          StopAllCoroutines();
+            StopAllCoroutines();
+            dialogueHolder.SetActive(false);
             gameObject.SetActive(true);
             iconHolder.SetActive(true);
             inputOffImage.sprite = _keyToShow.OffKeySprite;

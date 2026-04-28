@@ -15,6 +15,7 @@ TagManager:
   - PopOutCanvas
   - EnemyJump
   - EnemyDespawner
+  - SearcherDespawner
   layers:
   - Default
   - TransparentFX
@@ -34,7 +35,7 @@ TagManager:
   - No post
   - Post
   - AcidMesh
-  - 
+  - DoorEditor
   - 
   - 
   - 
@@ -90,4 +91,7 @@ TagManager:
     locked: 0
   - name: SortingTexture
     uniqueID: 534091891
+    locked: 0
+  - name: Minimap
+    uniqueID: 2595806971
     locked: 0

@@ -107,12 +107,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545774749916095554}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6853976413428451533}
+  m_Father: {fileID: 8926665853459612215}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4598415429190235755
@@ -186,6 +186,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb1961ab62a5644cb19fdffba12e8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4934197132102521253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8926665853459612215}
+  m_Layer: 11
+  m_Name: CameraTargetHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8926665853459612215
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4934197132102521253}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 997878536834380943}
+  m_Father: {fileID: 6853976413428451533}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6853976411917872364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,8 +1205,8 @@ Transform:
   - {fileID: 6853976412451008246}
   - {fileID: 6853976413043972776}
   - {fileID: 211370201}
-  - {fileID: 997878536834380943}
   - {fileID: 3276993198073230298}
+  - {fileID: 8926665853459612215}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1566,6 +1598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 97ee086e618d50c4dbefcf4cd7135726, type: 2}
   camTarget: {fileID: 997878536834380943}
+  camHolder: {fileID: 8926665853459612215}
 --- !u!114 &6853976413428451523
 MonoBehaviour:
   m_ObjectHideFlags: 0

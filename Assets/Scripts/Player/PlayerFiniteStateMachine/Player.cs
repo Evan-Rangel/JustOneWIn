@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerData playerData;
     [SerializeField] Transform camTarget;
+    [SerializeField] Transform camHolder;
     #endregion
 
     #region Components
@@ -184,25 +185,27 @@ public class Player : MonoBehaviour
     CamPositionController camController;
     Transform modifyCameraPosition;
     Vector2 activeDirection= Vector2.one;
-   /* private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("ModifyCam"))
+        if (collision.TryGetComponent(out CameraStaticCollision _staticColl))
+        {
+            _staticColl.PlayerEnterCollision(camHolder);
+        }
+       /* if (collision.CompareTag("ModifyCam"))
         {
             camController=collision.transform.GetComponent<CamPositionController>();
             modifyCameraPosition = camController.newPosition;
             activeDirection = camController.activeDirection;
-        }
+        }*/
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("ModifyCam"))
+        if (collision.TryGetComponent(out CameraStaticCollision _staticColl))
         {
-            camController = null;
-            modifyCameraPosition = null;
-            activeDirection = Vector2.one;
-            camTarget.localPosition = new Vector3(0, 3, 0);
+            _staticColl.PlayerExitCollision();
+            camHolder.parent = transform;
         }
-    }*/
+    }
 
     #endregion
 
