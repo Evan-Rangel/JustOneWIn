@@ -8,7 +8,7 @@ namespace Avocado
     {
         [SerializeField] Transform staticPoint;
         [SerializeField] int direction;
-        [SerializeField] bool staticX, staticY;
+        [SerializeField] bool staticX, staticY, onTriggerStay;
         Transform playerTransform;
         Transform cameraHolder;
         private void Start()
@@ -18,9 +18,13 @@ namespace Avocado
         private void Update()
         {
             if (playerTransform == null || cameraHolder==null) return;
-
             if (staticX)
             {
+                if (onTriggerStay)
+                {
+                    cameraHolder.position = new Vector3(staticPoint.position.x, playerTransform.position.y, 0);
+                    return;
+                }
                 if (direction > 0 && playerTransform.position.x >= staticPoint.position.x)
                 { 
                     cameraHolder.position= new Vector3(staticPoint.position.x, playerTransform.position.y, 0);
@@ -31,15 +35,16 @@ namespace Avocado
                     cameraHolder.position = new Vector3(staticPoint.position.x, playerTransform.position.y, 0);
                     return;
                 }
-                else
-                { 
-                    cameraHolder.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
-                    return;
-                }
-            
+                cameraHolder.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
+                return;
             }
             if (staticY)
             {
+                if (onTriggerStay)
+                {
+                    cameraHolder.position = new Vector3(playerTransform.position.x, staticPoint.position.y, 0);
+                    return;
+                }
                 if (direction > 0 && playerTransform.position.y >= staticPoint.position.y)
                 {
                     cameraHolder.position = new Vector3(playerTransform.position.x, staticPoint.position.y, 0);
@@ -47,14 +52,11 @@ namespace Avocado
                 }
                 if (direction < 0 && playerTransform.position.y <= staticPoint.position.y)
                 {
-                    cameraHolder.position = new Vector3(playerTransform.position.y, staticPoint.position.y, 0);
+                    cameraHolder.position = new Vector3(playerTransform.position.x, staticPoint.position.y, 0);
                     return;
                 }
-                else
-                {
-                    cameraHolder.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
-                    return;
-                }
+                cameraHolder.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
+                return;
             }
         }
         public void PlayerEnterCollision(Transform _cameraHolder)

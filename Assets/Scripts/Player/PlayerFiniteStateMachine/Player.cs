@@ -204,6 +204,7 @@ public class Player : MonoBehaviour
         {
             _staticColl.PlayerExitCollision();
             camHolder.parent = transform;
+            camHolder.localPosition = new Vector3(0, 0, 0);
         }
     }
 
