@@ -110,6 +110,7 @@ namespace Avocado
             GameObject bullet= FabricEnemiesPool.Instance.GetOctopusBullet();
             bullet.transform.position = bulletSpawn.position;
             bullet.transform.localScale = transform.localScale;
+            bullet.transform.rotation=Quaternion.identity;
             int direction = (transform.lossyScale.x > 0) ? 1 : -1;
             bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithDirection(rangedAttackData.projectileSpeed*direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage, rangedAttackData.initSound, rangedAttackData.hitSound);
 

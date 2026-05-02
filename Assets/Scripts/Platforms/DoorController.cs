@@ -30,10 +30,8 @@ namespace Avocado
                 return;
             if (SaveManager.IsEventKeySaved(eventName))
             {
-                if (!activatedOnTrigger)
                     DeactivateBlock();
-                else ActivateBlock();
-            
+                return;
             }
             
             if (startActivated)
@@ -55,10 +53,9 @@ namespace Avocado
         }
         void PlayerCollisionEnter(Collider2D _player)
         {
+            if (SaveManager.IsEventKeySaved(eventName))return;
             if (activatedOnTrigger) onTriggerIsActivated?.Invoke();
-            //ActivateBlock();
             else onTriggerIsDeactivated?.Invoke();
-                //DeactivateBlock();
         }
         public void ActivateBlockAndSaveEvent()
         {

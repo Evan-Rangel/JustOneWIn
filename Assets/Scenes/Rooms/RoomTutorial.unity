@@ -67252,7 +67252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &518269550
 Transform:
   m_ObjectHideFlags: 0
@@ -77666,6 +77666,7 @@ MonoBehaviour:
   statsBorderColor: {r: 0.46666667, g: 0.9607843, b: 1, a: 1}
   minimapHolder: {fileID: 1233599275}
   dialogueHolder: {fileID: 655703362}
+  currentGameState: 1
   itemList: []
   <itemTimeRespawn>k__BackingField: 0
   loadImage: {fileID: 0}
@@ -87125,7 +87126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1415578907
 MonoBehaviour:
   m_ObjectHideFlags: 0
