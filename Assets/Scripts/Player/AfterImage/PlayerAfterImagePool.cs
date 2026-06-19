@@ -22,8 +22,21 @@ public class PlayerAfterImagePool : MonoBehaviour
     // Inicializa el singleton y genera el pool inicial
     private void Awake()
     {
-        Instance = this;
-        DontDestroyOnLoad(this);
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        { 
+            Destroy(gameObject);
+        }
+
+
+
+
+
 
         GrowPool();
     }

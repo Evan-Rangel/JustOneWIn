@@ -66,7 +66,7 @@ public class PlayerCamera_S : MonoBehaviour
         propertyBlock.SetTexture("_PlayersPositionsTexture", playersPositionsTexture);
         spr.SetPropertyBlock(propertyBlock);
         objectsToTrackLocal = new List<ShaderEffectCameraLocal>(30);
-        spr.enabled = false;
+        //spr.enabled = false;
     }
     public void AddPlayerToPool(GameObject _player)
     {

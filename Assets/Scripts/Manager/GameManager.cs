@@ -544,7 +544,12 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
-       // DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
+        // Turn off VSync so the custom frame rate cap works
+       // QualitySettings.vSyncCount = 0;
+
+        // Apply the maximum frame rate limit
+        //Application.targetFrameRate = 60;
     }
     public void Start()
     {
