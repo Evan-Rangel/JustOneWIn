@@ -9,18 +9,17 @@ namespace Avocado
     {
         [field: SerializeField] public TpEntity shopID {get; private set;} 
 
-        [SerializeField] WeaponDataSO[] weaponsToSell;
+       // [SerializeField] WeaponDataSO[] weaponsToSell;
         [SerializeField] BuffItemDataSO[] buffsToSell;
-        List<ScriptableObject> itemsToSell;
+       // List<ScriptableObject> itemsToSell;
         ShopItemHolder[] shopItemHolders;
        // [SerializeField] Transform spawnPosition;
 
         [SerializeField] GameObject weaponPickupPrefab;
-        GameManager gameManager;
         public override void Start()
         {
             base.Start();
-            itemsToSell = new List<ScriptableObject>();
+            /*itemsToSell = new List<ScriptableObject>();
             foreach (var weapon in weaponsToSell)
             {
                 if (!SaveManager.IsWeaponSaved(weapon))
@@ -30,35 +29,37 @@ namespace Avocado
             {
                 itemsToSell.Add(buff);
             }
-            gameManager = GameManager.instance;
-            shopItemHolders = gameManager.shopHolder.GetComponentsInChildren<ShopItemHolder>();
+            gameManager = GameManager.instance;*/
+            shopItemHolders= CanvasManager.instance.shopHolder.GetComponentsInChildren<ShopItemHolder>();
+            //shopItemHolders = gameManager.shopHolder.GetComponentsInChildren<ShopItemHolder>();
         }
 
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
-            gameManager.ActiveShop(shopID);
+            GameManager.instance.ActiveShop(shopID);
  
             int shopIndex = 0;
             foreach (var holder in shopItemHolders)
             {
                 holder.gameObject.SetActive(true);
             }
-            foreach (var item in itemsToSell)
+            foreach (var item in buffsToSell)
             {
-                if (item is WeaponDataSO && !SaveManager.IsWeaponSaved((WeaponDataSO)item))
+                /*if (item is WeaponDataSO && !SaveManager.IsWeaponSaved((WeaponDataSO)item))
                 {
                     shopItemHolders[shopIndex].SetItemData((WeaponDataSO)item);
                     shopItemHolders[shopIndex].button.onClick.AddListener(() => SpawnWeaponPickup((WeaponDataSO)item));
                     shopIndex++;
                 }
-                else if (item is BuffItemDataSO && !SaveManager.IsBuffPurchased(shopID.zoneName))
+                else*/ 
+                if (!SaveManager.IsBuffPurchased(shopID.zoneName+item.buffName))
                 { 
-                    shopItemHolders[shopIndex].SetItemData((BuffItemDataSO)item);
-                    shopItemHolders[shopIndex].button.onClick.AddListener(() => ApplyBuffEffect((BuffItemDataSO)item));
+                    shopItemHolders[shopIndex].SetItemData(item);
+                    shopItemHolders[shopIndex].button.onClick.AddListener(() => ApplyBuffEffect(item));
                     shopIndex++;
                 }
-                else continue;
+               // else continue;
             }
 
             for (int i = 0; i < shopItemHolders.Length; i++)
@@ -70,10 +71,10 @@ namespace Avocado
         public void ApplyBuffEffect(BuffItemDataSO _data)
         {
             _data.ApllyBuff(shopID.zoneName);
-            gameManager.OnSelectedButtonDisabled();    
+            CanvasManager.instance.OnSelectedButtonDisabled();    
             OnInteractEvent();
         }
-        public void SpawnWeaponPickup(WeaponDataSO _data)
+       /* public void SpawnWeaponPickup(WeaponDataSO _data)
         {
             if (!gameManager.SubstractCoin(_data.PriceOnShop))
                 return;
@@ -93,7 +94,7 @@ namespace Avocado
             };
             OnInteractEvent();
         }
-
+       */
         
     }
 }

@@ -20,7 +20,7 @@ namespace Avocado
             {
                 collision.transform.GetComponentInChildren<Core>().grabUnlocked = true;
                 SaveManager.SaveGrabUnlocked(true);
-                GameManager.instance.ActiveAbilityHolder("climb");
+                CanvasManager.instance.ActiveAbilityHolder("climb");
 
                 Destroy(gameObject);
             }

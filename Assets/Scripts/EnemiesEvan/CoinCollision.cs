@@ -11,12 +11,12 @@ namespace Avocado
         private void OnEnable()
         {
             value = 1;
-            transform.root.localScale = Vector3.one;
+            transform.root.localScale = Vector3.one*0.15f;
 
             if (Random.Range(0, 10) > 8)
             {
                 value = 5;
-                transform.root.localScale = Vector3.one*2;
+                transform.root.localScale = Vector3.one*0.3f;
             }
 
             Invoke("DisableByTime", 45);

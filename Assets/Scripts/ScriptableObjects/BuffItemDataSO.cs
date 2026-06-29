@@ -18,7 +18,7 @@ namespace Avocado
         {
             if (!GameManager.instance.SubstractCoin(buffPrice))
                 return;
-            SaveManager.SaveBuffPurchase(_shopID, 2);
+            SaveManager.SaveBuffPurchase(_shopID+buffName, 2);
             switch (buffType)
             {
                 case STAT.Health:

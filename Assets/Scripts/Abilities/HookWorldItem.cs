@@ -18,7 +18,7 @@ namespace Avocado
             {
                 collision.transform.GetComponent<GrappleHandler>().enabled = true;
                 SaveManager.SaveGrappleUnlocked(true);
-                GameManager.instance.ActiveAbilityHolder("hook");
+                CanvasManager.instance.ActiveAbilityHolder("hook");
                 Destroy(gameObject);
             }
         }

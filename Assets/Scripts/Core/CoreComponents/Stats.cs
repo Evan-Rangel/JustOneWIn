@@ -64,14 +64,14 @@ namespace Avocado.CoreSystem
         }
         void UpdateStamina(float _value)
         {
-            GameManager.instance.UpdateStaminaBar(_value);
+            CanvasManager.instance.UpdateStaminaBar(_value);
         }void UpdateHealth(float _value)
         {
-            GameManager.instance.UpdateHealthBar(_value);
+            CanvasManager.instance.UpdateHealthBar(_value);
         }
         void UpdateHealthRecovery(float _value)
         {
-            GameManager.instance.UpdateHealthRecoveryImages(_value);
+            CanvasManager.instance.UpdateHealthRecoveryImages(_value);
         }
         public void UpdateHealthLevel(int _value)
         {

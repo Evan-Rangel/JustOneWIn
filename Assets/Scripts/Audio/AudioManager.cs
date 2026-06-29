@@ -88,11 +88,14 @@ public class AudioManager : MonoBehaviour
     IEnumerator StopSfxSound(float time, AudioSource source)
     { 
         yield return Helpers.GetWait(time);
-        pool.Enqueue(source);
-        source.transform.parent = transform;
-        source.Stop();
-        source.clip = null;
-        source.gameObject.SetActive(false);
+        if (source != null)
+        {
+            pool.Enqueue(source);
+            source.transform.parent = transform;
+            source.Stop();
+            source.clip = null;
+            source.gameObject.SetActive(false);
+        }
     }
     AudioSource CreateSource()
     {

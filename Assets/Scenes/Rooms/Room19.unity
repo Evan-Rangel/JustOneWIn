@@ -247790,6 +247790,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 557009563}
+  - component: {fileID: 557009564}
   m_Layer: 0
   m_Name: Doors
   m_TagString: Untagged
@@ -247817,6 +247818,29 @@ Transform:
   m_Father: {fileID: 1994644104}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &557009564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557009562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f48df9510ab42a4c8a0865f430fad1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <doors>k__BackingField:
+  - doorName: Door01
+    pos: {fileID: 434522103}
+  - doorName: Door02
+    pos: {fileID: 1155505987}
+  - doorName: Door03
+    pos: {fileID: 582659746}
+  - doorName: Door04
+    pos: {fileID: 947056012}
+  - doorName: Door05
+    pos: {fileID: 836605736}
 --- !u!1 &559236552
 GameObject:
   m_ObjectHideFlags: 0
@@ -248040,13 +248064,14 @@ GameObject:
   m_Component:
   - component: {fileID: 563998600}
   - component: {fileID: 563998601}
+  - component: {fileID: 563998602}
   m_Layer: 14
   m_Name: CompactMapColorsSpr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &563998600
 Transform:
   m_ObjectHideFlags: 0
@@ -248115,6 +248140,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &563998602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563998599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80bee341605212d48877383b25895e3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <allSavePoints>k__BackingField: []
 --- !u!1 &565963967
 GameObject:
   m_ObjectHideFlags: 0
@@ -259223,40 +259261,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c7895d3443f74f922b6a08c63032e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fpsText: {fileID: 848262178}
   maxFps: 0
   minFps: 1000
   newGameStartPosition: {fileID: 1070363915}
   coins: 100
-  coinsText: {fileID: 1561313618}
   coinPrefab: {fileID: 3368731579408713463, guid: 3b49d5b49f6f4764d9c4406a51eb1f4a, type: 3}
-  statsHolder: {fileID: 1680619998}
-  pauseHolder: {fileID: 1109946170}
-  pausePrincipalHolder: {fileID: 2082507481}
-  holderToHideWithEsc:
-  - {fileID: 962513919}
-  - {fileID: 1622286228}
-  - {fileID: 1617196100}
-  - {fileID: 409185992}
-  - {fileID: 1233599275}
-  - {fileID: 1496451525}
-  - {fileID: 1767804565}
-  - {fileID: 1102770257}
-  - {fileID: 9154820}
-  - {fileID: 1109946170}
-  - {fileID: 655703362}
-  <shopHolder>k__BackingField: {fileID: 962513919}
-  healthAnimator: {fileID: 1859183158}
-  staminaAnimator: {fileID: 686085073}
-  statsBackgroundAnimator: {fileID: 2136080550}
-  healthBar: {fileID: 569520443}
-  staminaBar: {fileID: 1623656865}
-  healtBarRecoveryImages:
-  - {fileID: 1632386180}
-  - {fileID: 1985041407}
-  - {fileID: 1326173309}
-  - {fileID: 2125188113}
-  shopItemHolders: []
   <weaponsData>k__BackingField:
   - {fileID: 11400000, guid: 34a22b2e4f061dd4e833ca5b0b73ddc6, type: 2}
   - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}
@@ -259272,64 +259281,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ebfe2e1966d7ae44abdce328d22f3613, type: 2}
   weaponUnlocked: []
   weaponsInGame: []
-  windowSelector: {fileID: 409185992}
-  bossHealthBarHolder: {fileID: 807365352}
-  bossHealthBarAnimator: {fileID: 807365354}
-  bossHealthBar: {fileID: 1893609141}
-  allSavePoints:
-  - {fileID: 803589127}
-  - {fileID: 1082469865}
-  - {fileID: 1056974789}
-  - {fileID: 1424786575}
-  - {fileID: 893081222}
-  - {fileID: 1610874661}
+  currentTeleportManager: {fileID: 0}
   <currentSpawnPosition>k__BackingField:
     pos: {fileID: 0}
     zoneName: 
     sceneName: 
   <activeSavePoints>k__BackingField: []
-  doors:
-  - doorName: Door01
-    pos: {fileID: 434522103}
-  - doorName: Door02
-    pos: {fileID: 1155505987}
-  - doorName: Door03
-    pos: {fileID: 582659746}
-  - doorName: Door04
-    pos: {fileID: 947056012}
-  - doorName: Door05
-    pos: {fileID: 836605736}
+  currentDoorManager: {fileID: 0}
   currentSceneName: Room19
   <playerSavePosition>k__BackingField: {fileID: 1275532786}
-  hookHolder: {fileID: 72619500}
-  dashHolder: {fileID: 1857897525}
-  climbHolder: {fileID: 698491535}
-  titleBackgroundImage: {fileID: 1902751211}
-  titleBorderImage01: {fileID: 531810226}
-  titleBorderImage02: {fileID: 511963297}
-  titleText: {fileID: 1021826445}
-  shopBackgroundColor: {r: 0.76862746, g: 0.6039216, b: 0.50980395, a: 1}
-  inventoryBackgroundColor: {r: 0.50980395, g: 0.76862746, b: 0.6, a: 1}
-  statsBackgroundColor: {r: 0.50980395, g: 0.68235296, b: 0.76862746, a: 1}
-  shopBorderColor: {r: 1, g: 0.7254902, b: 0.46666667, a: 1}
-  inventoryBorderColor: {r: 0.37254903, g: 1, b: 0.49803922, a: 1}
-  statsBorderColor: {r: 0.46666667, g: 0.9607843, b: 1, a: 1}
-  minimapHolder: {fileID: 1233599275}
-  dialogueHolder: {fileID: 655703362}
-  currentGameState: 1
-  itemList: []
-  <itemTimeRespawn>k__BackingField: 0
-  loadImage: {fileID: 0}
-  loadText: {fileID: 0}
-  startCount: []
-  StartGameEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  dontDestroyOnLoadObjects: []
   items: []
   itemsSprites: []
-  cursor: {fileID: 0}
-  localPlayerController: {fileID: 0}
-  localPlayerObject: {fileID: 0}
+  itemList: []
+  <itemTimeRespawn>k__BackingField: 0
 --- !u!4 &979532588
 Transform:
   m_ObjectHideFlags: 0
@@ -266844,6 +266809,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1305077147}
   - component: {fileID: 1305077148}
+  - component: {fileID: 1305077149}
   m_Layer: 0
   m_Name: CameraContainer
   m_TagString: Untagged
@@ -266906,6 +266872,18 @@ PolygonCollider2D:
       - {x: -140, y: 0}
       - {x: -102, y: 0}
   m_UseDelaunayMesh: 0
+--- !u!114 &1305077149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305077146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d2bd3f5352d36542aa989234e46aa80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1311140292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -272398,9 +272376,6 @@ MonoBehaviour:
     pos: {fileID: 1275532786}
     zoneName: Room19
     sceneName: Room19
-  weaponsToSell:
-  - {fileID: 11400000, guid: 43b039c21d2d00440b417aca5ffe1566, type: 2}
-  - {fileID: 11400000, guid: 415f662a6d30a85448262347982ad2c3, type: 2}
   buffsToSell:
   - {fileID: 11400000, guid: 184166a9334a4004681372c9b0e17783, type: 2}
   weaponPickupPrefab: {fileID: 7002959371737094118, guid: b0f73ec3103934545aa96c640d881cec, type: 3}

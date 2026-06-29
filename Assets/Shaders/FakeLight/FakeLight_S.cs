@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class FakeLight_S : MonoBehaviour
 {
     [SerializeField] SpriteRenderer spr;
@@ -8,6 +9,22 @@ public class FakeLight_S : MonoBehaviour
     MaterialPropertyBlock propertyBlock;
     [SerializeField] GameObject player;
     public static FakeLight_S instance;
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += SceneLoaded;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= SceneLoaded;
+    }
+    void SceneLoaded(Scene scena, LoadSceneMode mode)
+    {
+        spr.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetFloat("_DarknessStrength", 0);
+        propertyBlock.SetFloat("_RespawnEffect", 1);
+        spr.SetPropertyBlock(propertyBlock);
+        Invoke("UnShadeEffect", 2);
+    }
     private void Awake()
     {
         instance = this;
@@ -17,13 +34,14 @@ public class FakeLight_S : MonoBehaviour
     }
     private void Start()
     {
-        spr.GetPropertyBlock(propertyBlock);
+       /* spr.GetPropertyBlock(propertyBlock);
         propertyBlock.SetFloat("_DarknessStrength", 0);
         propertyBlock.SetFloat("_RespawnEffect", 1);
         spr.SetPropertyBlock(propertyBlock);
         Invoke("UnShadeEffect", 1);
         //UnShadeEffect();
-    }
+    */
+        }
     private void Update()
     {
 

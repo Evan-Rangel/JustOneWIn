@@ -7,7 +7,7 @@ namespace Avocado
     public class MinimapUIManager : MonoBehaviour
     {
         [SerializeField] GameObject minimapCamera;
-        [SerializeField]TeleportController[] teleportControllers;
+        [SerializeField] public TeleportController[] teleportControllers;
         [SerializeField] TMP_Text zoneNameText;
         [SerializeField] Button selectButton;
         public event Action<TpEntity> onNextPoint;
@@ -35,7 +35,7 @@ namespace Avocado
             selectButton.onClick.AddListener(() =>
             {
                 TeleportPlayerAnimController.instance.PlayTeleportEndAnim();
-                GameManager.instance.ToggleMinimap(false);
+                CanvasManager.instance.ToggleMinimap(false);
                 FakeLight_S.instance.ShadeEffect();
                 GameSaveCapsule capsule = GameManager.instance.playerSavePosition.root.GetComponentInChildren<GameSaveCapsule>();
                 capsule.StartCloseCapsuleAnimation();

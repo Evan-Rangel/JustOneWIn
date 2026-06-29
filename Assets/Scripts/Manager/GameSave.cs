@@ -12,7 +12,11 @@ namespace Avocado
         bool isHighlightedOnMap = false;
         TpEntity shopID;
         public event Action<TpEntity> onSavePointActivated;
-       // public event Action onSavePointDisabled;
+        // public event Action onSavePointDisabled;
+        private void Awake()
+        {
+            GameManager.instance.SetPlayerSavePosition(savePointPosition);
+        }
         public override void Start()
         {
             base.Start();
@@ -65,7 +69,7 @@ namespace Avocado
             GameManager.instance.AddSavePoint(shopID);
             minimapCamera.enabled = true;
             minimapCamera.transform.position= transform.position;
-            GameManager.instance.ToggleMinimap(true);
+            CanvasManager.instance.ToggleMinimap(true);
         }
     }
 }

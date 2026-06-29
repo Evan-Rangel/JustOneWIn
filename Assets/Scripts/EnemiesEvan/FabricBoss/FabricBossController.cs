@@ -84,7 +84,7 @@ namespace Avocado
             fabricCollision.OnPlayerExit += PlayerExit;
             playerPosition= GameObject.FindGameObjectWithTag("Player").transform;
 
-            OnHealthChange += GameManager.instance.UpdateBossHealthBar;
+            OnHealthChange += CanvasManager.instance.UpdateBossHealthBar;
             OnHealthChange.Invoke(0);
         }
         private void OnDisable()
@@ -92,7 +92,7 @@ namespace Avocado
             anim.SetBool("startDeath", false);
             fabricCollision.OnPlayerEnter -= PlayerEnter;
             fabricCollision.OnPlayerExit -= PlayerExit;
-            OnHealthChange -= GameManager.instance.UpdateBossHealthBar;
+            OnHealthChange -= CanvasManager.instance.UpdateBossHealthBar;
         }
         private void Update()
         {
@@ -244,7 +244,7 @@ namespace Avocado
                 coin.transform.position = transform.position;
                 coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine. Random.Range(1f, 3f)), ForceMode2D.Impulse);
             }
-            GameManager.instance.BossDeath();
+            CanvasManager.instance.BossDeath();
             anim.SetBool("startDeath", false);
             gameObject.SetActive(false);
         }

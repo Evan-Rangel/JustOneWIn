@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     #region FPS Display
-    [SerializeField] TMPro.TMP_Text fpsText;
+    //[SerializeField] TMPro.TMP_Text fpsText;
     [SerializeField] float maxFps = 0, minFps = 1000;
 
     void ShowFps()
@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
         if (fps > maxFps)
             maxFps = fps;
 
-        fpsText.text = Mathf.RoundToInt(fps).ToString();
+        CanvasManager.instance.SetFpsText(Mathf.RoundToInt(fps).ToString());
+        //fpsText.text = Mathf.RoundToInt(fps).ToString();
         Invoke("ShowFps", 0.1f);
 
     }
@@ -39,14 +40,15 @@ public class GameManager : MonoBehaviour
     #region Coins 
     [Header("Coins")]
     public int coins;
-    [SerializeField] TMP_Text coinsText;
+    //[SerializeField] TMP_Text coinsText;
     public void AddCoin(int _value)
     {
         if (coins == 999)
             return;
         coins += _value;
         SaveManager.SaveCoins(coins);
-        coinsText.text = coins.ToString();
+        CanvasManager.instance.SetCoinsText(coins.ToString());
+       // coinsText.text = coins.ToString();
     }
     public bool SubstractCoin(int _value)
     {
@@ -54,13 +56,17 @@ public class GameManager : MonoBehaviour
             return false;
         coins -= _value;
         SaveManager.SaveCoins(coins);
-        coinsText.text = coins.ToString();
+        CanvasManager.instance.SetCoinsText(coins.ToString());
+
+        //coinsText.text = coins.ToString();
         return true;
     }
     void CoinsInPlayerPrefs()
     {
         coins = SaveManager.GetCoins();
-        coinsText.text = coins.ToString();
+        CanvasManager.instance.SetCoinsText(coins.ToString());
+
+        //coinsText.text = coins.ToString();
     }
 
 
@@ -89,63 +95,63 @@ public class GameManager : MonoBehaviour
     #region Sounds
     public void PlayButtonSelectSound() => AudioManager.instance.PlaySFXSound("ButtonSelect");
     public void PlayButtonSubmitSound() => AudioManager.instance.PlaySFXSound("ButtonSubmit");
-
-
     #endregion
+
+
     [Header("User Interface")]
-    [SerializeField] GameObject statsHolder;
-    [SerializeField] GameObject pauseHolder;
-    [SerializeField] GameObject pausePrincipalHolder;
-    [SerializeField] GameObject[] holderToHideWithEsc;
-    [field: SerializeField] public GameObject shopHolder { get; private set; }
-    [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
-    [SerializeField] Image healthBar, staminaBar;
-    [SerializeField] GameObject[] healtBarRecoveryImages;
+   // [SerializeField] GameObject statsHolder;
+    //[SerializeField] GameObject pauseHolder;
+    //[SerializeField] GameObject[] holderToHideWithEsc;
+    //[field: SerializeField] public GameObject shopHolder { get; private set; }
+    //[SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
+   // [SerializeField] Image healthBar, staminaBar;
+    //[SerializeField] GameObject[] healtBarRecoveryImages;
     int healthLevel = 1, staminaLevel = 1, healthRecoverLevel=1;
-    [SerializeField] ShopItemHolder[] shopItemHolders;
+    //[SerializeField] ShopItemHolder[] shopItemHolders;
     [field: SerializeField] public WeaponDataSO[] weaponsData { get; private set; }
     [SerializeField] List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
     [SerializeField] List<WeaponDataSO> weaponsInGame = new List<WeaponDataSO>();
-    public GameObject windowSelector;
+    //public GameObject windowSelector;
 
-    #region Boss Health Bar
-    [Header("Boss Health Bar")]
-    [SerializeField] GameObject bossHealthBarHolder;
-    [SerializeField] Animator bossHealthBarAnimator;
-    [SerializeField] Image bossHealthBar;
-    void DisabelHealthBar()
-    {
-        gameObject.SetActive(false);
-    }
+    /* #region Boss Health Bar
+     [Header("Boss Health Bar")]
+     [SerializeField] GameObject bossHealthBarHolder;
+     [SerializeField] Animator bossHealthBarAnimator;
+     [SerializeField] Image bossHealthBar;
+     void DisabelHealthBar()
+     {
+         gameObject.SetActive(false);
+     }
 
-    public void UpdateBossHealthBar(float _value)
-    {
-        if (!bossHealthBarHolder.activeInHierarchy)bossHealthBarHolder.SetActive(true);
-        bossHealthBar.fillAmount = _value;
-    }
+     public void UpdateBossHealthBar(float _value)
+     {
+         if (!bossHealthBarHolder.activeInHierarchy)bossHealthBarHolder.SetActive(true);
+         bossHealthBar.fillAmount = _value;
+     }
 
-    public void BossDeath()
-    {
-        DisabelHealthBar();
-        bossHealthBarAnimator.SetTrigger("BossDeath");
-    }
-    #endregion
+     public void BossDeath()
+     {
+         DisabelHealthBar();
+         bossHealthBarAnimator.SetTrigger("BossDeath");
+     }
+     #endregion*/
 
     [Header("SpawnPoints")]
-    [SerializeField] TeleportController[] allSavePoints;
+    public TeleportManager currentTeleportManager;
+    //[SerializeField] TeleportController[] allSavePoints;
     public Vector2 GetTeleportPositionByName(string _zoneName)
     {
-        for (int i = 0; i < allSavePoints.Length; i++)
+        for (int i = 0; i < currentTeleportManager.allSavePoints.Length; i++)
         {
-            if (allSavePoints[i].shopID.zoneName == _zoneName)
-                return allSavePoints[i].transform.position;
+            if (currentTeleportManager.allSavePoints[i].shopID.zoneName == _zoneName)
+                return currentTeleportManager.allSavePoints[i].transform.position;
         }
         return Vector2.zero;
     }public int GetTeleportIndexByName(string _zoneName)
     {
-        for (int i = 0; i < allSavePoints.Length; i++)
+        for (int i = 0; i < currentTeleportManager.allSavePoints.Length; i++)
         {
-            if (allSavePoints[i].shopID.zoneName == _zoneName)
+            if (currentTeleportManager.allSavePoints[i].shopID.zoneName == _zoneName)
                 return i;
         }
         return 0;
@@ -153,9 +159,13 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public TpEntity currentSpawnPosition { get; private set; }
 
     [field: SerializeField] public List<TpEntity> activeSavePoints { get; private set; } = new List<TpEntity>();
-    [SerializeField] Door[] doors;
+    public DoorsManager currentDoorManager;
     [SerializeField] string currentSceneName;
     [field: SerializeField] public Transform playerSavePosition { get; private set; }
+    public void SetPlayerSavePosition(Transform _newPosition)
+    { 
+        playerSavePosition = _newPosition;
+    }
     public void HideInfoMinimap(TpEntity _entity)
     {
         MinimapUIManager.instance.ShowInfo(_entity);
@@ -163,7 +173,7 @@ public class GameManager : MonoBehaviour
     
     public void ActivePauseHolder()
     { 
-        pauseHolder.SetActive(true);
+        CanvasManager.instance.TogglePauseHolder(true);
         ChangeState(GameState.UI);
     }
     public void  TeleportPlayerTo(string _sceneName)
@@ -178,16 +188,18 @@ public class GameManager : MonoBehaviour
        // SceneManager.LoadScene("TransitionScene");
         SceneManager.LoadScene(currentSceneName);
     }
+    #region Save Points Logic
+    
     public Vector2 GetSavePositionBySavedZoneName()
     {
         if (PlayerPrefs.HasKey("DoorName"))
         {
-            for (int i = 0; i < doors.Length; i++)
+            for (int i = 0; i < currentDoorManager.doors.Length; i++)
             {
-                if (doors[i].doorName != PlayerPrefs.GetString("DoorName")) 
+                if (currentDoorManager.doors[i].doorName != PlayerPrefs.GetString("DoorName")) 
                     continue;
                 PlayerPrefs.DeleteKey("DoorName");
-                return (Vector2)doors[i].pos.position;
+                return (Vector2)currentDoorManager.doors[i].pos.position;
             }
         }
         TeleportPlayerAnimController.instance.PlayTeleportAnim();
@@ -202,6 +214,7 @@ public class GameManager : MonoBehaviour
                 return allSavePoints[i].shopID.pos.position;
         }
         */
+        Debug.Log("New Pos");
         return newGameStartPosition.position;
     }
     public void AddSavePoint(TpEntity _point)
@@ -218,14 +231,20 @@ public class GameManager : MonoBehaviour
         SaveManager.SaveZoneUnlocked(_point.zoneName);
         activeSavePoints.Add(_point);   
     }
-    void CheckForSavePoints()
+    public void CheckForSavePoints(TeleportManager _newTeleportManager)
     {
-        for (int i = 0; i < allSavePoints.Length; i++)
+        currentTeleportManager = _newTeleportManager;
+        CanvasManager.instance.SetMinimapTeleports(_newTeleportManager);
+        for (int i = 0; i < currentTeleportManager.allSavePoints.Length; i++)
         {
-            if (SaveManager.IsZoneUnlocked(allSavePoints[i].shopID.zoneName))
-                activeSavePoints.Add(allSavePoints[i].shopID);
+            if (SaveManager.IsZoneUnlocked(currentTeleportManager.allSavePoints[i].shopID.zoneName) && !activeSavePoints.Contains(currentTeleportManager.allSavePoints[i].shopID))
+                activeSavePoints.Add(currentTeleportManager.allSavePoints[i].shopID);
         }
     }
+    #endregion
+
+
+    #region Weapon Logic
     public WeaponDataSO GetWeaponDataAtIndex(int idx)
     {
         if (idx >= weaponUnlocked.Count || idx < 0)
@@ -289,45 +308,29 @@ public class GameManager : MonoBehaviour
         }
         return null;
     }
+    #endregion
 
-    [Header("Abilities Unlock Holders")]
-    [SerializeField] GameObject hookHolder;
-    [SerializeField] GameObject dashHolder;
-    [SerializeField] GameObject climbHolder;
-    public void ActiveAbilityHolder(string _holdername)
-    {
-        switch (_holdername)
-        {
-            case "hook":
-                hookHolder.SetActive(true);
-                break;
-            case "climb": 
-                climbHolder.SetActive(true);
-                break;
-            case "dash": 
-                dashHolder.SetActive(true);
-                break;
-        }
-    }
+
 
     public void HideHolders()
     {
         ChangeState(GameState.Gameplay);
-        pausePrincipalHolder.SetActive(true);
-        foreach (GameObject holder in holderToHideWithEsc)
-        {
-            holder.SetActive(false);
-        }
+        CanvasManager.instance.HideHolders();
     }
+
+    #region Buffs Logic
     public void HealthBuff()
     {
         if (healthLevel >= 3) return;
         healthLevel++;
         SaveManager.SaveHealthLevel(healthLevel);
         stats.UpdateHealthLevel(healthLevel - 1);
-        healthAnimator.SetInteger("Level", healthLevel);
+        CanvasManager.instance.SetHealthAnimationLevel(healthLevel);
+
+        /*healthAnimator.SetInteger("Level", healthLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < healthLevel)
             statsBackgroundAnimator.SetInteger("Level", healthLevel);
+        */
     }
     public void StaminaBuff()
     {
@@ -335,9 +338,11 @@ public class GameManager : MonoBehaviour
         staminaLevel++;
         SaveManager.SaveStaminaLevel(staminaLevel);
         stats.UpdateStaminaLevel(staminaLevel - 1);
-        staminaAnimator.SetInteger("Level", staminaLevel);
+        CanvasManager.instance.SetStaminaAnimationLevel(staminaLevel);
+       /* staminaAnimator.SetInteger("Level", staminaLevel);
         if (statsBackgroundAnimator.GetInteger("Level") < staminaLevel)
             statsBackgroundAnimator.SetInteger("Level", staminaLevel);
+    */
     }
     public void HealthRecoverBuff()
     {
@@ -355,10 +360,14 @@ public class GameManager : MonoBehaviour
         stats.UpdateHealthLevel(healthLevel - 1);
         stats.UpdateStaminaLevel(staminaLevel - 1);
         stats.UpdateHealthRecoveryLevel(healthRecoverLevel);
-        healthAnimator.SetInteger("Level", healthLevel);
-        staminaAnimator.SetInteger("Level", staminaLevel);
-        statsBackgroundAnimator.SetInteger("Level", Math.Max(healthLevel, staminaLevel));
+        CanvasManager.instance.SetHealthAnimationLevel(healthLevel);
+        CanvasManager.instance.SetStaminaAnimationLevel(staminaLevel);
+
+        //healthAnimator.SetInteger("Level", healthLevel);
+        //staminaAnimator.SetInteger("Level", staminaLevel);
+        //statsBackgroundAnimator.SetInteger("Level", Math.Max(healthLevel, staminaLevel));
     }
+    /*
     public void UpdateHealthBar(float _value)
     {
         healthBar.fillAmount = 1 - _value;
@@ -376,11 +385,9 @@ public class GameManager : MonoBehaviour
                 healtBarRecoveryImages[i].SetActive(true);
                 continue ;
             }
-
             healtBarRecoveryImages[i].SetActive(false);
-
         }
-    }
+    }*/
 
 
 
@@ -388,11 +395,14 @@ public class GameManager : MonoBehaviour
     {
         AddSavePoint(_spawn);
         currentSpawnPosition = _spawn;
-        shopHolder.SetActive(true);
-        windowSelector.SetActive(true);
-        SetInfoMenuComputer("Shop");
+        CanvasManager.instance.ActiveShop();
+        
         ChangeState(GameState.UI);
     }
+    #endregion
+    
+    
+    /*
     [Header("Title Colors")]
     [SerializeField] Image titleBackgroundImage;
     [SerializeField] Image titleBorderImage01, titleBorderImage02;
@@ -426,40 +436,7 @@ public class GameManager : MonoBehaviour
             default:
                 return;
         }
-    }
-
-    [Header("Minimap")]
-    [SerializeField] GameObject minimapHolder;
-    public void ToggleMinimap(bool _active)
-    {
-        ChangeState(GameState.UI);
-        minimapHolder.SetActive(_active);
-    }
-
-    OnEnableFirstButton[] onEnableFirstButtons; 
-    public void OnSelectedButtonDisabled()
-    {
-        onEnableFirstButtons = FindObjectsOfType<OnEnableFirstButton>();
-        foreach (OnEnableFirstButton button in onEnableFirstButtons)
-        {
-            if (button.gameObject.activeSelf)
-                button.SelectButton();
-        }
-    }
-
-    #region Dialogue
-    [Header("Dialogue UI")]
-    [SerializeField] GameObject dialogueHolder;
-    public void ActiveDialogueWindow( )
-    {
-        dialogueHolder.SetActive(true);
-    }
-
-
-    #endregion
-
-
-
+    }*/
 
 
     #endregion
@@ -522,12 +499,17 @@ public class GameManager : MonoBehaviour
         Gameplay
     }
     #endregion
-  
+
+    [SerializeField] GameObject[] dontDestroyOnLoadObjects;
     private void Awake()
     {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
-        // DontDestroyOnLoad(gameObject);
+        for (int i = 0; i < dontDestroyOnLoadObjects.Length; i++)
+        {
+            DontDestroyOnLoad(dontDestroyOnLoadObjects[i]);
+        }
+        DontDestroyOnLoad(gameObject);
     }
     public void Start()
     {
@@ -539,7 +521,7 @@ public class GameManager : MonoBehaviour
         CoinsInPlayerPrefs();
         InitStatsWithPlayerPrefs();
         CkeckForAvailableWepons();
-        CheckForSavePoints();
+        //CheckForSavePoints();
 
     }
    

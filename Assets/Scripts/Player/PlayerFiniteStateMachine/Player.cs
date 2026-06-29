@@ -5,6 +5,7 @@ using Avocado.FSM;
 using Avocado.Weapons;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /*---------------------------------------------------------------------------------------------
 Este script define el comportamiento base del jugador y gestiona su lógica mediante una máquina 
@@ -147,8 +148,20 @@ public class Player : MonoBehaviour
         { { } }
         // Iniciar en el estado de reposo
         StateMachine.Initialize(IdleState);
-        transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
+        //transform.position = GameManager.instance.GetSavePositionBySavedZoneName(); //SaveManager.GetPlayerPosition();
         camTarget.localPosition = new Vector3(0, 3, 0);
+    }
+    public void ResetPlayerPosition(Scene scena, LoadSceneMode mode)
+    {
+        transform.position = GameManager.instance.GetSavePositionBySavedZoneName();
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += ResetPlayerPosition; 
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= ResetPlayerPosition;
 
     }
     private void HandlePoiseCurrentValueZero()
@@ -162,10 +175,6 @@ public class Player : MonoBehaviour
         // Actualización lógica del sistema central y del estado actual
         Core.LogicUpdate();
         StateMachine.CurrentState.LogicUpdate();
-
-
-       
-    
     }
 
     private void FixedUpdate()

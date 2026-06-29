@@ -10,13 +10,10 @@ namespace Avocado
         public void SinglePlayer()
         {
             if (SaveManager.GetSceneSpawnName() == "" || SaveManager.GetSceneSpawnName() == null)
-            {
-                SceneManager.LoadScene("RoomTutorial");
-                return;
-            }
-           
-            SceneManager.LoadScene(SaveManager.GetSceneSpawnName());
-            return;
+                PlayerPrefs.SetString("SceneToLoad", "RoomTutorial");
+            else
+                PlayerPrefs.SetString("SceneToLoad", SaveManager.GetSceneSpawnName());
+            SceneManager.LoadScene("RoomAssetCharge");
         }
         public void Host()
         {

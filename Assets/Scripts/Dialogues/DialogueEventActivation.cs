@@ -14,7 +14,7 @@ namespace Avocado
         public void StartDialogueInIndex(int idx)
         {
             currentDialogueIndex = idx;
-            GameManager.instance.ActiveDialogueWindow();
+            CanvasManager.instance.ActiveDialogueWindow();
             DialogueUIController.instance.StartDialogue(dialogue[idx]);
         }
         public void RequestDialogue()
