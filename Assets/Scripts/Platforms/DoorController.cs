@@ -14,6 +14,7 @@ namespace Avocado
         event Action<string, Transform> OnPlaySound;
         [SerializeField] bool startActivated;
         [SerializeField] bool activatedOnTrigger;
+        [SerializeField] bool onSaveIsActive;
         public UnityEvent onTriggerIsActivated, onTriggerIsDeactivated;
         private void Awake()
         {
@@ -30,6 +31,11 @@ namespace Avocado
                 return;
             if (SaveManager.IsEventKeySaved(eventName))
             {
+                if (activateCollision!=null)
+                    activateCollision.gameObject.SetActive(false);
+                if (onSaveIsActive)
+                    ActivateBlock();
+                else
                     DeactivateBlock();
                 return;
             }
@@ -54,6 +60,7 @@ namespace Avocado
         void PlayerCollisionEnter(Collider2D _player)
         {
             if (SaveManager.IsEventKeySaved(eventName))return;
+            activateCollision.gameObject.SetActive(false);
             if (activatedOnTrigger) onTriggerIsActivated?.Invoke();
             else onTriggerIsDeactivated?.Invoke();
         }

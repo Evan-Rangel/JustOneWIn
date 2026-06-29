@@ -26,6 +26,17 @@ namespace Avocado
         int currentShoots;
         [SerializeField] Transform bulletSpawn;
         [SerializeField]List<Vector2> movePositions;
+        public void SetMovePositions(List<Vector2> _newMovePositions) 
+        
+        {
+            movePositions = _newMovePositions;
+            targetPos = new List<Vector2>();
+            for (int i = 0; i < movePositions.Count; i++)
+            {
+                targetPos.Add(movePositions[i] + (Vector2)transform.position);
+            }
+        }
+
         List<Vector2> targetPos;
         int currentIndexPoint;
         [SerializeField] float moveSpeed;

@@ -156,6 +156,7 @@ namespace Avocado
         public int coins = 0;
         public int staminaLevel = 1;
         public int healthLevel = 1;
+        public int healthRecoverLevel = 1;
         public Dictionary<string, int> shopBuffs = new Dictionary<string, int>();
     }
 
@@ -202,7 +203,15 @@ namespace Avocado
             if (data == null) Load();
             return data.eventsUnlocked.Contains(eventKey);
         }
-
+        public static void DeleteEventKey(string eventKey)
+        {
+            if (data == null) Load();
+            if (data.eventsUnlocked.Contains(eventKey))
+            {
+                data.eventsUnlocked.Remove(eventKey);
+                Save();
+            }
+        }
 
         #endregion
 
@@ -375,6 +384,18 @@ namespace Avocado
         #endregion
 
         #region Stats
+
+        public static void SaveHealthRecoverLevel(int _level)
+        {
+            if (data == null) Load();
+            data.healthRecoverLevel = _level;
+            Save();
+        }
+        public static int GetHealthRecoverLevel()
+        {
+            if (data == null) Load();
+            return data.healthRecoverLevel;
+        }
         public static void SaveCoins(int _coins)
         {
             if (data == null) Load();

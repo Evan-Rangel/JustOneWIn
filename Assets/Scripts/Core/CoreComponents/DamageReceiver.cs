@@ -68,10 +68,10 @@ namespace Avocado.CoreSystem
             soundReproductor.PlayDamageSound();
 
             // Disminuir salud
-            //stats.Health.Decrease(data.Amount);
+            stats.Health.Decrease(data.Amount);
             //GlobalVolumeController.instance.SetChromaticAberration(1);
 
-            // GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
+             GameManager.instance.UpdateHealthBar(stats.Health.CurrentValue/stats.Health.MaxValue);
 
             // Lanzar partículas de daño
             particleManager.StartWithRandomRotation(damageParticles);

@@ -97,11 +97,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject pauseHolder;
     [SerializeField] GameObject pausePrincipalHolder;
     [SerializeField] GameObject[] holderToHideWithEsc;
-    [SerializeField] GameObject[] objectsToDelayActivation;
+    //[SerializeField] GameObject[] objectsToDelayActivation;
     [field: SerializeField] public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
     [SerializeField] Image healthBar, staminaBar;
-    int healthLevel = 1, staminaLevel = 1;
+    [SerializeField] GameObject[] healtBarRecoveryImages;
+    int healthLevel = 1, staminaLevel = 1, healthRecoverLevel=1;
     [SerializeField] ShopItemHolder[] shopItemHolders;
     [field: SerializeField] public WeaponDataSO[] weaponsData { get; private set; }
     [SerializeField] List<WeaponDataSO> weaponUnlocked = new List<WeaponDataSO>();
@@ -339,12 +340,22 @@ public class GameManager : MonoBehaviour
         if (statsBackgroundAnimator.GetInteger("Level") < staminaLevel)
             statsBackgroundAnimator.SetInteger("Level", staminaLevel);
     }
+    public void HealthRecoverBuff()
+    {
+        if (healthRecoverLevel >= 4) return;
+    
+        healthRecoverLevel++;
+        SaveManager.SaveHealthRecoverLevel(healthRecoverLevel);
+        stats.UpdateHealthRecoveryLevel(healthRecoverLevel );
+    }
     public void InitStatsWithPlayerPrefs()
     {
         healthLevel = SaveManager.GetHealthLevel();
         staminaLevel = SaveManager.GetStaminaLevel();
+        healthRecoverLevel = SaveManager.GetHealthRecoverLevel();
         stats.UpdateHealthLevel(healthLevel - 1);
         stats.UpdateStaminaLevel(staminaLevel - 1);
+        stats.UpdateHealthRecoveryLevel(healthRecoverLevel);
         healthAnimator.SetInteger("Level", healthLevel);
         staminaAnimator.SetInteger("Level", staminaLevel);
         statsBackgroundAnimator.SetInteger("Level", Math.Max(healthLevel, staminaLevel));
@@ -356,6 +367,20 @@ public class GameManager : MonoBehaviour
     public void UpdateStaminaBar(float _value)
     {
         staminaBar.fillAmount = 1 - _value;
+    }
+    public void UpdateHealthRecoveryImages(float _Value)
+    {
+        for (int i = 0; i < healtBarRecoveryImages.Length; i++)
+        {
+            if (i < (int)_Value)
+            {
+                healtBarRecoveryImages[i].SetActive(true);
+                continue ;
+            }
+
+            healtBarRecoveryImages[i].SetActive(false);
+
+        }
     }
 
 
@@ -564,11 +589,11 @@ public class GameManager : MonoBehaviour
         CkeckForAvailableWepons();
         CheckForSavePoints();
 
-        foreach (GameObject obj in objectsToDelayActivation)
+/*        foreach (GameObject obj in objectsToDelayActivation)
         {
             obj.SetActive(true);
         }
-
+*/
         //levelData= Helpers.GetCurrentLevel();
         //AudioManager.instance.PlayMusic(levelData.levelMusic);
         //StartCoroutine(StartGame());
@@ -666,6 +691,7 @@ public interface ICollidable
 public enum STAT
 {
     Health,
-    Stamina
+    Stamina,
+    HealthRecover
 }
 #endregion

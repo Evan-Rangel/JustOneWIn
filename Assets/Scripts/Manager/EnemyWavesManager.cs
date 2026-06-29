@@ -20,6 +20,13 @@ namespace Avocado
         [SerializeField]EnemyWave[] waves;
         public UnityEvent waveOvercome;
         FabricEnemyCollision fabricEnemyCollision;
+
+        [ContextMenu("Delete Key")]
+        public void DeleteEventKey()
+        { 
+            SaveManager.DeleteEventKey(eventName);
+        }
+
         private void Awake()
         {
             fabricEnemyCollision = GetComponentInChildren<FabricEnemyCollision>();

@@ -23,6 +23,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action OnInteractEventInputChanged;
     public event Action<float> OnCameraTargetInputChanged;
     public event Action onNextDialogueInput;
+    public event Action onHealthRecoveryInput;
     // Evento que notifica si se ha iniciado o cancelado una interacción
 
     private PlayerInput playerInput;
@@ -252,6 +253,14 @@ public class PlayerInputHandler : MonoBehaviour
             GrappleInput = false;
             OnGrappleInputChanged?.Invoke(false);
         }
+    }
+    public void OnHealthRecoveryInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            onHealthRecoveryInput?.Invoke();
+        }
+    
     }
 
     public void UseJumpInput() => JumpInput = false;

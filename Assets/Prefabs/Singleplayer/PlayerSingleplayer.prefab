@@ -940,6 +940,8 @@ MonoBehaviour:
   - <MaxValue>k__BackingField: 50
   - <MaxValue>k__BackingField: 100
   - <MaxValue>k__BackingField: 150
+  <healthRecovery>k__BackingField:
+    <MaxValue>k__BackingField: 1
   <StaminaLevels>k__BackingField:
   - <MaxValue>k__BackingField: 50
   - <MaxValue>k__BackingField: 100
@@ -1579,6 +1581,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 8bd04db1-6c1d-4caa-8edd-c6aed047554c
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6853976413428451523}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: OnHealthRecoveryInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e63eab67-b4ae-4ed3-98de-3939c38c1580
+    m_ActionName: Gameplay/HealthRecover[/XInputControllerWindows/dpad/up]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay

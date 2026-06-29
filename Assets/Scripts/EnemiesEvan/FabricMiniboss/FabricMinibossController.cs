@@ -7,7 +7,8 @@ namespace Avocado
 {
     public class FabricMinibossController : MonoBehaviour, IDamageable
     {
-
+        [SerializeField] float minTimeBetweenShoots=3f;
+        bool canShoot;
 
         FabricEnemySoundReproductor soundReproductor;
         [SerializeField] float minRandomTimeLapseIdleSound, maxRandomTimeLapseIdleSound;
@@ -39,6 +40,7 @@ namespace Avocado
         }
         private void OnEnable()
         {
+            canShoot = true;    
             anim.SetBool("idle", true);
             CancelInvoke(nameof(IdleSound));
             currentHealth = maxtHealth;
@@ -48,6 +50,10 @@ namespace Avocado
         }
         private void Update()
         {
+           
+
+
+
             Collider2D[] detectedObjects = Physics2D.OverlapCircleAll(meleeAttackPoint.position, meleeAttackData.attackRadius, meleeAttackData.whatIsPlayer);
             foreach (Collider2D collider in detectedObjects)
             {
@@ -89,11 +95,19 @@ namespace Avocado
         }
         void SpawnProjectile()
         {
+            if (!canShoot) return;
+
+            canShoot = false;
+            Invoke(nameof(ResetShootTimer), minTimeBetweenShoots);
             GameObject bullet = FabricEnemiesPool.Instance.GetMiniBossBullet();
             bullet.transform.position = attackPoint.position;
             //bullet.transform.localScale = transform.localScale*6;
             int direction = (transform.lossyScale.x > 0) ? 1 : -1;
             bullet.GetComponent<Avocado.Projectiles.Projectile>().FireProjectileWithDirection(rangedAttackData.projectileSpeed * direction, rangedAttackData.projectileTravelDistance, rangedAttackData.projectileDamage, rangedAttackData.initSound, rangedAttackData.hitSound);
+        }
+        void ResetShootTimer()
+        {
+            canShoot = true;
         }
         void IDamageable.Damage(DamageData data)
         {

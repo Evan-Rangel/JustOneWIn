@@ -137,6 +137,7 @@ public class Player : MonoBehaviour
         // Evento cuando se intenta interactuar con algo
         InputHandler.OnInteractInputChanged += InteractableDetector.TryInteract;
         InputHandler.OnCameraTargetInputChanged += ChangeCamTargetPosition;
+        InputHandler.onHealthRecoveryInput += Stats.OnHealthRecovery;
         RB = GetComponent<Rigidbody2D>();
         DashDirectionIndicator = transform.Find("DashDirectionIndicator");
         MovementCollider = GetComponent<BoxCollider2D>();

@@ -77,7 +77,6 @@ namespace Avocado.CoreSystem
         {
             if (CanSetVelocity)
             {
-                Debug.Log(workspace);
                 RB.velocity = workspace;
                 CurrentVelocity = workspace;
             }

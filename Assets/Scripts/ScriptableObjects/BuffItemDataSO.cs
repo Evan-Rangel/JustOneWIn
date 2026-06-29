@@ -27,6 +27,9 @@ namespace Avocado
                 case STAT.Stamina:
                     GameManager.instance.StaminaBuff();
                     break;
+                case STAT.HealthRecover:
+                    GameManager.instance.HealthRecoverBuff();
+                    break;
             }
         }
 

@@ -11,7 +11,7 @@ namespace Avocado
 
         private void Start()
         {
-        Invoke("StartLasers", 1);
+            Invoke("StartLasers", 1);
         }
         public void StartLasers()
         {
