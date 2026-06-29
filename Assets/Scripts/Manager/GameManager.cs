@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject pauseHolder;
     [SerializeField] GameObject pausePrincipalHolder;
     [SerializeField] GameObject[] holderToHideWithEsc;
-    //[SerializeField] GameObject[] objectsToDelayActivation;
     [field: SerializeField] public GameObject shopHolder { get; private set; }
     [SerializeField] Animator healthAnimator, staminaAnimator, statsBackgroundAnimator;
     [SerializeField] Image healthBar, staminaBar;
@@ -466,12 +465,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-    public void LoadNextLevel()
-    {
-        SceneManager.LoadScene("SecondLevel");
-    }
-
-    
 
     #endregion
 
@@ -481,7 +474,7 @@ public class GameManager : MonoBehaviour
 
     // Estado actual del juego, inicializado en Gameplay
    
-    [SerializeField]private GameState currentGameState = GameState.Gameplay;
+    private GameState currentGameState = GameState.Gameplay;
     public GameState GetCurrentGameState=> currentGameState;
     // Método para cambiar de estado
     public void ChangeState(GameState state)
@@ -529,58 +522,17 @@ public class GameManager : MonoBehaviour
         Gameplay
     }
     #endregion
-
-    #region Items
-    public List<GameObject> itemList;
-    public GameObject GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
-    //[Range(1, 10)]
-    [field: SerializeField, Range(1, 10f)] public float itemTimeRespawn { get; private set; }
-
-    #endregion
-
-
-    #region Online
-
-    LevelData levelData;
-    [SerializeField] Image loadImage;
-    [SerializeField] TMP_Text loadText;
-    [SerializeField] string[] startCount;
-    [SerializeField] UnityEvent StartGameEvent;
-    [SerializeField] GameObject[] items;
-    public Sprite[] itemsSprites;
-    public Transform cursor;
-    public static GameManager instance;
-
-    public PlayerObjectController localPlayerController;
-    public GameObject localPlayerObject;
-    private CustomNetworkManager manager;
-    private CustomNetworkManager Manager
-    {
-        get
-        {
-            if (manager != null)
-            {
-                return manager;
-            }
-            return manager = CustomNetworkManager.singleton as CustomNetworkManager;
-        }
-    }
+  
     private void Awake()
     {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
         // DontDestroyOnLoad(gameObject);
-        // Turn off VSync so the custom frame rate cap works
-       // QualitySettings.vSyncCount = 0;
-
-        // Apply the maximum frame rate limit
-        //Application.targetFrameRate = 60;
     }
     public void Start()
     {
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        UnityEngine.Cursor.visible=false;
-        //  SaveManager.DeleteSaved();
+        UnityEngine.Cursor.visible = false;
         Invoke("ShowFps", 2);
         stats = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Stats>();
         HideHolders();
@@ -589,84 +541,39 @@ public class GameManager : MonoBehaviour
         CkeckForAvailableWepons();
         CheckForSavePoints();
 
-/*        foreach (GameObject obj in objectsToDelayActivation)
-        {
-            obj.SetActive(true);
-        }
-*/
-        //levelData= Helpers.GetCurrentLevel();
-        //AudioManager.instance.PlayMusic(levelData.levelMusic);
-        //StartCoroutine(StartGame());
     }
-    public void SetPlayerSpawns(Transform[] _spawns)
-    {
-        localPlayerObject.transform.position = _spawns[manager.gamePlayers.IndexOf(localPlayerController)].position;
-    }
-    public void FindLocalPlayer()
-    {
-        localPlayerObject = GameObject.Find("LocalGamePlayer");
-        localPlayerController = localPlayerObject.GetComponent<PlayerObjectController>();
+   
+    //desuso
+    #region Online
 
-    }
-    /*public void ChangeWeaponSprite(int weaponIdx)
-    { 
-        localPlayerController.ChangeWeaponIndex(weaponIdx);
-    }
-    public void ChangeAttacActive(bool attackActive)
-    { 
-        localPlayerController.ChangeAttackActive(attackActive);
-    }
-    public void UpdatePlayers()
-    {
-        foreach (PlayerObjectController player in Manager.gamePlayers)
-        {
-            player.gameObject.GetComponentInChildren<WeaponComponent>().SetIsAttackActive(player.attackActive);
-            player.gameObject.GetComponentInChildren<WeaponSprite>().SetCurrentWeaponSpriteIndex(player.weaponIndex);
-        }
-    }
-    */
+    LevelData levelData;
+    [Space]
+    [Space]
+    [Space]
+
+    [Header("Desuso")]
+    [Space]
+    [SerializeField] GameObject[] items;
+    public Sprite[] itemsSprites;
+    public static GameManager instance;
+
+
+ 
+   
+  
     public GameObject RequestRandomItem()
     {
         return Instantiate(items[UnityEngine.Random.Range(0, items.Length)]);
     }
-    //Para reaparecer el item en el mapa
-    public IEnumerator ReEnableItem(GameObject item)
-    {
-        item.SetActive(false);
-        yield return Helpers.GetWait(5);
-        item.SetActive(true);
-        yield break;
-    }
-    IEnumerator StartGame()
-    {
-        bool isFilled;
-        float value;
-        float targetFillAmount;
-        //Temporizador en UI
-        foreach (var count in startCount)
-        {
-            loadText.text = count;
-            if (count == "GO")
-            {
-                yield return Helpers.GetWait(0.2f);
-                StartGameEvent.Invoke();
-                yield break;
-            }
-            isFilled = (loadImage.fillAmount == 1);
-            value = isFilled ? -1.5f : 1.5f;
-            targetFillAmount = isFilled ? 0 : 1;
-            while (loadImage.fillAmount != targetFillAmount)
-            {
-                loadImage.fillAmount += Time.deltaTime * value;
 
-                yield return Helpers.GetWait(Time.deltaTime);
-            }
+    #endregion
+    #region Items
+    public List<GameObject> itemList;
+    public GameObject GetItemByIndex(int idx) { return itemList[idx] != null ? itemList[idx] : null; }
+    //[Range(1, 10)]
+    [field: SerializeField, Range(1, 10f)] public float itemTimeRespawn { get; private set; }
 
-            loadImage.fillAmount = (loadImage.fillAmount < 0.5f) ? 0 : 1;
-            loadImage.fillClockwise = !loadImage.fillClockwise;
-        }
-    }
-#endregion
+    #endregion
 
 }
 [Serializable]

@@ -4306,7 +4306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &264138224
 Transform:
   m_ObjectHideFlags: 0
@@ -259245,9 +259245,6 @@ MonoBehaviour:
   - {fileID: 9154820}
   - {fileID: 1109946170}
   - {fileID: 655703362}
-  objectsToDelayActivation:
-  - {fileID: 1466904750}
-  - {fileID: 264138223}
   <shopHolder>k__BackingField: {fileID: 962513919}
   healthAnimator: {fileID: 1859183158}
   staminaAnimator: {fileID: 686085073}
@@ -269713,7 +269710,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1466904751
 Transform:
   m_ObjectHideFlags: 0
