@@ -1,33 +1,33 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Avocado
 {
     public class DialogueEventActivation : MonoBehaviour
     {
-        [SerializeField] DialogueInstance[] dialogue;
-        int currentDialogueIndex;
-
-        private void Awake()
+        [SerializeField] Dialogue_SO dialogue;
+        [SerializeField] UnityEvent onDialogueEnd;
+        [SerializeField] bool activateOnStart;
+        private void Start()
         {
-            currentDialogueIndex = 0;
-        }
-        public void StartDialogueInIndex(int idx)
-        {
-            currentDialogueIndex = idx;
-            CanvasManager.instance.ActiveDialogueWindow();
-            DialogueUIController.instance.StartDialogue(dialogue[idx]);
-        }
-        public void RequestDialogue()
-        {
-            if (currentDialogueIndex == dialogue.Length)
-                return;
-            if (SaveManager.IsDialogueKeySaved(dialogue[currentDialogueIndex].dialogueData.dialogueKey))
+            StartDialogue();
+            if (activateOnStart)
             {
-                currentDialogueIndex++;
-                RequestDialogue();
-                return;
+            //    Invoke(nameof(StartDialogue), 1.5f);
             }
-            StartDialogueInIndex(currentDialogueIndex);
+        }
+        public void StartDialogue()
+        {
+            DialogueUIController.instance.StartDialogue(dialogue, onDialogueEnd);
+        }
+        
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Player"))
+            {
+                DialogueUIController.instance.StartDialogue(dialogue, onDialogueEnd);
+               // PopOutTextManager.instance.ShowText("Press E to talk", transform.position + Vector3.up * 1.5f);
+            }
         }
     }   
 }

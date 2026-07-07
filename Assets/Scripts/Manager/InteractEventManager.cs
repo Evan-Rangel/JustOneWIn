@@ -39,6 +39,14 @@ namespace Avocado
                 player = null;  
             }
         }
+        private void OnDisable()
+        {
+            if (player != null)
+            {
+                player.GetComponent<PlayerInputHandler>().OnInteractEventInputChanged -= OnInteractEvent;
+                player = null;
+            }
+        }
         public virtual void OnInteractEvent()
         {
             //textHolder.SetActive(false);

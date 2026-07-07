@@ -36,7 +36,7 @@ namespace Avocado
             {
                 TeleportPlayerAnimController.instance.PlayTeleportEndAnim();
                 CanvasManager.instance.ToggleMinimap(false);
-                FakeLight_S.instance.ShadeEffect();
+                FakeLight_S.instance.ShadeEffect(null);
                 GameSaveCapsule capsule = GameManager.instance.playerSavePosition.root.GetComponentInChildren<GameSaveCapsule>();
                 capsule.StartCloseCapsuleAnimation();
                 capsule.OnCloseAnimationEnd += () =>

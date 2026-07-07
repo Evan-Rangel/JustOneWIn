@@ -178,10 +178,9 @@ public class GameManager : MonoBehaviour
     }
     public void  TeleportPlayerTo(string _sceneName)
     { 
-        
+        //Debug.Log("Teleporting to scene: " + _sceneName);
         //SaveManager.SaveZoneSpawnName(target.sceneName);
         SceneManager.LoadScene(_sceneName);
-       // SceneManager.LoadScene("Main");
     }
     public void ResetLevel()
     { 
@@ -202,9 +201,13 @@ public class GameManager : MonoBehaviour
                 return (Vector2)currentDoorManager.doors[i].pos.position;
             }
         }
-        TeleportPlayerAnimController.instance.PlayTeleportAnim();
+        Debug.Log("a");
         if (playerSavePosition != null)
+        { 
+            TeleportPlayerAnimController.instance.PlayTeleportAnim();
             return playerSavePosition.position;
+        }
+        Debug.Log("b");
 
         /*
         string _zoneName = SaveManager.GetZoneSpawnName();
@@ -214,7 +217,6 @@ public class GameManager : MonoBehaviour
                 return allSavePoints[i].shopID.pos.position;
         }
         */
-        Debug.Log("New Pos");
         return newGameStartPosition.position;
     }
     public void AddSavePoint(TpEntity _point)

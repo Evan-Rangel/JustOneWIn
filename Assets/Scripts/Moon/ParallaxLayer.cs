@@ -11,6 +11,7 @@ public class ParallaxLayer : MonoBehaviour
 
     void Start()
     {
+        cam= Camera.main.transform; 
         startX = transform.position.x;
         startCamX = cam.position.x;
     }

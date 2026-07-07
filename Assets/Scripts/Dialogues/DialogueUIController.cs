@@ -1,18 +1,21 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.Events;
 namespace Avocado
 {
     public class DialogueUIController : MonoBehaviour
     {
+        [SerializeField] GameObject dialogueHolder;
         [SerializeField] TMP_Text dialogueTxt;
         Dialogue_SO currentDialogue;
-        int currentDialogueIndex;
-        string currentText;
+        [SerializeField]int currentDialogueIndex;
         int currentIndex;
-        bool saveCurrentDialogue;
+        [SerializeField] Image border;
         [SerializeField] float textSpeed = 0.05f;
-
         public static DialogueUIController instance;
+        [SerializeField] Dialogue_SO testDialogueSo;
+        UnityEvent onDialogueEventEnd;
         private void Awake()
         {
             if (instance == null)
@@ -23,23 +26,21 @@ namespace Avocado
             {
                 Destroy(gameObject);
             }
-            saveCurrentDialogue = false;
             dialogueTxt= GetComponentInChildren<TMP_Text>();
+            dialogueHolder.SetActive(false);
         }
-
         public void OnInputEnter()
         {
+            if (!dialogueHolder.activeSelf)
+                return;
             CancelInvoke(nameof(WriteDialogue));
 
-            if (currentIndex < currentText.Length - 1)
+            if (currentIndex < currentDialogue.dialogue[currentDialogueIndex].text.Length - 1)
             {
-                dialogueTxt.text = currentText;
-                currentIndex = currentText.Length;
+                dialogueTxt.text = currentDialogue.dialogue[currentDialogueIndex].text;
+                currentIndex = currentDialogue.dialogue[currentDialogueIndex].text.Length;
                 return;
             }
-
-            if (saveCurrentDialogue)
-                SaveManager.SaveDialogueKey(currentDialogue.dialogueKey);
 
             currentDialogueIndex++;
             dialogueTxt.text = "";
@@ -47,41 +48,43 @@ namespace Avocado
             
             if (currentDialogueIndex< currentDialogue.dialogue.Length)
             {
-                currentText = currentDialogue.dialogue[currentDialogueIndex];
+                border.color = currentDialogue.dialogue[currentDialogueIndex].borderColor;
                 InvokeRepeating(nameof(WriteDialogue), 0f, textSpeed);
                 return;
             }
 
+            if (currentDialogue.saveDialogue)
+                SaveManager.SaveDialogueKey(currentDialogue.dialogueKey);
+
             currentDialogueIndex = 0;
             currentDialogue = null;
-            gameObject.SetActive(false);
+            onDialogueEventEnd?.Invoke();
+            dialogueHolder.SetActive(false);
+            GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
             return;
         }
-
-        public void StartDialogue(DialogueInstance dialogue)
+        
+        public void StartDialogue(Dialogue_SO _dialogue, UnityEvent _onDialogueEventEnd)
         {
-            saveCurrentDialogue = dialogue.saveDialogue;
-            currentDialogue= dialogue.dialogueData;
+            GameManager.instance.ChangeState(GameManager.GameState.UI);
+            Debug.Log("Starting Dialogue: " + _dialogue.dialogueKey);
+            onDialogueEventEnd = _onDialogueEventEnd;
+
+            dialogueHolder.SetActive(true);
+            currentDialogueIndex = 0;
+            currentDialogue= _dialogue;
+            border.color = _dialogue.dialogue[currentDialogueIndex].borderColor;
             currentIndex = 0;
             currentDialogueIndex = 0;
-            currentText = currentDialogue.dialogue[0];
             dialogueTxt.text = "";
             InvokeRepeating(nameof(WriteDialogue), 0f, textSpeed);
         }
         void WriteDialogue()
         { 
-            dialogueTxt.text += currentText[currentIndex];
+            dialogueTxt.text += currentDialogue.dialogue[currentDialogueIndex].text[currentIndex];
             currentIndex++;
-            if (currentIndex >= currentText.Length )
-                CancelInvoke(nameof(WriteDialogue));
-        }
-        private void OnDisable()
-        {
-            GameManager.instance.ChangeState(GameManager.GameState.Gameplay);
-        }
-        private void OnEnable()
-        {
-            GameManager.instance.ChangeState(GameManager.GameState.UI);
+            if (currentIndex < currentDialogue.dialogue[currentDialogueIndex].text.Length) return;
+            CancelInvoke(nameof(WriteDialogue));
         }
     }
 }

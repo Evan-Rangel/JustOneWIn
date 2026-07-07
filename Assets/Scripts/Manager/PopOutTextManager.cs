@@ -26,13 +26,14 @@ namespace Avocado
             }
             else
             {
-                instance = this;
+                instance = this; 
             }
             dialogueHolder.SetActive(false);
             iconHolder.SetActive(false);
         }
         public void ShowText(string _text, Vector2 _position)
         { 
+            dialogueText.text = "";
             transform.position = _position;
             StopAllCoroutines();
             gameObject.SetActive(true);
@@ -44,7 +45,7 @@ namespace Avocado
         {
             while (dialogueText.text!=_text)
             {
-                yield return Helpers.GetWait(.1f);
+                yield return Helpers.GetWait(0.05f);
                 dialogueText.text = _text.Substring(0, Mathf.Min(dialogueText.text.Length + 1, _text.Length));
             }
             StartCoroutine(TimerText());

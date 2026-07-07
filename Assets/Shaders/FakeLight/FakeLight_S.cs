@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,8 @@ public class FakeLight_S : MonoBehaviour
     MaterialPropertyBlock propertyBlock;
     [SerializeField] GameObject player;
     public static FakeLight_S instance;
+    IEnumerator unShadeEffect;
+    IEnumerator shadeEffect;
     private void OnEnable()
     {
         SceneManager.sceneLoaded += SceneLoaded;
@@ -17,31 +20,22 @@ public class FakeLight_S : MonoBehaviour
     {
         SceneManager.sceneLoaded -= SceneLoaded;
     }
-    void SceneLoaded(Scene scena, LoadSceneMode mode)
+    void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
+
         spr.GetPropertyBlock(propertyBlock);
         propertyBlock.SetFloat("_DarknessStrength", 0);
         propertyBlock.SetFloat("_RespawnEffect", 1);
         spr.SetPropertyBlock(propertyBlock);
-        Invoke("UnShadeEffect", 2);
+        Invoke(nameof(UnShadeEffect), 1.5f);
     }
     private void Awake()
     {
         instance = this;
-        //DontDestroyOnLoad(this);
         propertyBlock = new MaterialPropertyBlock();
         spr = GetComponent<SpriteRenderer>();
     }
-    private void Start()
-    {
-       /* spr.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetFloat("_DarknessStrength", 0);
-        propertyBlock.SetFloat("_RespawnEffect", 1);
-        spr.SetPropertyBlock(propertyBlock);
-        Invoke("UnShadeEffect", 1);
-        //UnShadeEffect();
-    */
-        }
+
     private void Update()
     {
 
@@ -51,10 +45,15 @@ public class FakeLight_S : MonoBehaviour
     }
     public void UnShadeEffect()
     {
+        if (unShadeEffect != null)
+        {
+            StopCoroutine(unShadeEffect);
+        }
+        if (shadeEffect != null)
+            StopCoroutine(shadeEffect);
 
-
-        StartCoroutine(IUnShadeEffect());
-
+        unShadeEffect = IUnShadeEffect();
+        StartCoroutine(unShadeEffect);
     }
     IEnumerator IUnShadeEffect()
     {
@@ -78,9 +77,20 @@ public class FakeLight_S : MonoBehaviour
         propertyBlock.SetFloat("_RespawnEffect", 0);
         spr.SetPropertyBlock(propertyBlock);
     }
-    public void ShadeEffect()
-    { 
-        StartCoroutine(IShadeEffect());
+    event Action shaderEffectSuccess;
+    public void ShadeEffect(Action _shaderEffectSuccess)
+    {
+       // Debug.Log("StartShade");
+        shaderEffectSuccess = _shaderEffectSuccess;
+        if (shadeEffect != null)
+            StopCoroutine(shadeEffect);
+
+        if (unShadeEffect!=null)
+            StopCoroutine(unShadeEffect);
+
+        shadeEffect = IShadeEffect();
+        StartCoroutine(shadeEffect);
+
     }
     IEnumerator IShadeEffect()
     {
@@ -102,8 +112,9 @@ public class FakeLight_S : MonoBehaviour
         }
         propertyBlock.SetFloat("_RespawnEffect", 1);
         spr.SetPropertyBlock(propertyBlock);
-
-
+        yield return Helpers.GetWait(0.05f);
+        shaderEffectSuccess?.Invoke();
+        shaderEffectSuccess = null;
         //propertyBlock.SetFloat("_RespawnEffect", 0);
         //spr.SetPropertyBlock(propertyBlock);
     }

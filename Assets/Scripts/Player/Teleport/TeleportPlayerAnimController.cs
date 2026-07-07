@@ -30,7 +30,7 @@ namespace Avocado
         }   
         void EndAnimationComplete()
         {
-            GameManager.instance.ResetLevel();
+            //GameManager.instance.ResetLevel();
         }
         public void PlayTeleportAnim()
         {

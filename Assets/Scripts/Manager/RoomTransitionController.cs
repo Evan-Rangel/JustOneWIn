@@ -14,8 +14,8 @@ namespace Avocado
         public void InitTransition()
         {
             PlayerPrefs.SetString("DoorName", nextSceneDoorName);
-            FakeLight_S.instance.StartRespawnEffect();
-            StartCoroutine(DelayTransition());
+            FakeLight_S.instance.ShadeEffect(()=>SceneManager.LoadScene(nextSceneName));
+            //StartCoroutine(DelayTransition());
         }
         IEnumerator DelayTransition()
         {

@@ -13,6 +13,13 @@ namespace Avocado
         {
             if (SaveManager.IsTutorialKeySaved(TutorialData.name)) gameObject.SetActive(false);
         }
+        public void TriggerTutorial()
+        {
+            if (isShortTutorial)
+                shortTutorial?.Invoke(keyboardKey, (Vector2)transform.position + Vector2.up * 2.5f);
+            else
+                ShowTutorial();
+        }
         private void OnEnable()
         {
             showTutorial=TutorialManager.Instance.ShowTutorialItem;

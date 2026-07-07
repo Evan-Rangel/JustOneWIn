@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Avocado
 {
@@ -10,7 +11,7 @@ namespace Avocado
         List<GameObject> searcherPool = new List<GameObject>();
         [SerializeField] GameObject fabricOctopusBulletPrefab;
         List<GameObject> fabricOctopusBulletPool = new List<GameObject>();
-        [SerializeField] GameObject fabricMiniBossBuulletPrefab;
+        [SerializeField] GameObject fabricMiniBossBulletPrefab;
         List<GameObject> fabricMiniBossBulletPool = new List<GameObject>();
         [SerializeField] GameObject fabricTorretBulletPrefab;
         List<GameObject> fabricTorretBulletPool = new List<GameObject>();
@@ -33,7 +34,23 @@ namespace Avocado
                 Destroy(gameObject);
             }
         }
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            fabricMiniBossBulletPool.Clear();
+            fabricOctopusBulletPool.Clear(); 
+            fabricTorretBulletPool.Clear();
+            searcherPool.Clear();
+            explosionEffectPool.Clear();
 
+        }
         public GameObject GetFabricTorretBullet()
         {
             foreach (GameObject bullet in fabricTorretBulletPool)
@@ -60,7 +77,7 @@ namespace Avocado
                     return bullet;
                 }
             }
-            GameObject newBullet = Instantiate(fabricMiniBossBuulletPrefab);
+            GameObject newBullet = Instantiate(fabricMiniBossBulletPrefab);
             fabricMiniBossBulletPool.Add(newBullet);
             return newBullet;
 

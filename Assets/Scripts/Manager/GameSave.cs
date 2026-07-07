@@ -66,9 +66,10 @@ namespace Avocado
         public override void OnInteractEvent()
         {
             base.OnInteractEvent();
+            //Debug.Log("GameSave");
             GameManager.instance.AddSavePoint(shopID);
-            minimapCamera.enabled = true;
-            minimapCamera.transform.position= transform.position;
+            MinimapCamera.Instance.enabled = true;
+            MinimapCamera.Instance.transform.position= transform.position;
             CanvasManager.instance.ToggleMinimap(true);
         }
     }

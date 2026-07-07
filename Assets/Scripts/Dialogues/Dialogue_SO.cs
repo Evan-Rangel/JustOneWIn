@@ -7,12 +7,16 @@ namespace Avocado
     public class Dialogue_SO : ScriptableObject
     {
         [field: SerializeField] public string dialogueKey { get; private set; }
-        [field: SerializeField] public string[] dialogue { get; private set; }
+        [field: SerializeField] public DialogueData[] dialogue { get; private set; }
+        [field: SerializeField] public bool saveDialogue { get; private set; }
+        //[field:SerializeField]
+
     }
     [Serializable]
-    public class DialogueInstance
+    public class DialogueData
     {
-        public Dialogue_SO dialogueData { get; private set; }
-        public bool saveDialogue{ get; private set; }
+        public string text;
+        public Color borderColor;
     }
+    
 }
