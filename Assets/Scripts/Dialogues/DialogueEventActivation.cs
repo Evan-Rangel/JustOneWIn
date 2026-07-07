@@ -10,10 +10,9 @@ namespace Avocado
         [SerializeField] bool activateOnStart;
         private void Start()
         {
-            StartDialogue();
             if (activateOnStart)
             {
-            //    Invoke(nameof(StartDialogue), 1.5f);
+                StartDialogue();
             }
         }
         public void StartDialogue()
