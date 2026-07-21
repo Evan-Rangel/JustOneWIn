@@ -49,6 +49,7 @@ namespace Avocado
         }
         public virtual void OnInteractEvent()
         {
+            GameManager.instance.ResetStats();
             //textHolder.SetActive(false);
             interactEvent?.Invoke();
         }

@@ -55,7 +55,7 @@ namespace Avocado
             currentPointIndex++;
             if (currentPointIndex >= GameManager.instance.activeSavePoints.Count)
                 currentPointIndex=0;
-
+            Debug.Log("Current Index: "+ currentPointIndex+ "; Max: "+ GameManager.instance.activeSavePoints.Count);
             TpEntity tp = GameManager.instance.activeSavePoints[currentPointIndex];
             minimapCamera.transform.position = GameManager.instance.GetTeleportPositionByName(tp.zoneName);
             onNextPoint?.Invoke(tp);
@@ -65,6 +65,7 @@ namespace Avocado
             currentPointIndex--;
             if (currentPointIndex < 0)
                 currentPointIndex = GameManager.instance.activeSavePoints.Count - 1;
+            Debug.Log("Current Index: " + currentPointIndex + "; Max: " + GameManager.instance.activeSavePoints.Count);
             TpEntity tp = GameManager.instance.activeSavePoints[currentPointIndex];
             minimapCamera.transform.position = GameManager.instance.GetTeleportPositionByName(tp.zoneName);
             onPrevPoint?.Invoke(tp);

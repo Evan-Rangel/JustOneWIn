@@ -42,6 +42,8 @@ namespace Avocado.CoreSystem
         void ResetLevel()
         {
             GameManager.instance.ResetLevel();
+            core.transform.parent.gameObject.SetActive(true);
+
         }
 
         // Suscribe el método Die al evento de vida en cero.

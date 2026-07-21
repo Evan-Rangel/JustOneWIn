@@ -2,13 +2,10 @@
 using Avocado.CoreSystem;
 using Avocado.Weapons;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -185,7 +182,7 @@ public class GameManager : MonoBehaviour
     public void ResetLevel()
     { 
        // SceneManager.LoadScene("TransitionScene");
-        SceneManager.LoadScene(currentSceneName);
+        SceneManager.LoadScene(SaveManager.GetSceneSpawnName());
     }
     #region Save Points Logic
     
@@ -201,13 +198,11 @@ public class GameManager : MonoBehaviour
                 return (Vector2)currentDoorManager.doors[i].pos.position;
             }
         }
-        Debug.Log("a");
         if (playerSavePosition != null)
         { 
             TeleportPlayerAnimController.instance.PlayTeleportAnim();
             return playerSavePosition.position;
         }
-        Debug.Log("b");
 
         /*
         string _zoneName = SaveManager.GetZoneSpawnName();
@@ -222,15 +217,14 @@ public class GameManager : MonoBehaviour
     public void AddSavePoint(TpEntity _point)
     {
         SaveManager.SaveSceneSpawnName(_point.sceneName);
-        //currentSpawnPosition = _point;
 
         for (int i = 0; i < activeSavePoints.Count; i++)
         {
             if (activeSavePoints[i].zoneName == _point.zoneName)
                 return;
         }
-        //if (activeSavePoints.Contains(_point)) return;
         SaveManager.SaveZoneUnlocked(_point.zoneName);
+        if (activeSavePoints.Contains(_point)) return;
         activeSavePoints.Add(_point);   
     }
     public void CheckForSavePoints(TeleportManager _newTeleportManager)
@@ -239,7 +233,13 @@ public class GameManager : MonoBehaviour
         CanvasManager.instance.SetMinimapTeleports(_newTeleportManager);
         for (int i = 0; i < currentTeleportManager.allSavePoints.Length; i++)
         {
-            if (SaveManager.IsZoneUnlocked(currentTeleportManager.allSavePoints[i].shopID.zoneName) && !activeSavePoints.Contains(currentTeleportManager.allSavePoints[i].shopID))
+            for (int j = 0; j < activeSavePoints.Count; j++)
+            {
+                if (activeSavePoints[j].zoneName == currentTeleportManager.allSavePoints[i].shopID.sceneName)
+                    return;
+            }
+            if (SaveManager.IsZoneUnlocked(currentTeleportManager.allSavePoints[i].shopID.zoneName) )
+            
                 activeSavePoints.Add(currentTeleportManager.allSavePoints[i].shopID);
         }
     }
@@ -354,13 +354,17 @@ public class GameManager : MonoBehaviour
         SaveManager.SaveHealthRecoverLevel(healthRecoverLevel);
         stats.UpdateHealthRecoveryLevel(healthRecoverLevel );
     }
+    public void ResetStats()
+    { 
+        stats.InitStats();
+    }
     public void InitStatsWithPlayerPrefs()
     {
         healthLevel = SaveManager.GetHealthLevel();
         staminaLevel = SaveManager.GetStaminaLevel();
         healthRecoverLevel = SaveManager.GetHealthRecoverLevel();
-        stats.UpdateHealthLevel(healthLevel - 1);
-        stats.UpdateStaminaLevel(staminaLevel - 1);
+       // stats.UpdateHealthLevel(healthLevel - 1);
+        //stats.UpdateStaminaLevel(staminaLevel - 1);
         stats.UpdateHealthRecoveryLevel(healthRecoverLevel);
         CanvasManager.instance.SetHealthAnimationLevel(healthLevel);
         CanvasManager.instance.SetStaminaAnimationLevel(staminaLevel);
@@ -369,28 +373,6 @@ public class GameManager : MonoBehaviour
         //staminaAnimator.SetInteger("Level", staminaLevel);
         //statsBackgroundAnimator.SetInteger("Level", Math.Max(healthLevel, staminaLevel));
     }
-    /*
-    public void UpdateHealthBar(float _value)
-    {
-        healthBar.fillAmount = 1 - _value;
-    }
-    public void UpdateStaminaBar(float _value)
-    {
-        staminaBar.fillAmount = 1 - _value;
-    }
-    public void UpdateHealthRecoveryImages(float _Value)
-    {
-        for (int i = 0; i < healtBarRecoveryImages.Length; i++)
-        {
-            if (i < (int)_Value)
-            {
-                healtBarRecoveryImages[i].SetActive(true);
-                continue ;
-            }
-            healtBarRecoveryImages[i].SetActive(false);
-        }
-    }*/
-
 
 
     public void ActiveShop(TpEntity _spawn)
@@ -403,43 +385,6 @@ public class GameManager : MonoBehaviour
     }
     #endregion
     
-    
-    /*
-    [Header("Title Colors")]
-    [SerializeField] Image titleBackgroundImage;
-    [SerializeField] Image titleBorderImage01, titleBorderImage02;
-    [SerializeField]TMPro.TMP_Text titleText;
-
-    [SerializeField] Color shopBackgroundColor, inventoryBackgroundColor, statsBackgroundColor;
-    [SerializeField] Color shopBorderColor, inventoryBorderColor, statsBorderColor;
-    public void SetInfoMenuComputer(string _menuTitle)
-    {
-        titleText.SetText(_menuTitle);
-        switch (_menuTitle)
-        {
-            case "Shop":
-                titleBorderImage01.color = shopBorderColor;
-                titleBorderImage02.color = shopBorderColor;
-                titleBackgroundImage.color = shopBackgroundColor;
-
-                return;
-            case "Stats":
-                titleBorderImage01.color = statsBorderColor;
-                titleBorderImage02.color = statsBorderColor;
-                titleBackgroundImage.color = statsBackgroundColor;
-
-                return;
-            case "Inventory":
-                titleBorderImage01.color = inventoryBorderColor;
-                titleBorderImage02.color = inventoryBorderColor;
-                titleBackgroundImage.color = inventoryBackgroundColor;
-
-                return;
-            default:
-                return;
-        }
-    }*/
-
 
     #endregion
 
@@ -523,10 +468,23 @@ public class GameManager : MonoBehaviour
         CoinsInPlayerPrefs();
         InitStatsWithPlayerPrefs();
         CkeckForAvailableWepons();
+        
         //CheckForSavePoints();
-
     }
-   
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            coinsPool.Clear();
+        };
+    }
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= (scene, mode) =>
+        {
+            coinsPool.Clear();
+        };
+    }
     //desuso
     #region Online
 
@@ -540,10 +498,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject[] items;
     public Sprite[] itemsSprites;
     public static GameManager instance;
-
-
- 
-   
   
     public GameObject RequestRandomItem()
     {

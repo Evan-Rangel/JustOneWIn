@@ -1,8 +1,11 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class SettingsResolution : MonoBehaviour
 {
+
     TMP_Dropdown dropdown;
     Resolution[] resolutions;
     [SerializeField] AudioClip dropdownClip;
@@ -26,6 +29,13 @@ public class SettingsResolution : MonoBehaviour
             SetResolution();
         }
     }
+  
+ 
+    public void RefreshDropdown()
+    {
+        Debug.Log("sd");
+        //dropdown.RefreshShownValue();
+    }
     void LoadResolution()
     {
        // dropdown.onValueChanged.AddListener(delegate { AudioManager.instance.PlayOneShotSFX(dropdownClip); });
@@ -33,6 +43,7 @@ public class SettingsResolution : MonoBehaviour
     }
     public void SetResolution()
     {
+        //Debug.Log("dasdasddad");
         int resolutionIndex = dropdown.value;
         Screen.SetResolution(resolutions[resolutionIndex].width, resolutions[resolutionIndex].height, ConvertToBool(PlayerPrefs.GetInt("Windowed")));
         PlayerPrefs.SetInt("Resolution", resolutionIndex);

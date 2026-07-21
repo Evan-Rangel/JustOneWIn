@@ -6,7 +6,7 @@ namespace Avocado
     {
         void Start()
         {
-           SaveManager.DeleteSaved();
+            SaveManager.DeleteSaved();
             PlayerPrefs.DeleteKey("DoorName");
         }
     }

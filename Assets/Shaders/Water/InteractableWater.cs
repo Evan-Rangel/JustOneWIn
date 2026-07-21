@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+#if UNITY_EDITOR
 using UnityEditor.UIElements;
+#endif
 using Avocado;
 
 
@@ -135,7 +137,7 @@ public class InteractableWater : MonoBehaviour
         _meshFilter.mesh = _mesh;
     }         
 }
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(InteractableWater))]
 public class InteractableWaterEditor : Editor
 {
@@ -235,3 +237,4 @@ public class InteractableWaterEditor : Editor
     }
 }
 
+#endif

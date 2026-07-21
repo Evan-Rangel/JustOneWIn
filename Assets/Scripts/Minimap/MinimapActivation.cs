@@ -35,6 +35,7 @@ namespace Avocado
         public void ActivateMinimap(bool _active)
         {
             minimap.SetActive(_active);
+            MinimapCamera.Instance.gameObject.SetActive(_active);
             MinimapCamera.Instance.onMinimap = _active;
             MinimapCamera.Instance.SetFieldOfView(170);
         }

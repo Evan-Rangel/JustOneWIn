@@ -197,7 +197,8 @@ namespace Avocado
         private GameObject InstantiatePoint()
         {
             if (pointPrefab == null) return null;
-            return (GameObject)PrefabUtility.InstantiatePrefab(pointPrefab, transform);
+            //return (GameObject)PrefabUtility.InstantiatePrefab(pointPrefab, transform);
+            return Instantiate(pointPrefab, transform);
         }
         #endregion
     }

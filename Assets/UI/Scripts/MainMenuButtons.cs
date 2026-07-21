@@ -10,7 +10,8 @@ namespace Avocado
     {
         [SerializeField] Image buttonImage;
         [SerializeField] Sprite[] buttonSprites;
-
+        [SerializeField] Button button;
+        
         private void Awake()
         {
             buttonImage = GetComponent<Image>();
@@ -18,6 +19,7 @@ namespace Avocado
         private void Start()
         {
             buttonImage.sprite = buttonSprites[0];
+            
         }
      
         public void OnPointerEnter(PointerEventData eventData)

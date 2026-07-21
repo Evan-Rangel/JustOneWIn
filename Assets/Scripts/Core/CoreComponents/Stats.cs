@@ -30,27 +30,26 @@ namespace Avocado.CoreSystem
         protected override void Awake()
         {
             base.Awake();
-            InitStats();        
         }
         public void InitStats()
         {
-            Health = HealthLevels[0];
-            Stamina = StaminaLevels[0];
             Poise.Init();
             Stamina.Init();
             healthRecovery.Init();
             Health.Init();
-
         }
         private void OnEnable()
         {
+            Health = HealthLevels[SaveManager.GetHealthLevel() - 1];
+            Stamina = StaminaLevels[SaveManager.GetStaminaLevel() - 1];
+            healthRecovery.OnCurrentValueChangeCurrentValue += UpdateHealthRecovery;
             rechargeStamina = IRechargeStamina();
             rechargeHealth = IRechargeStamina();
-            healthRecovery.OnCurrentValueChangeCurrentValue += UpdateHealthRecovery;
             Stamina.OnCurrentValueDecrease += RechargeStamina;
             Stamina.OnCurrentValueChange += UpdateStamina;
             Health.OnCurrentValueChange += UpdateHealth;
             Health.OnCurrentValueDecrease += () => StopCoroutine(rechargeHealth);
+            InitStats();
 
         }
         private void OnDisable()
